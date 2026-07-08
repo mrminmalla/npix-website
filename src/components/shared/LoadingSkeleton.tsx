@@ -1,0 +1,33 @@
+import { Skeleton } from "@/components/ui/skeleton";
+
+export function CardSkeleton() {
+  return (
+    <div className="rounded-xl border border-border p-6">
+      <Skeleton className="mb-4 h-10 w-10 rounded-lg" />
+      <Skeleton className="mb-2 h-5 w-2/3" />
+      <Skeleton className="h-4 w-full" />
+      <Skeleton className="mt-1 h-4 w-4/5" />
+    </div>
+  );
+}
+
+export function LoadingSkeleton({
+  count = 6,
+  className,
+}: {
+  count?: number;
+  className?: string;
+}) {
+  return (
+    <div
+      className={
+        className ??
+        "grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+      }
+    >
+      {Array.from({ length: count }).map((_, i) => (
+        <CardSkeleton key={i} />
+      ))}
+    </div>
+  );
+}
