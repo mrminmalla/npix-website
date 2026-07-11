@@ -15,8 +15,8 @@ interface QuickAction {
 
 const QUICK_ACTIONS: QuickAction[] = [
   {
-    id: "become-a-member",
-    title: "Become a Member",
+    id: "join-npix",
+    title: "Join NPIX",
     description: "Start the process of connecting your organization to NPIX.",
     buttonLabel: "Apply Now",
     href: `mailto:${CONTACT_EMAIL}?subject=Membership%20Inquiry`,

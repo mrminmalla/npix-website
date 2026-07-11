@@ -23,16 +23,14 @@ export function TrafficSection() {
           </p>
         </FadeIn>
 
-        <FadeIn delay={0.1} className="mt-8">
-          <div className="rounded-xl border border-border bg-background p-4 shadow-sm sm:p-6">
-            <GrafanaEmbed
-              src={DAILY_PANEL.src}
-              title="NPIX daily traffic, last 24 hours"
-              className="h-[250px] sm:h-[300px]"
-            />
-          </div>
+        <FadeIn delay={0.1} className="mt-6">
+          <GrafanaEmbed
+            src={DAILY_PANEL.src}
+            title="NPIX daily traffic, last 24 hours"
+            className="h-[250px] sm:h-[350px]"
+          />
 
-          <div className="mt-6 flex justify-center sm:justify-start">
+          <div className="mt-6">
             <Button asChild variant="outline">
               <Link href="/statistics">
                 View Detailed Statistics

@@ -84,7 +84,7 @@ export function MobileMenu() {
                       href={`mailto:${CONTACT_EMAIL}?subject=Membership%20Inquiry`}
                       onClick={() => setOpen(false)}
                     >
-                      Become a Member
+                      Join NPIX
                     </a>
                   </Button>
                 </li>

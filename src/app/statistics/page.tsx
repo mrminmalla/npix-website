@@ -67,7 +67,7 @@ export default function StatisticsPage() {
             delay={0.1}
             className="mt-8 rounded-xl border border-border bg-background p-4 shadow-sm sm:p-6"
           >
-            <TrafficTabs graphClassName="h-[360px] sm:h-[520px]" />
+            <TrafficTabs graphClassName="h-[280px] sm:h-[340px] lg:h-[400px]" />
           </FadeIn>
         </div>
       </section>

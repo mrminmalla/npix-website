@@ -31,7 +31,7 @@ export function CTASection() {
           <div className="flex flex-col gap-4 sm:flex-row">
             <Button asChild size="lg" variant="accent">
               <a href={`mailto:${CONTACT_EMAIL}?subject=Membership%20Inquiry`}>
-                Become a Member
+                Join NPIX
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </a>
             </Button>

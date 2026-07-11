@@ -62,7 +62,7 @@ export function Navbar() {
         <div className="flex shrink-0 items-center gap-2">
           <ThemeSwitcher />
           <Button asChild variant="accent" size="sm" className="hidden sm:inline-flex">
-            <a href={`mailto:${CONTACT_EMAIL}?subject=Membership%20Inquiry`}>Become a Member</a>
+            <a href={`mailto:${CONTACT_EMAIL}?subject=Membership%20Inquiry`}>Join NPIX</a>
           </Button>
           <MobileMenu />
         </div>
