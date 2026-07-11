@@ -30,7 +30,7 @@ export interface NewsItem {
   content: string;
   category: NewsCategory;
   featured?: boolean;
-  image: string;
+  location?: string;
 }
 
 export interface ExchangeLocation {

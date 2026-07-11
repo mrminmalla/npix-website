@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { CalendarDays, ArrowRight } from "lucide-react";
+import { CalendarDays, Clock, MapPin, ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { NewsCategoryBanner } from "@/components/cards/NewsCategoryBanner";
+import { getReadingTime, cn } from "@/lib/utils";
 import type { NewsItem } from "@/types";
-import { cn } from "@/lib/utils";
 
 function formatDate(dateStr: string) {
   return new Date(dateStr).toLocaleDateString("en-US", {
@@ -13,6 +14,8 @@ function formatDate(dateStr: string) {
 }
 
 export function NewsCard({ item, className }: { item: NewsItem; className?: string }) {
+  const readingTime = getReadingTime(item.content);
+
   return (
     <article
       className={cn(
@@ -20,11 +23,7 @@ export function NewsCard({ item, className }: { item: NewsItem; className?: stri
         className,
       )}
     >
-      <div className="relative flex h-40 items-center justify-center overflow-hidden bg-gradient-to-br from-primary to-secondary/60">
-        <span className="text-sm font-semibold uppercase tracking-widest text-primary-foreground/80">
-          {item.category}
-        </span>
-      </div>
+      <NewsCategoryBanner category={item.category} size="sm" />
       <div className="flex flex-1 flex-col p-6">
         <Badge variant="secondary" className="w-fit">
           {item.category}
@@ -35,11 +34,25 @@ export function NewsCard({ item, className }: { item: NewsItem; className?: stri
         <p className="mt-2 line-clamp-3 flex-1 text-sm leading-relaxed text-foreground-secondary">
           {item.summary}
         </p>
-        <div className="mt-4 flex items-center justify-between">
-          <span className="inline-flex items-center gap-1.5 text-xs text-foreground-secondary">
+
+        <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-foreground-secondary">
+          <span className="inline-flex items-center gap-1.5">
             <CalendarDays className="h-3.5 w-3.5" aria-hidden="true" />
             {formatDate(item.date)}
           </span>
+          <span className="inline-flex items-center gap-1.5">
+            <Clock className="h-3.5 w-3.5" aria-hidden="true" />
+            {readingTime} min read
+          </span>
+        </div>
+        {item.location && (
+          <span className="mt-1 inline-flex items-center gap-1.5 text-xs text-foreground-secondary">
+            <MapPin className="h-3.5 w-3.5" aria-hidden="true" />
+            {item.location}
+          </span>
+        )}
+
+        <div className="mt-4 flex items-center justify-end">
           <Link
             href={`/news/${item.slug}`}
             className="inline-flex items-center gap-1 text-sm font-semibold text-secondary transition-colors hover:text-primary group-hover:gap-2"

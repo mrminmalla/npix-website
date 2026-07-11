@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { FeaturedNewsCard } from "@/components/cards/FeaturedNewsCard";
+import { UpcomingEvents } from "@/components/sections/UpcomingEvents";
 import { NewsDirectory } from "@/components/sections/NewsDirectory";
+import { NewsletterSection } from "@/components/sections/NewsletterSection";
 import { FadeIn } from "@/components/shared/FadeIn";
 import { JsonLd } from "@/components/shared/JsonLd";
 import { NEWS_ITEMS } from "@/data/news";
@@ -44,7 +46,9 @@ export default function NewsPage() {
         description="Announcements, maintenance notices, new member updates, and upcoming events from NPIX."
       />
 
-      <section className="py-12 md:py-16">
+      <UpcomingEvents />
+
+      <section className="bg-surface py-12 md:py-16">
         <div className="container-page">
           <FadeIn>
             <FeaturedNewsCard item={featured} />
@@ -52,11 +56,13 @@ export default function NewsPage() {
         </div>
       </section>
 
-      <section className="pb-12 md:pb-16">
+      <section className="py-12 md:py-16">
         <div className="container-page">
           <NewsDirectory items={rest} />
         </div>
       </section>
+
+      <NewsletterSection />
     </>
   );
 }

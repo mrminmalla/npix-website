@@ -14,6 +14,10 @@ export const NOC_PHONE = "+977-1-4000001";
 export const OFFICE_ADDRESS =
   "Putalisadak, Kathmandu 44600, Nepal";
 
+// Fixed reference date matching this demo site's fictional "present" (2026), so
+// upcoming/past comparisons stay stable regardless of the real wall-clock date.
+export const SITE_CURRENT_DATE = "2026-07-10";
+
 export const SOCIAL_LINKS = {
   facebook: "https://facebook.com/npix.net.np",
   twitter: "https://twitter.com/npix_np",

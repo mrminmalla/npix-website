@@ -5,6 +5,13 @@ import { SearchBar } from "@/components/shared/SearchBar";
 import { Pagination } from "@/components/shared/Pagination";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { NewsCard } from "@/components/cards/NewsCard";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { StaggerContainer, StaggerItem } from "@/components/shared/FadeIn";
 import { cn } from "@/lib/utils";
 import type { NewsItem } from "@/types";
@@ -15,19 +22,28 @@ const PAGE_SIZE = 6;
 export function NewsDirectory({ items }: { items: NewsItem[] }) {
   const [query, setQuery] = React.useState("");
   const [category, setCategory] = React.useState<NewsItem["category"] | "All">("All");
+  const [year, setYear] = React.useState("All");
   const [page, setPage] = React.useState(1);
+
+  const years = React.useMemo(() => {
+    const distinct = new Set(items.map((item) => item.date.slice(0, 4)));
+    return [...distinct].sort((a, b) => b.localeCompare(a));
+  }, [items]);
 
   const filtered = React.useMemo(() => {
     const q = query.trim().toLowerCase();
-    return items.filter((item) => {
-      const matchesQuery =
-        q === "" ||
-        item.title.toLowerCase().includes(q) ||
-        item.summary.toLowerCase().includes(q);
-      const matchesCategory = category === "All" || item.category === category;
-      return matchesQuery && matchesCategory;
-    });
-  }, [items, query, category]);
+    return items
+      .filter((item) => {
+        const matchesQuery =
+          q === "" ||
+          item.title.toLowerCase().includes(q) ||
+          item.summary.toLowerCase().includes(q);
+        const matchesCategory = category === "All" || item.category === category;
+        const matchesYear = year === "All" || item.date.startsWith(year);
+        return matchesQuery && matchesCategory && matchesYear;
+      })
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  }, [items, query, category, year]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const paged = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
@@ -41,10 +57,32 @@ export function NewsDirectory({ items }: { items: NewsItem[] }) {
             setQuery(value);
             setPage(1);
           }}
-          placeholder="Search news and events..."
+          placeholder="Search news, events, workshops, and announcements..."
           aria-label="Search news"
-          className="w-full sm:max-w-sm"
+          className="w-full lg:w-[360px]"
         />
+
+        {years.length > 1 && (
+          <Select
+            value={year}
+            onValueChange={(value) => {
+              setYear(value);
+              setPage(1);
+            }}
+          >
+            <SelectTrigger className="w-full sm:w-36" aria-label="Filter by year">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="All">All Years</SelectItem>
+              {years.map((y) => (
+                <SelectItem key={y} value={y}>
+                  {y}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
       </div>
 
       <div className="mt-5 flex flex-wrap gap-2">
@@ -92,7 +130,10 @@ export function NewsDirectory({ items }: { items: NewsItem[] }) {
             description="Try adjusting your search or category filter."
           />
         ) : (
-          <StaggerContainer className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <StaggerContainer
+            key={`${category}-${year}-${query}-${page}`}
+            className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+          >
             {paged.map((item) => (
               <StaggerItem key={item.id}>
                 <NewsCard item={item} />

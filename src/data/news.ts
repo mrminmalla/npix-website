@@ -1,4 +1,13 @@
-import type { NewsItem } from "@/types";
+import {
+  Megaphone,
+  Wrench,
+  UserPlus,
+  GraduationCap,
+  Users,
+  TrendingUp,
+  type LucideIcon,
+} from "lucide-react";
+import type { NewsItem, NewsCategory } from "@/types";
 
 export const NEWS_ITEMS: NewsItem[] = [
   {
@@ -12,7 +21,6 @@ export const NEWS_ITEMS: NewsItem[] = [
       "NPIX recorded a new peak traffic milestone of 40.2 Gbps, driven by increased domestic streaming, banking transactions, and government e-service usage. This marks a 28% year-over-year increase and reflects the growing importance of local traffic exchange in Nepal's digital ecosystem.",
     category: "Announcements",
     featured: true,
-    image: "/images/news/traffic-milestone.svg",
   },
   {
     id: "n2",
@@ -24,7 +32,6 @@ export const NEWS_ITEMS: NewsItem[] = [
     content:
       "NPIX will perform a firmware upgrade on its core switching fabric on the scheduled date. Members may experience brief interruptions of under 60 seconds during the failover window. Advance notice was sent to all technical contacts.",
     category: "Maintenance",
-    image: "/images/news/maintenance.svg",
   },
   {
     id: "n3",
@@ -36,7 +43,6 @@ export const NEWS_ITEMS: NewsItem[] = [
     content:
       "This quarter, NPIX onboarded Lumbini Edge Networks, Nepal Academy of Science & Research, and Chitwan Cyber Solutions. Each new member gains access to public peering, route server services, and dual-stack connectivity from day one.",
     category: "New Members",
-    image: "/images/news/new-members.svg",
   },
   {
     id: "n4",
@@ -48,7 +54,7 @@ export const NEWS_ITEMS: NewsItem[] = [
     content:
       "The workshop covered IPv6 addressing plans, route server peering configuration, and common migration pitfalls. Over 30 engineers from member organizations attended the session held at the NPIX Kathmandu facility.",
     category: "Workshops",
-    image: "/images/news/workshop.svg",
+    location: "NPIX Facility, Putalisadak, Kathmandu",
   },
   {
     id: "n5",
@@ -60,7 +66,7 @@ export const NEWS_ITEMS: NewsItem[] = [
     content:
       "The conference will feature keynote sessions on national digital infrastructure resilience, panel discussions with member organizations, and technical deep-dives into route server operations and IPv6 adoption trends.",
     category: "Conferences",
-    image: "/images/news/conference.svg",
+    location: "Hotel Yak & Yeti, Kathmandu",
   },
   {
     id: "n6",
@@ -72,7 +78,6 @@ export const NEWS_ITEMS: NewsItem[] = [
     content:
       "The upgrade doubles available route server capacity and introduces improved route filtering and RPKI validation, further strengthening the security and reliability of multilateral peering at NPIX.",
     category: "Upgrades",
-    image: "/images/news/upgrade.svg",
   },
   {
     id: "n7",
@@ -84,7 +89,6 @@ export const NEWS_ITEMS: NewsItem[] = [
     content:
       "The updated guide walks prospective members through membership requirements, technical prerequisites, port provisioning timelines, and BGP configuration templates for both route server and bilateral peering.",
     category: "Announcements",
-    image: "/images/news/documentation.svg",
   },
   {
     id: "n8",
@@ -96,7 +100,6 @@ export const NEWS_ITEMS: NewsItem[] = [
     content:
       "This is a routine annual test of backup power systems at the NPIX facility. Redundant power paths ensure no impact to member connectivity is expected during the test window.",
     category: "Maintenance",
-    image: "/images/news/maintenance.svg",
   },
   {
     id: "n9",
@@ -108,7 +111,6 @@ export const NEWS_ITEMS: NewsItem[] = [
     content:
       "As digital banking adoption grows in Nepal, Himalayan Commerce Bank joins NPIX to ensure faster, more reliable access to its online and mobile banking platforms for customers across all connected ISPs.",
     category: "New Members",
-    image: "/images/news/new-members.svg",
   },
   {
     id: "n10",
@@ -120,7 +122,7 @@ export const NEWS_ITEMS: NewsItem[] = [
     content:
       "The workshop covered BGP route hijack prevention, RPKI-based route origin validation, and coordinated incident response procedures among NPIX member networks.",
     category: "Workshops",
-    image: "/images/news/workshop.svg",
+    location: "NPIX Facility, Putalisadak, Kathmandu",
   },
   {
     id: "n11",
@@ -132,7 +134,6 @@ export const NEWS_ITEMS: NewsItem[] = [
     content:
       "The panel discussed opportunities for regional IXP cooperation, shared best practices for neutral exchange governance, and strategies for improving Internet resilience across South Asia.",
     category: "Conferences",
-    image: "/images/news/conference.svg",
   },
   {
     id: "n12",
@@ -144,7 +145,53 @@ export const NEWS_ITEMS: NewsItem[] = [
     content:
       "The updated policy requires all members to maintain accurate IRR route objects and enables stricter prefix filtering on route server sessions, reducing the risk of accidental route leaks.",
     category: "Upgrades",
-    image: "/images/news/upgrade.svg",
+  },
+  {
+    id: "n0",
+    slug: "npix-closes-2025-with-record-membership-growth",
+    title: "NPIX Closes 2025 with Record Membership Growth",
+    date: "2025-12-18",
+    summary:
+      "NPIX ended 2025 with its fastest year of membership growth to date, adding banks, universities, and technology companies to the exchange.",
+    content:
+      "Throughout 2025, NPIX welcomed a record number of new member organizations, including several banks, universities, and technology companies. The growth reflects increasing awareness among Nepali organizations of the latency, cost, and resilience benefits of domestic peering.",
+    category: "Announcements",
+  },
+  {
+    id: "n13",
+    slug: "ipv6-security-workshop-for-network-engineers",
+    title: "IPv6 Security Workshop for Network Engineers",
+    date: "2026-08-06",
+    summary:
+      "A hands-on workshop covering IPv6 security hardening, RA guard, and DHCPv6 snooping for member network teams.",
+    content:
+      "NPIX will host a technical workshop for member network engineers covering IPv6-specific security considerations, including RA guard, DHCPv6 snooping, and first-hop security best practices for dual-stack networks. Seating is limited to two engineers per member organization.",
+    category: "Workshops",
+    location: "NPIX Facility, Putalisadak, Kathmandu",
+  },
+  {
+    id: "n14",
+    slug: "npix-regional-peering-forum-2026",
+    title: "NPIX Regional Peering Forum 2026",
+    date: "2026-09-17",
+    summary:
+      "A one-day forum bringing together ISPs, banks, and government stakeholders from across the region to discuss peering and interconnection growth.",
+    content:
+      "The NPIX Regional Peering Forum brings together network operators, content providers, and policymakers from Nepal and neighboring countries to discuss cross-border interconnection, regional IXP cooperation, and the future of domestic traffic exchange in South Asia.",
+    category: "Conferences",
+    location: "Hotel Yak & Yeti, Kathmandu",
+  },
+  {
+    id: "n15",
+    slug: "route-server-best-practices-workshop",
+    title: "Route Server Best Practices Workshop",
+    date: "2026-10-08",
+    summary:
+      "A technical workshop on route server configuration, RPKI validation, and prefix filtering for existing and prospective members.",
+    content:
+      "This workshop walks network engineers through configuring route server sessions at NPIX, covering RPKI-based origin validation, IRR-based prefix filtering, and troubleshooting common multilateral peering issues.",
+    category: "Workshops",
+    location: "NPIX Facility, Putalisadak, Kathmandu",
   },
 ];
 
@@ -156,3 +203,12 @@ export const NEWS_CATEGORIES: NewsItem["category"][] = [
   "Conferences",
   "Upgrades",
 ];
+
+export const NEWS_CATEGORY_ICONS: Record<NewsCategory, LucideIcon> = {
+  Announcements: Megaphone,
+  Maintenance: Wrench,
+  "New Members": UserPlus,
+  Workshops: GraduationCap,
+  Conferences: Users,
+  Upgrades: TrendingUp,
+};
