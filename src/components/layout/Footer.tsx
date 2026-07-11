@@ -7,16 +7,12 @@ import {
   LinkedinIcon,
   YoutubeIcon,
 } from "@/components/shared/SocialIcons";
-import {
-  FOOTER_QUICK_LINKS,
-  FOOTER_SERVICE_LINKS,
-  FOOTER_DOC_LINKS,
-} from "@/constants/nav";
+import { FOOTER_QUICK_LINKS, FOOTER_DOC_LINKS } from "@/constants/nav";
 import {
   CONTACT_EMAIL,
   CONTACT_PHONE,
   OFFICE_ADDRESS,
-  SITE_DESCRIPTION,
+  FOOTER_DESCRIPTION,
   SOCIAL_LINKS,
 } from "@/constants/site";
 
@@ -60,11 +56,11 @@ export function Footer() {
 
   return (
     <footer className="border-t border-border bg-surface">
-      <div className="container-page grid grid-cols-1 gap-10 py-16 sm:grid-cols-2 lg:grid-cols-5">
+      <div className="container-page grid grid-cols-1 gap-8 py-12 sm:grid-cols-2 md:py-16 lg:grid-cols-4">
         <div className="sm:col-span-2 lg:col-span-2">
           <Logo />
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-foreground-secondary">
-            {SITE_DESCRIPTION}
+            {FOOTER_DESCRIPTION}
           </p>
           <ul className="mt-6 space-y-3 text-sm text-foreground-secondary">
             <li className="flex items-start gap-2">
@@ -101,7 +97,6 @@ export function Footer() {
         </div>
 
         <FooterColumn title="Quick Links" links={FOOTER_QUICK_LINKS} />
-        <FooterColumn title="Services" links={FOOTER_SERVICE_LINKS} />
         <FooterColumn title="Documentation" links={FOOTER_DOC_LINKS} />
       </div>
 

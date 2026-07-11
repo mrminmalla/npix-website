@@ -5,13 +5,10 @@ import { NEWS_ITEMS } from "@/data/news";
 const STATIC_ROUTES = [
   "",
   "/about",
-  "/services",
   "/members",
   "/statistics",
-  "/locations",
   "/documentation",
   "/news",
-  "/contact",
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {

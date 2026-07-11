@@ -8,6 +8,7 @@ import { ThemeSwitcher } from "@/components/shared/ThemeSwitcher";
 import { MobileMenu } from "@/components/layout/MobileMenu";
 import { Button } from "@/components/ui/button";
 import { NAV_LINKS } from "@/constants/nav";
+import { CONTACT_EMAIL } from "@/constants/site";
 import { cn } from "@/lib/utils";
 
 export function Navbar() {
@@ -61,7 +62,7 @@ export function Navbar() {
         <div className="flex shrink-0 items-center gap-2">
           <ThemeSwitcher />
           <Button asChild variant="accent" size="sm" className="hidden sm:inline-flex">
-            <Link href="/contact#become-a-member">Become a Member</Link>
+            <a href={`mailto:${CONTACT_EMAIL}?subject=Membership%20Inquiry`}>Become a Member</a>
           </Button>
           <MobileMenu />
         </div>

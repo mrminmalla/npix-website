@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { NAV_LINKS } from "@/constants/nav";
+import { CONTACT_EMAIL } from "@/constants/site";
 import { cn } from "@/lib/utils";
 
 export function MobileMenu() {
@@ -79,9 +80,12 @@ export function MobileMenu() {
                 })}
                 <li className="mt-2 px-4">
                   <Button asChild variant="accent" className="w-full">
-                    <Link href="/contact#become-a-member" onClick={() => setOpen(false)}>
+                    <a
+                      href={`mailto:${CONTACT_EMAIL}?subject=Membership%20Inquiry`}
+                      onClick={() => setOpen(false)}
+                    >
                       Become a Member
-                    </Link>
+                    </a>
                   </Button>
                 </li>
               </ul>
