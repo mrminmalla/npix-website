@@ -37,7 +37,7 @@ export function MemberShowcaseSection() {
           </div>
           <Link
             href="/members"
-            className="inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold text-secondary hover:text-primary"
+            className="inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold text-slate-600 transition-colors duration-200 hover:text-sky-600 dark:text-slate-300 dark:hover:text-sky-400"
           >
             View All Members
             <ArrowRight className="h-4 w-4" aria-hidden="true" />

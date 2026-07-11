@@ -37,7 +37,7 @@ export function FeaturedDocuments() {
             <StaggerItem key={doc.id}>
               <div className="flex h-full flex-col rounded-xl border border-border bg-background p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
                 <div className="flex items-start justify-between gap-3">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-secondary/10 text-secondary">
                     <FileText className="h-5 w-5" aria-hidden="true" />
                   </div>
                   <Badge variant="outline">{doc.fileType}</Badge>

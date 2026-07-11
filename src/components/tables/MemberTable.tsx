@@ -32,7 +32,7 @@ export function MemberTable({ members }: { members: Member[] }) {
                     href={member.website}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-secondary hover:text-primary hover:underline"
+                    className="text-slate-600 transition-colors duration-200 hover:text-sky-600 hover:underline dark:text-slate-300 dark:hover:text-sky-400"
                   >
                     {member.name}
                   </a>

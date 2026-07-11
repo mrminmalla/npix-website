@@ -152,7 +152,7 @@ export default function DocumentationPage() {
                       index !== DOWNLOADS.length - 1 && "border-b border-border",
                     )}
                   >
-                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-secondary/10 text-secondary">
                       <Icon className="h-5 w-5" aria-hidden="true" />
                     </div>
                     <div className="min-w-0 flex-1">

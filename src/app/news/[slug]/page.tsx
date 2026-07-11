@@ -68,17 +68,19 @@ export default async function NewsDetailPage({
 
       <article className="py-12 md:py-16">
         <div className="container-page mx-auto max-w-3xl">
-          <Link
-            href="/news"
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-secondary hover:text-primary"
-          >
-            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-            Back to News & Events
-          </Link>
+          <div className="flex flex-wrap items-center gap-3">
+            <Link
+              href="/news"
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-600 transition-colors duration-200 hover:text-sky-600 dark:text-slate-300 dark:hover:text-sky-400"
+            >
+              <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+              Back to News & Events
+            </Link>
 
-          <Badge variant="secondary" className="mt-6 w-fit">
-            {item.category}
-          </Badge>
+            <Badge variant="secondary" className="w-fit">
+              {item.category}
+            </Badge>
+          </div>
 
           <h1 className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
             {item.title}

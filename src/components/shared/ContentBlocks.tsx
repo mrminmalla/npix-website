@@ -102,7 +102,7 @@ export function ContentBlocks({ blocks }: { blocks: ContentBlock[] }) {
           case "link": {
             const Icon = block.download ? DownloadIcon : ArrowRight;
             const linkClassName =
-              "mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-secondary hover:text-primary";
+              "mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-slate-600 transition-colors duration-200 hover:text-sky-600 dark:text-slate-300 dark:hover:text-sky-400";
             return (
               <div key={i}>
                 {!block.download && isInternalHref(block.href) ? (

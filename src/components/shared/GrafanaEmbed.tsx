@@ -79,7 +79,7 @@ export function GrafanaEmbed({
               setStatus("loading");
               setAttempt((n) => n + 1);
             }}
-            className="inline-flex items-center gap-1.5 text-sm font-semibold text-secondary hover:text-primary"
+            className="inline-flex items-center gap-1.5 text-sm font-semibold text-slate-600 transition-colors duration-200 hover:text-sky-600 dark:text-slate-300 dark:hover:text-sky-400"
           >
             <RefreshCw className="h-3.5 w-3.5" aria-hidden="true" />
             Retry

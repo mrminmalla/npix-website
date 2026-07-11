@@ -55,7 +55,7 @@ export function NewsCard({ item, className }: { item: NewsItem; className?: stri
         <div className="mt-4 flex items-center justify-end">
           <Link
             href={`/news/${item.slug}`}
-            className="inline-flex items-center gap-1 text-sm font-semibold text-secondary transition-colors hover:text-primary group-hover:gap-2"
+            className="inline-flex items-center gap-1 text-sm font-semibold text-slate-600 transition-colors duration-200 hover:text-sky-600 group-hover:gap-2 dark:text-slate-300 dark:hover:text-sky-400"
           >
             Read More
             <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
