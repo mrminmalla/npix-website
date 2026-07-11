@@ -32,7 +32,7 @@ export function Navbar() {
       )}
     >
       <div className="container-page flex h-16 items-center justify-between gap-3">
-        <Logo compact />
+        <Logo compact imgClassName="h-10" />
 
         <nav aria-label="Primary navigation" className="hidden xl:block">
           <ul className="flex items-center gap-0.5">

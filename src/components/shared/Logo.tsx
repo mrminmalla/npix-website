@@ -2,7 +2,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
-export function Logo({ className, compact = false }: { className?: string; compact?: boolean }) {
+export function Logo({
+  className,
+  imgClassName,
+  compact = false,
+}: {
+  className?: string;
+  imgClassName?: string;
+  compact?: boolean;
+}) {
   return (
     <Link
       href="/"
@@ -17,7 +25,7 @@ export function Logo({ className, compact = false }: { className?: string; compa
         width={2048}
         height={1365}
         priority
-        className="h-8 w-auto dark:invert"
+        className={cn("h-8 w-auto dark:invert", imgClassName)}
       />
       {!compact && (
         <span className="hidden whitespace-nowrap text-foreground-secondary font-medium sm:inline">
