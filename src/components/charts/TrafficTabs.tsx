@@ -2,19 +2,24 @@
 
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { GrafanaEmbed } from "@/components/shared/GrafanaEmbed";
+import { LiveIndicator } from "@/components/shared/LiveIndicator";
 import { TRAFFIC_PANELS } from "@/data/traffic-panels";
+import { cn } from "@/lib/utils";
 
-export function TrafficTabs() {
+export function TrafficTabs({ graphClassName }: { graphClassName?: string }) {
   return (
     <Tabs defaultValue={TRAFFIC_PANELS[0].id}>
-      <div className="-mx-1 overflow-x-auto px-1">
-        <TabsList>
-          {TRAFFIC_PANELS.map((panel) => (
-            <TabsTrigger key={panel.id} value={panel.id}>
-              {panel.label}
-            </TabsTrigger>
-          ))}
-        </TabsList>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="-mx-1 overflow-x-auto px-1">
+          <TabsList>
+            {TRAFFIC_PANELS.map((panel) => (
+              <TabsTrigger key={panel.id} value={panel.id}>
+                {panel.label}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        </div>
+        <LiveIndicator />
       </div>
 
       {TRAFFIC_PANELS.map((panel) => (
@@ -25,7 +30,7 @@ export function TrafficTabs() {
           <GrafanaEmbed
             src={panel.src}
             title={`NPIX ${panel.label.toLowerCase()} traffic, ${panel.sublabel.toLowerCase()}`}
-            className="h-[300px] sm:h-[450px]"
+            className={cn("h-[300px] sm:h-[450px]", graphClassName)}
           />
         </TabsContent>
       ))}

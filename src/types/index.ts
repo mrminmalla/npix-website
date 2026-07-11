@@ -119,16 +119,11 @@ export interface FaqItem {
   answer: string;
 }
 
-export interface TrafficDatum {
-  label: string;
-  ipv4: number;
-  ipv6: number;
-}
-
-export interface MemberGrowthDatum {
-  label: string;
-  members: number;
-  asns: number;
+export interface PointOfPresence {
+  id: string;
+  name: string;
+  city: string;
+  description: string;
 }
 
 export interface WhyNpixItem {

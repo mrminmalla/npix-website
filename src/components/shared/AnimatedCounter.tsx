@@ -34,7 +34,12 @@ export function AnimatedCounter({
 
   React.useEffect(() => {
     const unsubscribe = springValue.on("change", (latest) => {
-      setDisplay(latest.toFixed(decimals));
+      setDisplay(
+        Number(latest.toFixed(decimals)).toLocaleString("en-US", {
+          minimumFractionDigits: decimals,
+          maximumFractionDigits: decimals,
+        }),
+      );
     });
     return unsubscribe;
   }, [springValue, decimals]);
