@@ -1,5 +1,11 @@
 import type { Metadata } from "next";
-import { Download as DownloadIcon, FileText } from "lucide-react";
+import {
+  Eye,
+  Download as DownloadIcon,
+  FileText,
+  FileType2,
+  File as FileIcon,
+} from "lucide-react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/shared/FadeIn";
 import {
@@ -8,16 +14,21 @@ import {
   AccordionTrigger,
   AccordionContent,
 } from "@/components/ui/accordion";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { JsonLd } from "@/components/shared/JsonLd";
+import { DocumentationSearch } from "@/components/sections/DocumentationSearch";
+import { FeaturedDocuments } from "@/components/sections/FeaturedDocuments";
 import { DocumentCategoryList } from "@/components/sections/DocumentCategoryList";
-import { DOWNLOAD_ITEMS, FAQ_ITEMS } from "@/data/documentation";
+import { QuickActions } from "@/components/sections/QuickActions";
+import { getDownloadableDocuments, getFaqs } from "@/lib/documents";
 import { SITE_URL } from "@/constants/site";
+import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
   title: "Documentation",
   description:
-    "Access NPIX documentation including membership requirements, technical requirements, connectivity guides, policies, FAQs, and downloadable resources.",
+    "Everything you need to join, peer, and connect with Nepal Internet Exchange. Explore guides, technical requirements, policies, and downloadable resources.",
   keywords: [
     "NPIX documentation",
     "membership requirements",
@@ -28,10 +39,24 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Documentation | NPIX",
     description:
-      "Access NPIX documentation including membership requirements, technical guides, policies, and downloadable resources.",
+      "Everything you need to join, peer, and connect with Nepal Internet Exchange.",
     url: `${SITE_URL}/documentation`,
   },
 };
+
+const FAQS = getFaqs();
+const DOWNLOADS = getDownloadableDocuments();
+
+function formatMonthYear(dateStr: string) {
+  return new Date(dateStr).toLocaleDateString("en-US", { month: "long", year: "numeric" });
+}
+
+function getFileTypeIcon(fileType: string) {
+  const type = fileType.toLowerCase();
+  if (type === "pdf") return FileText;
+  if (type === "docx" || type === "doc") return FileType2;
+  return FileIcon;
+}
 
 export default function DocumentationPage() {
   return (
@@ -40,7 +65,7 @@ export default function DocumentationPage() {
         data={{
           "@context": "https://schema.org",
           "@type": "FAQPage",
-          mainEntity: FAQ_ITEMS.map((faq) => ({
+          mainEntity: FAQS.map((faq) => ({
             "@type": "Question",
             name: faq.question,
             acceptedAnswer: { "@type": "Answer", text: faq.answer },
@@ -50,30 +75,51 @@ export default function DocumentationPage() {
 
       <PageHeader
         eyebrow="Resources"
-        title="Documentation"
-        description="Everything your organization needs to plan, apply for, and connect to the NPIX exchange fabric."
+        title="Documentation & Resources"
+        description="Everything you need to join, peer, and connect with Nepal Internet Exchange. Explore guides, technical requirements, policies, and downloadable resources."
       />
 
-      <section className="py-12 md:py-16">
+      <section className="py-8 md:py-10">
         <div className="container-page">
-          <DocumentCategoryList />
+          <DocumentationSearch />
         </div>
       </section>
 
-      <section id="faqs" className="scroll-mt-24 bg-surface py-12 md:py-16">
+      <FeaturedDocuments />
+
+      <section className="py-12 md:py-16">
+        <div className="container-page">
+          <FadeIn className="max-w-2xl">
+            <p className="text-sm font-semibold uppercase tracking-widest text-secondary">
+              Browse By Topic
+            </p>
+            <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+              Documentation Categories
+            </h2>
+          </FadeIn>
+
+          <div className="mt-8">
+            <DocumentCategoryList />
+          </div>
+        </div>
+      </section>
+
+      <QuickActions />
+
+      <section id="faqs" className="scroll-mt-24 py-10 md:py-12">
         <div className="container-page">
           <FadeIn className="mx-auto max-w-2xl text-center">
             <p className="text-sm font-semibold uppercase tracking-widest text-secondary">
               Common Questions
             </p>
-            <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+            <h2 className="mt-3 text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
               Frequently Asked Questions
             </h2>
           </FadeIn>
 
-          <div className="mx-auto mt-8 max-w-3xl rounded-xl border border-border bg-background px-6">
+          <div className="mt-6">
             <Accordion type="single" collapsible>
-              {FAQ_ITEMS.map((faq) => (
+              {FAQS.map((faq) => (
                 <AccordionItem key={faq.id} value={faq.id}>
                   <AccordionTrigger>{faq.question}</AccordionTrigger>
                   <AccordionContent>{faq.answer}</AccordionContent>
@@ -84,7 +130,7 @@ export default function DocumentationPage() {
         </div>
       </section>
 
-      <section id="downloads" className="scroll-mt-24 py-12 md:py-16">
+      <section id="downloads" className="scroll-mt-24 bg-surface py-12 md:py-16">
         <div className="container-page">
           <FadeIn className="max-w-2xl">
             <p className="text-sm font-semibold uppercase tracking-widest text-secondary">
@@ -95,30 +141,58 @@ export default function DocumentationPage() {
             </h2>
           </FadeIn>
 
-          <StaggerContainer className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2">
-            {DOWNLOAD_ITEMS.map((item) => (
-              <StaggerItem key={item.id}>
-                <div className="flex items-center gap-4 rounded-xl border border-border bg-background p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                    <FileText className="h-6 w-6" aria-hidden="true" />
+          <StaggerContainer className="mt-8 overflow-hidden rounded-xl border border-border bg-background shadow-sm">
+            {DOWNLOADS.map((item, index) => {
+              const Icon = getFileTypeIcon(item.fileType);
+              return (
+                <StaggerItem key={item.id}>
+                  <div
+                    className={cn(
+                      "flex flex-wrap items-start gap-4 p-4 transition-colors hover:bg-surface/60 sm:p-5 lg:flex-nowrap lg:items-center",
+                      index !== DOWNLOADS.length - 1 && "border-b border-border",
+                    )}
+                  >
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                      <Icon className="h-5 w-5" aria-hidden="true" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <h3 className="text-base font-semibold text-foreground">
+                        {item.title}
+                      </h3>
+                      <p className="mt-0.5 text-sm text-foreground-secondary">
+                        {item.description}
+                      </p>
+                      <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-foreground-secondary/70">
+                        <Badge variant="outline">{item.fileType}</Badge>
+                        <span>{item.fileSize}</span>
+                        <span aria-hidden="true">&middot;</span>
+                        <span>Version {item.version}</span>
+                        <span aria-hidden="true">&middot;</span>
+                        <span>Updated {formatMonthYear(item.updatedDate)}</span>
+                      </div>
+                    </div>
+                    <div className="flex w-full shrink-0 gap-2 lg:w-auto">
+                      <Button asChild size="sm" variant="outline" className="flex-1 lg:flex-none">
+                        <a
+                          href={item.previewUrl ?? item.downloadUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <Eye className="h-4 w-4" aria-hidden="true" />
+                          Preview
+                        </a>
+                      </Button>
+                      <Button asChild size="sm" variant="accent" className="flex-1 lg:flex-none">
+                        <a href={item.downloadUrl} download>
+                          <DownloadIcon className="h-4 w-4" aria-hidden="true" />
+                          Download
+                        </a>
+                      </Button>
+                    </div>
                   </div>
-                  <div className="min-w-0 flex-1">
-                    <h3 className="truncate text-base font-semibold text-foreground">
-                      {item.title}
-                    </h3>
-                    <p className="mt-0.5 text-xs text-foreground-secondary">
-                      {item.fileType} &middot; {item.fileSize}
-                    </p>
-                  </div>
-                  <Button asChild size="sm" variant="outline">
-                    <a href={item.href} download>
-                      <DownloadIcon className="h-4 w-4" aria-hidden="true" />
-                      Download
-                    </a>
-                  </Button>
-                </div>
-              </StaggerItem>
-            ))}
+                </StaggerItem>
+              );
+            })}
           </StaggerContainer>
         </div>
       </section>

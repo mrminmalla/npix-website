@@ -87,28 +87,30 @@ export type ContentBlock =
   | { type: "code"; language?: string; code: string }
   | { type: "link"; href: string; label: string; download?: boolean };
 
-export interface DocumentEntry {
-  id: string;
-  title: string;
-  summary: string;
-  content: ContentBlock[];
-}
-
-export interface DocCategory {
+export interface DocumentCategoryMeta {
   id: string;
   title: string;
   description: string;
   icon: LucideIcon;
-  items: DocumentEntry[];
+  sortOrder: number;
 }
 
-export interface DownloadItem {
+export interface DocumentResource {
   id: string;
   title: string;
   description: string;
+  categoryId: string;
+  tags: string[];
   fileType: string;
-  fileSize: string;
-  href: string;
+  fileSize?: string;
+  version?: string;
+  publishDate: string;
+  updatedDate: string;
+  downloadUrl?: string;
+  previewUrl?: string;
+  featured?: boolean;
+  sortOrder: number;
+  content?: ContentBlock[];
 }
 
 export interface FaqItem {

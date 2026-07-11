@@ -11,22 +11,25 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { FadeIn } from "@/components/shared/FadeIn";
 import { DocumentModal } from "@/components/shared/DocumentModal";
-import { DOC_CATEGORIES } from "@/data/documentation";
-import type { DocumentEntry } from "@/types";
+import { getDocumentCategories, getDocumentsByCategory } from "@/lib/documents";
+import type { DocumentResource } from "@/types";
+
+const CATEGORIES = getDocumentCategories();
 
 export function DocumentCategoryList() {
-  const [activeDocument, setActiveDocument] = React.useState<DocumentEntry | null>(null);
+  const [activeDocument, setActiveDocument] = React.useState<DocumentResource | null>(null);
 
   return (
     <>
       <Accordion
         type="single"
         collapsible
-        defaultValue={DOC_CATEGORIES[0]?.id}
+        defaultValue={CATEGORIES[0]?.id}
         className="flex flex-col gap-5"
       >
-        {DOC_CATEGORIES.map((category, index) => {
+        {CATEGORIES.map((category, index) => {
           const Icon = category.icon;
+          const items = getDocumentsByCategory(category.id);
           return (
             <FadeIn key={category.id} delay={index * 0.05}>
               <div
@@ -48,13 +51,13 @@ export function DocumentCategoryList() {
                         </p>
                       </div>
                       <Badge variant="outline" className="hidden shrink-0 sm:inline-flex">
-                        {category.items.length} documents
+                        {items.length} documents
                       </Badge>
                     </div>
                   </AccordionTrigger>
                   <AccordionContent className="px-5 sm:px-7">
                     <div className="grid grid-cols-1 gap-1 border-t border-border pt-4 sm:grid-cols-2">
-                      {category.items.map((item) => (
+                      {items.map((item) => (
                         <button
                           key={item.id}
                           type="button"
