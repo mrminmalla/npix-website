@@ -11,12 +11,6 @@ export function HeroSection() {
       <HeroBackground />
 
       <div className="container-page relative">
-        <FadeIn>
-          <p className="mb-4 inline-flex items-center rounded-full border border-secondary/30 bg-secondary/10 px-4 py-1.5 text-sm font-medium text-secondary">
-            Nepal&apos;s Carrier-Neutral Internet Exchange
-          </p>
-        </FadeIn>
-
         <FadeIn delay={0.08}>
           <h1 className="max-w-3xl text-4xl font-bold tracking-tight text-primary-foreground sm:text-5xl lg:text-6xl">
             Connecting Nepal&apos;s <span className="text-gradient">Digital Ecosystem</span>
