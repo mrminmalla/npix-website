@@ -1,9 +1,7 @@
 import {
   Activity,
   TrendingUp,
-  Users,
   Network,
-  MapPin,
   CalendarClock,
   Gauge,
   Percent,
@@ -13,7 +11,6 @@ import {
 } from "lucide-react";
 import type { StatDatum, PointOfPresence } from "@/types";
 import { MEMBERS } from "@/data/members";
-import { LOCATIONS } from "@/data/locations";
 
 const UNIQUE_ASN_COUNT = new Set(MEMBERS.map((m) => m.asn)).size;
 const IPV6_MEMBER_COUNT = MEMBERS.filter((m) => m.ipv6Address).length;
@@ -26,7 +23,7 @@ export const HOME_STATS: StatDatum[] = [
     suffix: " Gbps",
     icon: Activity,
     decimals: 1,
-    description: "Real-time domestic traffic exchanged through NPIX.",
+    description: "Real-time traffic currently exchanged through NPIX.",
   },
   {
     id: "st2",
@@ -35,35 +32,21 @@ export const HOME_STATS: StatDatum[] = [
     suffix: " Gbps",
     icon: TrendingUp,
     decimals: 1,
-    description: "Highest traffic volume observed on the exchange.",
-  },
-  {
-    id: "st3",
-    label: "Connected Members",
-    value: MEMBERS.length,
-    icon: Users,
-    description: "Organizations actively peering through NPIX.",
+    description: "Highest observed traffic volume on the exchange.",
   },
   {
     id: "st4",
     label: "Connected ASNs",
     value: UNIQUE_ASN_COUNT,
     icon: Network,
-    description: "Autonomous Systems participating in the exchange.",
+    description: "Autonomous Systems actively peering through NPIX.",
   },
   {
     id: "st5",
-    label: "Exchange Locations",
-    value: LOCATIONS.length,
-    icon: MapPin,
-    description: "Points of interconnection across Nepal.",
-  },
-  {
-    id: "st6",
-    label: "Years of Operation",
-    value: 11,
-    icon: CalendarClock,
-    description: "Years of supporting Nepal's digital infrastructure.",
+    label: "Active PoPs",
+    value: 2,
+    icon: Building2,
+    description: "Interconnection facilities in Kathmandu and Lalitpur.",
   },
 ];
 

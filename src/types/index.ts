@@ -33,19 +33,6 @@ export interface NewsItem {
   location?: string;
 }
 
-export interface ExchangeLocation {
-  id: string;
-  name: string;
-  city: string;
-  address: string;
-  capacity: string;
-  status: "active" | "planned";
-  contactEmail: string;
-  contactPhone: string;
-  lat: number;
-  lng: number;
-}
-
 export interface StatDatum {
   id: string;
   label: string;
