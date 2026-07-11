@@ -103,7 +103,17 @@ export function Footer() {
       <div className="border-t border-border">
         <div className="container-page flex flex-col items-center justify-between gap-2 py-6 text-xs text-foreground-secondary sm:flex-row">
           <p>&copy; {year} NPIX &ndash; Nepal Internet Exchange. All rights reserved.</p>
-          <p>Connecting Nepal&apos;s Digital Ecosystem</p>
+          <p>
+            Powered by{" "}
+            <a
+              href="https://workalaya.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-accent transition-opacity duration-200 hover:underline hover:opacity-80"
+            >
+              Workalaya
+            </a>
+          </p>
         </div>
       </div>
     </footer>
