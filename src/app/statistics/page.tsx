@@ -86,7 +86,7 @@ export default function StatisticsPage() {
             </p>
           </FadeIn>
 
-          <StaggerContainer className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-5">
+          <StaggerContainer className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {TRAFFIC_INSIGHTS_STATS.map((stat) => (
               <StaggerItem key={stat.id}>
                 <StatCard

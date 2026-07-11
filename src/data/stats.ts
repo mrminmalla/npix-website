@@ -5,7 +5,6 @@ import {
   CalendarClock,
   Gauge,
   Percent,
-  Database,
   Building2,
   ShieldCheck,
 } from "lucide-react";
@@ -86,14 +85,6 @@ export const TRAFFIC_INSIGHTS_STATS: StatDatum[] = [
     icon: Percent,
     decimals: 1,
     description: "Billing-grade traffic level, excluding brief spikes.",
-  },
-  {
-    id: "ti5",
-    label: "24-Hour Traffic Volume",
-    value: 266,
-    suffix: " TB",
-    icon: Database,
-    description: "Total data exchanged across NPIX in the past 24 hours.",
   },
 ];
 
