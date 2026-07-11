@@ -4,7 +4,7 @@ import { HOME_STATS } from "@/data/stats";
 
 export function StatisticsSection() {
   return (
-    <section className="py-20 sm:py-28">
+    <section className="pt-12 pb-6 md:pt-16 md:pb-8">
       <div className="container-page">
         <FadeIn className="max-w-2xl">
           <p className="text-sm font-semibold uppercase tracking-widest text-secondary">
@@ -14,12 +14,12 @@ export function StatisticsSection() {
             NPIX by the Numbers
           </h2>
           <p className="mt-4 text-base text-foreground-secondary">
-            Real-time visibility into the exchange fabric connecting Nepal&apos;s digital
-            ecosystem.
+            Real-time insights into the infrastructure powering Nepal&apos;s interconnected
+            digital ecosystem.
           </p>
         </FadeIn>
 
-        <StaggerContainer className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <StaggerContainer className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {HOME_STATS.map((stat) => (
             <StaggerItem key={stat.id}>
               <StatCard
@@ -29,6 +29,7 @@ export function StatisticsSection() {
                 suffix={stat.suffix}
                 prefix={stat.prefix}
                 decimals={stat.decimals}
+                description={stat.description}
               />
             </StaggerItem>
           ))}

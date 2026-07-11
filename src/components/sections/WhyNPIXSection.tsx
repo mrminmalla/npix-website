@@ -3,7 +3,7 @@ import { WHY_NPIX } from "@/data/why-npix";
 
 export function WhyNPIXSection() {
   return (
-    <section className="bg-surface py-20 sm:py-28">
+    <section className="bg-surface py-12 md:py-16">
       <div className="container-page">
         <FadeIn className="max-w-2xl">
           <p className="text-sm font-semibold uppercase tracking-widest text-secondary">
@@ -13,12 +13,12 @@ export function WhyNPIXSection() {
             Why NPIX Matters
           </h2>
           <p className="mt-4 text-base text-foreground-secondary">
-            Domestic peering delivers measurable benefits across Nepal&apos;s Internet
-            ecosystem.
+            Domestic internet peering creates measurable benefits for networks,
+            businesses, and internet users throughout Nepal.
           </p>
         </FadeIn>
 
-        <StaggerContainer className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <StaggerContainer className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {WHY_NPIX.map((item) => {
             const Icon = item.icon;
             return (

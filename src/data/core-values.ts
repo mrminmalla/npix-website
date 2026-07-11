@@ -6,35 +6,35 @@ export const CORE_VALUES: CoreValue[] = [
     id: "cv1",
     title: "Neutrality",
     description:
-      "NPIX operates as a carrier-neutral platform, treating every member equally regardless of size or sector.",
+      "We operate as a carrier-neutral platform, providing equal opportunities and fair access to all members regardless of size, sector, or business model.",
     icon: Scale,
   },
   {
     id: "cv2",
     title: "Reliability",
     description:
-      "We maintain resilient, redundant infrastructure so members can depend on NPIX for critical connectivity.",
+      "We maintain resilient and highly available infrastructure to ensure uninterrupted and dependable connectivity for our members.",
     icon: ShieldCheck,
   },
   {
     id: "cv3",
     title: "Transparency",
     description:
-      "Clear policies, open statistics, and honest communication guide every aspect of how NPIX operates.",
+      "We believe in open communication, clear policies, and accountable operations that foster trust within Nepal's internet community.",
     icon: Eye,
   },
   {
     id: "cv4",
     title: "Collaboration",
     description:
-      "We work closely with ISPs, government, and industry to strengthen Nepal's shared digital infrastructure.",
+      "We work closely with network operators, government agencies, academic institutions, and industry stakeholders to strengthen Nepal's digital ecosystem.",
     icon: Handshake,
   },
   {
     id: "cv5",
     title: "Innovation",
     description:
-      "We continually invest in new technology and services to keep pace with Nepal's growing digital economy.",
+      "We continuously invest in technology and best practices to support the evolving needs of Nepal's growing internet infrastructure.",
     icon: Lightbulb,
   },
 ];

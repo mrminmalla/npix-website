@@ -3,51 +3,51 @@ import type { TimelineEntry } from "@/types";
 export const TIMELINE: TimelineEntry[] = [
   {
     id: "t1",
-    year: "2015",
-    title: "NPIX Founded",
+    year: "2010",
+    title: "Community Activities and Updates Begin",
     description:
-      "NPIX was established as a carrier-neutral Internet Exchange to keep domestic Internet traffic within Nepal.",
+      "NPIX begins publishing community updates and strengthening local collaboration among Nepal's network operators and internet stakeholders.",
   },
   {
     id: "t2",
-    year: "2016",
-    title: "First Six Members Connected",
+    year: "2015",
+    title: "Strengthening Local Peering",
     description:
-      "The founding cohort of ISPs connected to the exchange, establishing the first domestic peering fabric.",
+      "NPIX continues expanding its domestic peering ecosystem, promoting the exchange of local internet traffic within Nepal and improving network performance.",
   },
   {
     id: "t3",
     year: "2018",
-    title: "Banking Sector Joins",
+    title: "Growing Membership Community",
     description:
-      "The first financial institutions joined NPIX to improve reliability and latency for digital banking services.",
+      "Additional Internet Service Providers, enterprises, and organizations join NPIX, contributing to a more interconnected internet ecosystem.",
   },
   {
     id: "t4",
     year: "2020",
-    title: "IPv6 Route Server Launched",
+    title: "Regional Collaboration and Community Engagement",
     description:
-      "NPIX introduced dual-stack route server services, accelerating IPv6 adoption among member networks.",
+      "NPIX actively supports regional networking initiatives and technical community activities, fostering knowledge sharing and industry collaboration.",
   },
   {
     id: "t5",
-    year: "2022",
-    title: "20 Members Milestone",
+    year: "2024",
+    title: "APNIC Technical Workshops",
     description:
-      "NPIX surpassed 20 connected members spanning ISPs, banks, government, education, and technology sectors.",
+      "NPIX organizes technical workshops with APNIC covering topics such as Segment Routing (SRv6), network operations, and internet infrastructure development.",
   },
   {
     id: "t6",
-    year: "2024",
-    title: "Core Infrastructure Upgrade",
+    year: "2025",
+    title: "Universal Acceptance Day Participation",
     description:
-      "A major infrastructure upgrade increased available port capacity and improved network redundancy.",
+      "NPIX participates in Universal Acceptance Day initiatives, promoting digital inclusion and broader accessibility across Nepal's internet ecosystem.",
   },
   {
     id: "t7",
     year: "2026",
-    title: "Expansion Planning Begins",
+    title: "Hosting SANOG-44 and NPNOG-12",
     description:
-      "NPIX began planning expansion to Pokhara, Biratnagar, Butwal, and Nepalgunj to extend the exchange nationwide.",
+      "NPIX hosts SANOG-44 and NPNOG-12 in Kathmandu, bringing together network engineers, operators, researchers, and industry leaders from Nepal and across the region.",
   },
 ];

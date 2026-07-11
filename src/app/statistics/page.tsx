@@ -5,7 +5,8 @@ import { ChartCard } from "@/components/charts/ChartCard";
 import { TrafficChart } from "@/components/charts/TrafficChart";
 import { MemberGrowthChart } from "@/components/charts/MemberGrowthChart";
 import { IPv4IPv6Chart } from "@/components/charts/IPv4IPv6Chart";
-import { StaggerContainer, StaggerItem } from "@/components/shared/FadeIn";
+import { TrafficTabs } from "@/components/charts/TrafficTabs";
+import { FadeIn, StaggerContainer, StaggerItem } from "@/components/shared/FadeIn";
 import { JsonLd } from "@/components/shared/JsonLd";
 import { STATISTICS_PAGE_STATS } from "@/data/stats";
 import { SITE_URL } from "@/constants/site";
@@ -49,7 +50,7 @@ export default function StatisticsPage() {
         description="Real-time and historical visibility into traffic, membership, and protocol adoption across the NPIX exchange fabric."
       />
 
-      <section className="py-16">
+      <section className="py-12 md:py-16">
         <div className="container-page">
           <StaggerContainer className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-5">
             {STATISTICS_PAGE_STATS.map((stat) => (
@@ -67,7 +68,27 @@ export default function StatisticsPage() {
         </div>
       </section>
 
-      <section className="pb-20 sm:pb-28">
+      <section className="pb-12 md:pb-16">
+        <div className="container-page">
+          <FadeIn className="max-w-2xl">
+            <p className="text-sm font-semibold uppercase tracking-widest text-secondary">
+              Traffic Analytics
+            </p>
+            <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+              Exchange Traffic Statistics
+            </h2>
+            <p className="mt-4 text-base text-foreground-secondary">
+              Historical and real-time traffic exchanged across Nepal Internet Exchange.
+            </p>
+          </FadeIn>
+
+          <FadeIn delay={0.1} className="mt-8 rounded-xl border border-border bg-background p-4 shadow-sm sm:p-6">
+            <TrafficTabs />
+          </FadeIn>
+        </div>
+      </section>
+
+      <section className="pb-12 md:pb-16">
         <div className="container-page grid grid-cols-1 gap-6 lg:grid-cols-3">
           <ChartCard
             title="Traffic Growth"

@@ -107,7 +107,7 @@ export function NewsDirectory({ items }: { items: NewsItem[] }) {
           currentPage={page}
           totalPages={totalPages}
           onPageChange={setPage}
-          className="mt-10"
+          className="mt-8"
         />
       )}
     </div>

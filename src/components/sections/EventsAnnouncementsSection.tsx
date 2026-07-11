@@ -5,10 +5,10 @@ import { FadeIn, StaggerContainer, StaggerItem } from "@/components/shared/FadeI
 import { NEWS_ITEMS } from "@/data/news";
 import type { NewsCategory } from "@/types";
 
-const NEWS_CATEGORIES: NewsCategory[] = ["Maintenance", "New Members", "Upgrades"];
+const EVENT_CATEGORIES: NewsCategory[] = ["Announcements", "Workshops", "Conferences"];
 
-export function NewsSection() {
-  const latest = NEWS_ITEMS.filter((item) => NEWS_CATEGORIES.includes(item.category))
+export function EventsAnnouncementsSection() {
+  const latest = NEWS_ITEMS.filter((item) => EVENT_CATEGORIES.includes(item.category))
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     .slice(0, 4);
 
@@ -18,21 +18,21 @@ export function NewsSection() {
         <FadeIn className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
           <div className="max-w-2xl">
             <p className="text-sm font-semibold uppercase tracking-widest text-secondary">
-              Stay Updated
+              What&apos;s Happening
             </p>
             <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-              Latest News
+              Latest Events &amp; Announcements
             </h2>
             <p className="mt-4 text-base text-foreground-secondary">
-              The latest announcements, maintenance notices, infrastructure updates, and
-              developments from Nepal Internet Exchange.
+              Stay informed about workshops, industry events, peering activities, and
+              important updates from Nepal Internet Exchange.
             </p>
           </div>
           <Link
             href="/news"
             className="inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold text-secondary hover:text-primary"
           >
-            View All News
+            View All
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </Link>
         </FadeIn>

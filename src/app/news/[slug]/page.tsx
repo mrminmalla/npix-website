@@ -66,7 +66,7 @@ export default async function NewsDetailPage({
         }}
       />
 
-      <article className="py-20 sm:py-28">
+      <article className="py-12 md:py-16">
         <div className="container-page mx-auto max-w-3xl">
           <Link
             href="/news"

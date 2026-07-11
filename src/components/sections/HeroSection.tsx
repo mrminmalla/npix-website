@@ -3,10 +3,11 @@ import { ArrowRight, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { HeroBackground } from "@/components/sections/HeroBackground";
 import { FadeIn } from "@/components/shared/FadeIn";
+import { CONTACT_EMAIL } from "@/constants/site";
 
 export function HeroSection() {
   return (
-    <section className="relative overflow-hidden bg-primary py-28 sm:py-36">
+    <section className="relative overflow-hidden bg-primary py-16 md:py-20">
       <HeroBackground />
 
       <div className="container-page relative">
@@ -24,19 +25,21 @@ export function HeroSection() {
 
         <FadeIn delay={0.16}>
           <p className="mt-6 max-w-2xl text-lg leading-relaxed text-primary-foreground/75">
-            NPIX is Nepal&apos;s carrier-neutral Internet Exchange enabling local traffic
-            exchange among Internet Service Providers, banks, government organizations,
-            educational institutions, and technology companies.
+            Nepal Internet Exchange (NPIX) provides a neutral platform where Internet
+            Service Providers, content providers, financial institutions, government
+            organizations, academic networks, and enterprises exchange internet traffic
+            locally, delivering faster, more resilient, and cost-effective connectivity
+            across Nepal.
           </p>
         </FadeIn>
 
         <FadeIn delay={0.24}>
-          <div className="mt-10 flex flex-col gap-4 sm:flex-row">
+          <div className="mt-8 flex flex-col gap-4 sm:flex-row">
             <Button asChild size="lg" variant="accent">
-              <Link href="/contact#become-a-member">
+              <a href={`mailto:${CONTACT_EMAIL}?subject=Membership%20Inquiry`}>
                 Become a Member
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
-              </Link>
+              </a>
             </Button>
             <Button
               asChild

@@ -1,11 +1,11 @@
-import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FadeIn } from "@/components/shared/FadeIn";
+import { CONTACT_EMAIL } from "@/constants/site";
 
 export function CTASection() {
   return (
-    <section className="relative overflow-hidden bg-primary py-20 sm:py-24">
+    <section className="relative overflow-hidden bg-primary py-12 md:py-16">
       <div
         className="pointer-events-none absolute -top-20 right-10 h-64 w-64 rounded-full bg-secondary/20 blur-[90px]"
         aria-hidden="true"
@@ -23,17 +23,27 @@ export function CTASection() {
         </FadeIn>
         <FadeIn delay={0.1}>
           <p className="max-w-xl text-base text-primary-foreground/75">
-            Connect with NPIX to reduce latency, lower transit costs, and strengthen your
-            network&apos;s resilience.
+            Connect with NPIX to reduce latency, improve network resilience, and become
+            part of Nepal&apos;s growing interconnected digital community.
           </p>
         </FadeIn>
         <FadeIn delay={0.2}>
-          <Button asChild size="lg" variant="accent">
-            <Link href="/contact#become-a-member">
-              Become a Member
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            </Link>
-          </Button>
+          <div className="flex flex-col gap-4 sm:flex-row">
+            <Button asChild size="lg" variant="accent">
+              <a href={`mailto:${CONTACT_EMAIL}?subject=Membership%20Inquiry`}>
+                Become a Member
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </a>
+            </Button>
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className="border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/10"
+            >
+              <a href={`mailto:${CONTACT_EMAIL}`}>Contact Us</a>
+            </Button>
+          </div>
         </FadeIn>
       </div>
     </section>

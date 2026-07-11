@@ -1,17 +1,17 @@
 import type { Metadata } from "next";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { StatisticsSection } from "@/components/sections/StatisticsSection";
+import { TrafficSection } from "@/components/sections/TrafficSection";
 import { WhyNPIXSection } from "@/components/sections/WhyNPIXSection";
-import { ServicesSection } from "@/components/sections/ServicesSection";
+import { EventsAnnouncementsSection } from "@/components/sections/EventsAnnouncementsSection";
 import { MemberShowcaseSection } from "@/components/sections/MemberShowcaseSection";
-import { ConnectivitySection } from "@/components/sections/ConnectivitySection";
 import { NewsSection } from "@/components/sections/NewsSection";
 import { CTASection } from "@/components/sections/CTASection";
 import { JsonLd } from "@/components/shared/JsonLd";
 import { SITE_NAME, SITE_TAGLINE, SITE_URL, SITE_DESCRIPTION } from "@/constants/site";
 
 export const metadata: Metadata = {
-  title: `${SITE_NAME} | ${SITE_TAGLINE}`,
+  title: SITE_NAME,
   description: SITE_DESCRIPTION,
   alternates: { canonical: "/" },
   openGraph: {
@@ -37,10 +37,10 @@ export default function Home() {
       />
       <HeroSection />
       <StatisticsSection />
+      <TrafficSection />
       <WhyNPIXSection />
-      <ServicesSection />
+      <EventsAnnouncementsSection />
       <MemberShowcaseSection />
-      <ConnectivitySection />
       <NewsSection />
       <CTASection />
     </>

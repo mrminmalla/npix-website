@@ -19,7 +19,7 @@ export function PageHeader({
   return (
     <section
       className={cn(
-        "relative overflow-hidden border-b border-border bg-primary py-20 sm:py-28",
+        "relative overflow-hidden border-b border-border bg-primary py-12 md:py-16",
         className,
       )}
     >

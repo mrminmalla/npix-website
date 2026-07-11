@@ -6,28 +6,28 @@ export const WHY_NPIX: WhyNpixItem[] = [
     id: "w1",
     title: "Lower Latency",
     description:
-      "Keeping traffic within Nepal means fewer network hops, resulting in faster response times for local users.",
+      "Keeping local traffic within Nepal reduces network delays, resulting in faster access to websites, applications, and digital services.",
     icon: Zap,
   },
   {
     id: "w2",
-    title: "Reduced Transit Cost",
+    title: "Reduced Transit Costs",
     description:
-      "Exchanging traffic locally reduces reliance on expensive international transit bandwidth.",
+      "Exchanging traffic locally decreases dependency on international transit, lowering operational costs for connected networks.",
     icon: PiggyBank,
   },
   {
     id: "w3",
     title: "Improved Reliability",
     description:
-      "Domestic peering reduces dependency on international links, improving resilience during outages.",
+      "Direct interconnection provides resilient local communication paths and reduces the impact of international connectivity disruptions.",
     icon: ShieldCheck,
   },
   {
     id: "w4",
     title: "Stronger Digital Nepal",
     description:
-      "A robust domestic exchange strengthens the foundation of Nepal's growing digital economy and services.",
+      "A robust exchange ecosystem encourages local content development, innovation, and long-term digital growth.",
     icon: Flag,
   },
 ];

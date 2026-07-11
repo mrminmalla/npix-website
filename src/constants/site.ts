@@ -4,6 +4,8 @@ export const SITE_TAGLINE = "Connecting Nepal's Digital Ecosystem";
 export const SITE_URL = "https://www.npix.net.np";
 export const SITE_DESCRIPTION =
   "NPIX is Nepal's carrier-neutral Internet Exchange enabling local traffic exchange among Internet Service Providers, banks, government organizations, educational institutions, and technology companies.";
+export const FOOTER_DESCRIPTION =
+  "Nepal Internet Exchange (NPIX) is a neutral and independent Internet Exchange Point dedicated to improving internet performance, resilience, and collaboration by enabling networks in Nepal to exchange traffic locally.";
 
 export const CONTACT_EMAIL = "info@npix.net.np";
 export const NOC_EMAIL = "noc@npix.net.np";
