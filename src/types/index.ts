@@ -1,30 +1,16 @@
 import type { LucideIcon } from "lucide-react";
 
-export type MemberCategory =
-  | "ISP"
-  | "Bank"
-  | "Government"
-  | "Education"
-  | "Technology";
-
 export interface Member {
   id: string;
   name: string;
-  logo: string;
-  category: MemberCategory;
   asn: string;
   website: string;
-  ipv6Support: boolean;
-  memberSince: string;
-}
-
-export interface Service {
-  id: string;
-  slug: string;
-  title: string;
-  icon: LucideIcon;
-  description: string;
-  benefits: string[];
+  ipAddress: string;
+  ipv6Address?: string;
+  datahub: string;
+  datahubIpv6?: string;
+  category: "regular" | "special";
+  logo?: string;
 }
 
 export type NewsCategory =
@@ -68,6 +54,7 @@ export interface StatDatum {
   prefix?: string;
   icon: LucideIcon;
   decimals?: number;
+  description?: string;
 }
 
 export interface TimelineEntry {
@@ -92,12 +79,27 @@ export interface CoreValue {
   icon: LucideIcon;
 }
 
+export type ContentBlock =
+  | { type: "heading"; text: string }
+  | { type: "paragraph"; text: string }
+  | { type: "list"; ordered?: boolean; items: string[] }
+  | { type: "table"; headers: string[]; rows: string[][] }
+  | { type: "code"; language?: string; code: string }
+  | { type: "link"; href: string; label: string; download?: boolean };
+
+export interface DocumentEntry {
+  id: string;
+  title: string;
+  summary: string;
+  content: ContentBlock[];
+}
+
 export interface DocCategory {
   id: string;
   title: string;
   description: string;
   icon: LucideIcon;
-  items: string[];
+  items: DocumentEntry[];
 }
 
 export interface DownloadItem {

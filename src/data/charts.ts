@@ -15,17 +15,17 @@ export const TRAFFIC_GROWTH: TrafficDatum[] = [
 ];
 
 export const MEMBER_GROWTH: MemberGrowthDatum[] = [
-  { label: "2016", members: 6, asns: 6 },
-  { label: "2017", members: 9, asns: 9 },
-  { label: "2018", members: 12, asns: 12 },
-  { label: "2019", members: 14, asns: 14 },
-  { label: "2020", members: 16, asns: 16 },
-  { label: "2021", members: 18, asns: 18 },
-  { label: "2022", members: 20, asns: 20 },
-  { label: "2023", members: 22, asns: 22 },
-  { label: "2024", members: 24, asns: 24 },
-  { label: "2025", members: 26, asns: 26 },
-  { label: "2026", members: 27, asns: 27 },
+  { label: "2016", members: 9, asns: 9 },
+  { label: "2017", members: 14, asns: 14 },
+  { label: "2018", members: 19, asns: 19 },
+  { label: "2019", members: 24, asns: 24 },
+  { label: "2020", members: 29, asns: 29 },
+  { label: "2021", members: 35, asns: 35 },
+  { label: "2022", members: 40, asns: 40 },
+  { label: "2023", members: 45, asns: 45 },
+  { label: "2024", members: 49, asns: 49 },
+  { label: "2025", members: 52, asns: 52 },
+  { label: "2026", members: 55, asns: 54 },
 ];
 
 export const TRAFFIC_TRENDS_DAILY = [

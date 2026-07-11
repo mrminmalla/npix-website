@@ -1,90 +1,66 @@
-import { CheckCircle2, XCircle, ExternalLink } from "lucide-react";
-import { InitialsAvatar } from "@/components/shared/InitialsAvatar";
-import { Badge } from "@/components/ui/badge";
 import type { Member } from "@/types";
-import { MEMBER_CATEGORIES } from "@/data/members";
-
-function formatDate(dateStr: string) {
-  return new Date(dateStr).toLocaleDateString("en-US", {
-    month: "short",
-    year: "numeric",
-  });
-}
 
 export function MemberTable({ members }: { members: Member[] }) {
   return (
     <div className="overflow-x-auto rounded-xl border border-border">
-      <table className="w-full min-w-[720px] border-collapse text-sm">
+      <table className="w-full min-w-[640px] border-collapse text-sm">
         <thead>
           <tr className="border-b border-border bg-surface text-left">
             <th scope="col" className="px-5 py-3.5 font-semibold text-foreground">
-              Company
+              Name
             </th>
             <th scope="col" className="px-5 py-3.5 font-semibold text-foreground">
-              Category
+              AS
             </th>
             <th scope="col" className="px-5 py-3.5 font-semibold text-foreground">
-              ASN
+              IP Address
             </th>
             <th scope="col" className="px-5 py-3.5 font-semibold text-foreground">
-              IPv6
-            </th>
-            <th scope="col" className="px-5 py-3.5 font-semibold text-foreground">
-              Member Since
-            </th>
-            <th scope="col" className="px-5 py-3.5 font-semibold text-foreground">
-              Website
+              Datahub
             </th>
           </tr>
         </thead>
         <tbody>
-          {members.map((member) => {
-            const categoryLabel =
-              MEMBER_CATEGORIES.find((c) => c.value === member.category)?.label ??
-              member.category;
-            return (
-              <tr
-                key={member.id}
-                className="border-b border-border last:border-b-0 hover:bg-surface/60"
-              >
-                <td className="px-5 py-3.5">
-                  <div className="flex items-center gap-3">
-                    <InitialsAvatar name={member.name} className="h-8 w-8 text-xs" />
-                    <span className="font-medium text-foreground">{member.name}</span>
-                  </div>
-                </td>
-                <td className="px-5 py-3.5">
-                  <Badge variant="outline">{categoryLabel}</Badge>
-                </td>
-                <td className="px-5 py-3.5 font-mono text-foreground-secondary">
-                  {member.asn}
-                </td>
-                <td className="px-5 py-3.5">
-                  {member.ipv6Support ? (
-                    <CheckCircle2 className="h-4 w-4 text-success" aria-label="IPv6 supported" />
-                  ) : (
-                    <XCircle
-                      className="h-4 w-4 text-foreground-secondary"
-                      aria-label="IPv6 not supported"
-                    />
-                  )}
-                </td>
-                <td className="px-5 py-3.5 text-foreground-secondary">
-                  {formatDate(member.memberSince)}
-                </td>
-                <td className="px-5 py-3.5">
+          {members.map((member) => (
+            <tr
+              key={member.id}
+              className="border-b border-border last:border-b-0 hover:bg-surface/60"
+            >
+              <td className="px-5 py-3.5 font-medium">
+                {member.website ? (
                   <a
                     href={member.website}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 font-medium text-secondary hover:text-primary"
+                    className="text-secondary hover:text-primary hover:underline"
                   >
-                    Visit <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+                    {member.name}
                   </a>
-                </td>
-              </tr>
-            );
-          })}
+                ) : (
+                  <span className="text-foreground">{member.name}</span>
+                )}
+              </td>
+              <td className="px-5 py-3.5 font-mono text-foreground-secondary">
+                {member.asn}
+              </td>
+              <td className="px-5 py-3.5 font-mono text-foreground-secondary">
+                {member.ipAddress || <span>&mdash;</span>}
+                {member.ipv6Address && (
+                  <span className="block text-xs text-foreground-secondary/70">
+                    {member.ipv6Address}
+                  </span>
+                )}
+              </td>
+              <td className="px-5 py-3.5 font-mono text-foreground-secondary">
+                {member.datahub || <span>&mdash;</span>}
+                {member.datahubIpv6 && (
+                  <span className="block text-xs text-foreground-secondary/70">
+                    {member.datahubIpv6}
+                  </span>
+                )}
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>

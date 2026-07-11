@@ -10,7 +10,8 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { JsonLd } from "@/components/shared/JsonLd";
-import { DOC_CATEGORIES, DOWNLOAD_ITEMS, FAQ_ITEMS } from "@/data/documentation";
+import { DocumentCategoryList } from "@/components/sections/DocumentCategoryList";
+import { DOWNLOAD_ITEMS, FAQ_ITEMS } from "@/data/documentation";
 import { SITE_URL } from "@/constants/site";
 
 export const metadata: Metadata = {
@@ -33,10 +34,6 @@ export const metadata: Metadata = {
 };
 
 export default function DocumentationPage() {
-  const nonDownloadCategories = DOC_CATEGORIES.filter(
-    (cat) => cat.id !== "downloads" && cat.id !== "faqs",
-  );
-
   return (
     <>
       <JsonLd
@@ -57,47 +54,13 @@ export default function DocumentationPage() {
         description="Everything your organization needs to plan, apply for, and connect to the NPIX exchange fabric."
       />
 
-      <section className="py-20 sm:py-28">
+      <section className="py-12 md:py-16">
         <div className="container-page">
-          <StaggerContainer className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {nonDownloadCategories.map((cat) => {
-              const Icon = cat.icon;
-              return (
-                <StaggerItem key={cat.id}>
-                  <div
-                    id={cat.id}
-                    className="flex h-full scroll-mt-24 flex-col rounded-xl border border-border bg-background p-7 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
-                  >
-                    <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-secondary/10 text-secondary">
-                      <Icon className="h-6 w-6" aria-hidden="true" />
-                    </div>
-                    <h3 className="mt-5 text-lg font-semibold text-foreground">{cat.title}</h3>
-                    <p className="mt-2 text-sm leading-relaxed text-foreground-secondary">
-                      {cat.description}
-                    </p>
-                    <ul className="mt-4 space-y-2">
-                      {cat.items.map((item) => (
-                        <li
-                          key={item}
-                          className="flex items-start gap-2 text-sm text-foreground-secondary"
-                        >
-                          <span
-                            className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-secondary"
-                            aria-hidden="true"
-                          />
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </StaggerItem>
-              );
-            })}
-          </StaggerContainer>
+          <DocumentCategoryList />
         </div>
       </section>
 
-      <section id="faqs" className="scroll-mt-24 bg-surface py-20 sm:py-28">
+      <section id="faqs" className="scroll-mt-24 bg-surface py-12 md:py-16">
         <div className="container-page">
           <FadeIn className="mx-auto max-w-2xl text-center">
             <p className="text-sm font-semibold uppercase tracking-widest text-secondary">
@@ -108,7 +71,7 @@ export default function DocumentationPage() {
             </h2>
           </FadeIn>
 
-          <div className="mx-auto mt-12 max-w-3xl rounded-xl border border-border bg-background px-6">
+          <div className="mx-auto mt-8 max-w-3xl rounded-xl border border-border bg-background px-6">
             <Accordion type="single" collapsible>
               {FAQ_ITEMS.map((faq) => (
                 <AccordionItem key={faq.id} value={faq.id}>
@@ -121,7 +84,7 @@ export default function DocumentationPage() {
         </div>
       </section>
 
-      <section id="downloads" className="scroll-mt-24 py-20 sm:py-28">
+      <section id="downloads" className="scroll-mt-24 py-12 md:py-16">
         <div className="container-page">
           <FadeIn className="max-w-2xl">
             <p className="text-sm font-semibold uppercase tracking-widest text-secondary">
@@ -132,7 +95,7 @@ export default function DocumentationPage() {
             </h2>
           </FadeIn>
 
-          <StaggerContainer className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2">
+          <StaggerContainer className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2">
             {DOWNLOAD_ITEMS.map((item) => (
               <StaggerItem key={item.id}>
                 <div className="flex items-center gap-4 rounded-xl border border-border bg-background p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">

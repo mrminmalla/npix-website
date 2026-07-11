@@ -1,18 +1,25 @@
-"use client";
-
-import * as React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight } from "lucide-react";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { InitialsAvatar } from "@/components/shared/InitialsAvatar";
-import { FadeIn } from "@/components/shared/FadeIn";
-import { MEMBERS, MEMBER_CATEGORIES } from "@/data/members";
+import { FadeIn, StaggerContainer, StaggerItem } from "@/components/shared/FadeIn";
+import { MEMBERS } from "@/data/members";
+
+function uniqueSpecialMembers() {
+  const seen = new Set<string>();
+  return MEMBERS.filter((member) => member.category === "special" && member.logo).filter(
+    (member) => {
+      if (seen.has(member.website)) return false;
+      seen.add(member.website);
+      return true;
+    },
+  );
+}
 
 export function MemberShowcaseSection() {
-  const [active, setActive] = React.useState(MEMBER_CATEGORIES[0].value);
+  const specialMembers = uniqueSpecialMembers();
 
   return (
-    <section className="bg-surface py-20 sm:py-28">
+    <section className="bg-surface py-12 md:py-16">
       <div className="container-page">
         <FadeIn className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
           <div className="max-w-2xl">
@@ -20,8 +27,13 @@ export function MemberShowcaseSection() {
               Trusted By Nepal&apos;s Digital Leaders
             </p>
             <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-              Our Members
+              Special Members
             </h2>
+            <p className="mt-3 text-base text-foreground-secondary">
+              Leading organizations and infrastructure providers connected to NPIX,
+              helping strengthen Nepal&apos;s internet ecosystem through collaboration and
+              local interconnection.
+            </p>
           </div>
           <Link
             href="/members"
@@ -32,38 +44,26 @@ export function MemberShowcaseSection() {
           </Link>
         </FadeIn>
 
-        <div className="mt-10">
-          <Tabs
-            value={active}
-            onValueChange={(v) => setActive(v as typeof active)}
-          >
-            <TabsList className="flex-wrap justify-start">
-              {MEMBER_CATEGORIES.map((cat) => (
-                <TabsTrigger key={cat.value} value={cat.value}>
-                  {cat.label}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-
-            {MEMBER_CATEGORIES.map((cat) => (
-              <TabsContent key={cat.value} value={cat.value}>
-                <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-                  {MEMBERS.filter((m) => m.category === cat.value).map((member) => (
-                    <div
-                      key={member.id}
-                      className="flex items-center gap-3 rounded-xl border border-border bg-background p-4 transition-all hover:-translate-y-0.5 hover:shadow-md"
-                    >
-                      <InitialsAvatar name={member.name} className="h-10 w-10 shrink-0 text-xs" />
-                      <span className="truncate text-sm font-medium text-foreground">
-                        {member.name}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </TabsContent>
-            ))}
-          </Tabs>
-        </div>
+        <StaggerContainer className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
+          {specialMembers.map((member) => (
+            <StaggerItem key={member.id}>
+              <a
+                href={member.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex h-32 items-center justify-center rounded-xl border border-border bg-white p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
+              >
+                <Image
+                  src={member.logo!}
+                  alt={member.name}
+                  width={160}
+                  height={80}
+                  className="max-h-16 w-auto object-contain"
+                />
+              </a>
+            </StaggerItem>
+          ))}
+        </StaggerContainer>
       </div>
     </section>
   );
