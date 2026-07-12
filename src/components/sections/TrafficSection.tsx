@@ -27,7 +27,7 @@ export function TrafficSection() {
           <GrafanaEmbed
             src={DAILY_PANEL.src}
             title="NPIX daily traffic, last 24 hours"
-            className="h-[250px] sm:h-[350px]"
+            className="h-[250px] sm:h-[380px]"
           />
 
           <div className="mt-6">
