@@ -1,8 +1,8 @@
 import { MapPin } from "lucide-react";
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/shared/FadeIn";
-import { POINTS_OF_PRESENCE } from "@/data/stats";
+import type { PointOfPresence } from "@/types";
 
-export function PointsOfPresenceSection() {
+export function PointsOfPresenceSection({ points }: { points: PointOfPresence[] }) {
   return (
     <section className="py-12 md:py-16">
       <div className="container-page">
@@ -19,7 +19,7 @@ export function PointsOfPresenceSection() {
         </FadeIn>
 
         <StaggerContainer className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2">
-          {POINTS_OF_PRESENCE.map((pop) => (
+          {points.map((pop) => (
             <StaggerItem key={pop.id}>
               <div className="flex h-full flex-col rounded-xl border border-border bg-background p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
                 <div className="flex items-center gap-3">

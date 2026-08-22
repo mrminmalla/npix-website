@@ -78,7 +78,11 @@ export interface DocumentCategoryMeta {
   id: string;
   title: string;
   description: string;
-  icon: LucideIcon;
+  /** Its only consumer (DocumentCategoryList) is a "use client" component,
+   *  and React Server Components can't pass a resolved icon *component* as
+   *  a prop across that boundary — so unlike CoreValue/WhyNpixItem/StatDatum,
+   *  this carries the icon *name* and resolves it client-side instead. */
+  iconName: string;
   sortOrder: number;
 }
 

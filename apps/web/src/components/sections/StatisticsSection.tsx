@@ -1,8 +1,8 @@
 import { StatCard } from "@/components/cards/StatCard";
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/shared/FadeIn";
-import { HOME_STATS } from "@/data/stats";
+import type { StatDatum } from "@/types";
 
-export function StatisticsSection() {
+export function StatisticsSection({ stats }: { stats: StatDatum[] }) {
   return (
     <section className="pt-12 pb-6 md:pt-16 md:pb-8">
       <div className="container-page">
@@ -20,7 +20,7 @@ export function StatisticsSection() {
         </FadeIn>
 
         <StaggerContainer className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {HOME_STATS.map((stat) => (
+          {stats.map((stat) => (
             <StaggerItem key={stat.id}>
               <StatCard
                 label={stat.label}

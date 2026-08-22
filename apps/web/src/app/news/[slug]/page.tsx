@@ -4,8 +4,14 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, CalendarDays } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { JsonLd } from "@/components/shared/JsonLd";
-import { NEWS_ITEMS } from "@/data/news";
+import { getAllNews, getNewsBySlug } from "@/lib/cms/news";
 import { SITE_URL } from "@/constants/site";
+
+export const revalidate = 60;
+// New articles published after the last build still render on-demand
+// (default Next.js behavior) even though generateStaticParams below only
+// knows about slugs that existed at build time.
+export const dynamicParams = true;
 
 function formatDate(dateStr: string) {
   return new Date(dateStr).toLocaleDateString("en-US", {
@@ -15,8 +21,9 @@ function formatDate(dateStr: string) {
   });
 }
 
-export function generateStaticParams() {
-  return NEWS_ITEMS.map((item) => ({ slug: item.slug }));
+export async function generateStaticParams() {
+  const items = await getAllNews();
+  return items.map((item) => ({ slug: item.slug }));
 }
 
 export async function generateMetadata({
@@ -25,7 +32,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const item = NEWS_ITEMS.find((n) => n.slug === slug);
+  const item = await getNewsBySlug(slug);
   if (!item) return {};
 
   return {
@@ -48,7 +55,7 @@ export default async function NewsDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const item = NEWS_ITEMS.find((n) => n.slug === slug);
+  const item = await getNewsBySlug(slug);
 
   if (!item) notFound();
 

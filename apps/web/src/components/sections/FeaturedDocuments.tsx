@@ -9,14 +9,13 @@ import { DocumentModal } from "@/components/shared/DocumentModal";
 import { getFeaturedDocuments } from "@/lib/documents";
 import type { DocumentResource } from "@/types";
 
-const FEATURED = getFeaturedDocuments();
-
 function formatMonthYear(dateStr: string) {
   return new Date(dateStr).toLocaleDateString("en-US", { month: "long", year: "numeric" });
 }
 
-export function FeaturedDocuments() {
+export function FeaturedDocuments({ documents }: { documents: DocumentResource[] }) {
   const [activeDocument, setActiveDocument] = React.useState<DocumentResource | null>(null);
+  const FEATURED = getFeaturedDocuments(documents);
 
   if (FEATURED.length === 0) return null;
 

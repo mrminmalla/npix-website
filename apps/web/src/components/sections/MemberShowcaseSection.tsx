@@ -2,21 +2,11 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/shared/FadeIn";
-import { MEMBERS } from "@/data/members";
+import { uniqueSpecialMembers } from "@/lib/cms/members";
+import type { Member } from "@/types";
 
-function uniqueSpecialMembers() {
-  const seen = new Set<string>();
-  return MEMBERS.filter((member) => member.category === "special" && member.logo).filter(
-    (member) => {
-      if (seen.has(member.website)) return false;
-      seen.add(member.website);
-      return true;
-    },
-  );
-}
-
-export function MemberShowcaseSection() {
-  const specialMembers = uniqueSpecialMembers();
+export function MemberShowcaseSection({ members }: { members: Member[] }) {
+  const specialMembers = uniqueSpecialMembers(members);
 
   return (
     <section className="bg-surface py-12 md:py-16">

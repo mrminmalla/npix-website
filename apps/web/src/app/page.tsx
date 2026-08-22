@@ -8,7 +8,10 @@ import { MemberShowcaseSection } from "@/components/sections/MemberShowcaseSecti
 import { NewsSection } from "@/components/sections/NewsSection";
 import { CTASection } from "@/components/sections/CTASection";
 import { JsonLd } from "@/components/shared/JsonLd";
+import { getHomeData } from "@/lib/cms/home";
 import { SITE_NAME, SITE_TAGLINE, SITE_URL, SITE_DESCRIPTION } from "@/constants/site";
+
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: SITE_NAME,
@@ -21,7 +24,10 @@ export const metadata: Metadata = {
   },
 };
 
-export default function Home() {
+export default async function Home() {
+  const { stats, whyNpix, trafficPanel, memberShowcase, eventsAnnouncements, news } =
+    await getHomeData();
+
   return (
     <>
       <JsonLd
@@ -36,12 +42,12 @@ export default function Home() {
         }}
       />
       <HeroSection />
-      <StatisticsSection />
-      <TrafficSection />
-      <WhyNPIXSection />
-      <EventsAnnouncementsSection />
-      <MemberShowcaseSection />
-      <NewsSection />
+      <StatisticsSection stats={stats} />
+      {trafficPanel && <TrafficSection panel={trafficPanel} />}
+      <WhyNPIXSection items={whyNpix} />
+      <EventsAnnouncementsSection items={eventsAnnouncements} />
+      <MemberShowcaseSection members={memberShowcase} />
+      <NewsSection items={news} />
       <CTASection />
     </>
   );

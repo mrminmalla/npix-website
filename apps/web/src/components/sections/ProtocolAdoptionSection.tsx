@@ -2,9 +2,15 @@ import { GitBranch, Router } from "lucide-react";
 import { StatCard } from "@/components/cards/StatCard";
 import { ProtocolBar } from "@/components/charts/ProtocolBar";
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/shared/FadeIn";
-import { PROTOCOL_ADOPTION } from "@/data/stats";
 
-export function ProtocolAdoptionSection() {
+interface ProtocolAdoption {
+  ipv4SharePercent: number;
+  ipv6SharePercent: number;
+  ipv4Sessions: number;
+  ipv6Sessions: number;
+}
+
+export function ProtocolAdoptionSection({ adoption }: { adoption: ProtocolAdoption }) {
   return (
     <section className="py-12 md:py-16">
       <div className="container-page">
@@ -29,12 +35,12 @@ export function ProtocolAdoptionSection() {
               <div className="mt-6 space-y-5">
                 <ProtocolBar
                   label="IPv4"
-                  percent={PROTOCOL_ADOPTION.ipv4SharePercent}
+                  percent={adoption.ipv4SharePercent}
                   colorClassName="bg-secondary"
                 />
                 <ProtocolBar
                   label="IPv6"
-                  percent={PROTOCOL_ADOPTION.ipv6SharePercent}
+                  percent={adoption.ipv6SharePercent}
                   colorClassName="bg-accent"
                 />
               </div>
@@ -45,7 +51,7 @@ export function ProtocolAdoptionSection() {
             <StaggerItem>
               <StatCard
                 label="IPv4 Sessions"
-                value={PROTOCOL_ADOPTION.ipv4Sessions}
+                value={adoption.ipv4Sessions}
                 icon={GitBranch}
                 description="Members peering over IPv4."
                 className="h-full"
@@ -54,7 +60,7 @@ export function ProtocolAdoptionSection() {
             <StaggerItem>
               <StatCard
                 label="IPv6 Sessions"
-                value={PROTOCOL_ADOPTION.ipv6Sessions}
+                value={adoption.ipv6Sessions}
                 icon={Router}
                 description="Members peering over IPv6."
                 className="h-full"

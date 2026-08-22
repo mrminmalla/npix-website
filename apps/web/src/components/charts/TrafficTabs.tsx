@@ -3,16 +3,22 @@
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { GrafanaEmbed } from "@/components/shared/GrafanaEmbed";
 import { LiveIndicator } from "@/components/shared/LiveIndicator";
-import { TRAFFIC_PANELS } from "@/data/traffic-panels";
+import type { TrafficPanel } from "@/data/traffic-panels";
 import { cn } from "@/lib/utils";
 
-export function TrafficTabs({ graphClassName }: { graphClassName?: string }) {
+export function TrafficTabs({
+  panels,
+  graphClassName,
+}: {
+  panels: TrafficPanel[];
+  graphClassName?: string;
+}) {
   return (
-    <Tabs defaultValue={TRAFFIC_PANELS[0].id}>
+    <Tabs defaultValue={panels[0]?.id}>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="-mx-1 overflow-x-auto px-1">
           <TabsList>
-            {TRAFFIC_PANELS.map((panel) => (
+            {panels.map((panel) => (
               <TabsTrigger key={panel.id} value={panel.id}>
                 {panel.label}
               </TabsTrigger>
@@ -22,7 +28,7 @@ export function TrafficTabs({ graphClassName }: { graphClassName?: string }) {
         <LiveIndicator />
       </div>
 
-      {TRAFFIC_PANELS.map((panel) => (
+      {panels.map((panel) => (
         <TabsContent key={panel.id} value={panel.id}>
           <p className="mb-3 text-xs font-medium uppercase tracking-wide text-foreground-secondary">
             {panel.sublabel}

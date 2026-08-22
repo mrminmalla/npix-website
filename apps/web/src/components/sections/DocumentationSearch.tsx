@@ -4,27 +4,26 @@ import * as React from "react";
 import { FileText, HelpCircle, ArrowRight } from "lucide-react";
 import { SearchBar } from "@/components/shared/SearchBar";
 import { DocumentModal } from "@/components/shared/DocumentModal";
-import {
-  getAllDocuments,
-  getFaqs,
-  searchDocuments,
-  searchFaqs,
-} from "@/lib/documents";
-import type { DocumentResource } from "@/types";
+import { searchDocuments, searchFaqs } from "@/lib/documents";
+import type { DocumentResource, FaqItem } from "@/types";
 
-const DOCUMENTS = getAllDocuments();
-const FAQS = getFaqs();
 const MAX_DOC_RESULTS = 5;
 const MAX_FAQ_RESULTS = 4;
 
-export function DocumentationSearch() {
+export function DocumentationSearch({
+  documents,
+  faqs,
+}: {
+  documents: DocumentResource[];
+  faqs: FaqItem[];
+}) {
   const [query, setQuery] = React.useState("");
   const [activeDocument, setActiveDocument] = React.useState<DocumentResource | null>(null);
   const containerRef = React.useRef<HTMLDivElement>(null);
 
   const isOpen = query.trim().length > 0;
-  const matchedDocs = isOpen ? searchDocuments(DOCUMENTS, query).slice(0, MAX_DOC_RESULTS) : [];
-  const matchedFaqs = isOpen ? searchFaqs(FAQS, query).slice(0, MAX_FAQ_RESULTS) : [];
+  const matchedDocs = isOpen ? searchDocuments(documents, query).slice(0, MAX_DOC_RESULTS) : [];
+  const matchedFaqs = isOpen ? searchFaqs(faqs, query).slice(0, MAX_FAQ_RESULTS) : [];
   const hasResults = matchedDocs.length > 0 || matchedFaqs.length > 0;
 
   React.useEffect(() => {

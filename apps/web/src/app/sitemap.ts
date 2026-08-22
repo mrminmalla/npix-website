@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { SITE_URL } from "@/constants/site";
-import { NEWS_ITEMS } from "@/data/news";
+import { getAllNews } from "@/lib/cms/news";
 
 const STATIC_ROUTES = [
   "",
@@ -11,7 +11,7 @@ const STATIC_ROUTES = [
   "/news",
 ];
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
   const staticEntries: MetadataRoute.Sitemap = STATIC_ROUTES.map((route) => ({
     url: `${SITE_URL}${route}`,
@@ -20,7 +20,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: route === "" ? 1 : 0.7,
   }));
 
-  const newsEntries: MetadataRoute.Sitemap = NEWS_ITEMS.map((item) => ({
+  const newsItems = await getAllNews();
+  const newsEntries: MetadataRoute.Sitemap = newsItems.map((item) => ({
     url: `${SITE_URL}/news/${item.slug}`,
     lastModified: new Date(item.date),
     changeFrequency: "yearly",

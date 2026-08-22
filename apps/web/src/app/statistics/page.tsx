@@ -6,8 +6,10 @@ import { ProtocolAdoptionSection } from "@/components/sections/ProtocolAdoptionS
 import { PointsOfPresenceSection } from "@/components/sections/PointsOfPresenceSection";
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/shared/FadeIn";
 import { JsonLd } from "@/components/shared/JsonLd";
-import { TRAFFIC_INSIGHTS_STATS, INFRASTRUCTURE_STATS } from "@/data/stats";
+import { getStatisticsData } from "@/lib/cms/statistics";
 import { SITE_URL } from "@/constants/site";
+
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: "Statistics",
@@ -23,7 +25,10 @@ export const metadata: Metadata = {
   },
 };
 
-export default function StatisticsPage() {
+export default async function StatisticsPage() {
+  const { trafficInsights, infrastructure, protocolAdoption, pointsOfPresence, trafficPanels } =
+    await getStatisticsData();
+
   return (
     <>
       <JsonLd
@@ -67,7 +72,7 @@ export default function StatisticsPage() {
             delay={0.1}
             className="mt-8 rounded-xl border border-border bg-background p-4 shadow-sm sm:p-6"
           >
-            <TrafficTabs graphClassName="h-[280px] sm:h-[340px] lg:h-[400px]" />
+            <TrafficTabs panels={trafficPanels} graphClassName="h-[280px] sm:h-[340px] lg:h-[400px]" />
           </FadeIn>
         </div>
       </section>
@@ -87,7 +92,7 @@ export default function StatisticsPage() {
           </FadeIn>
 
           <StaggerContainer className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {TRAFFIC_INSIGHTS_STATS.map((stat) => (
+            {trafficInsights.map((stat) => (
               <StaggerItem key={stat.id}>
                 <StatCard
                   label={stat.label}
@@ -104,7 +109,7 @@ export default function StatisticsPage() {
         </div>
       </section>
 
-      <ProtocolAdoptionSection />
+      <ProtocolAdoptionSection adoption={protocolAdoption} />
 
       <section className="bg-surface py-12 md:py-16">
         <div className="container-page">
@@ -121,7 +126,7 @@ export default function StatisticsPage() {
           </FadeIn>
 
           <StaggerContainer className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {INFRASTRUCTURE_STATS.map((stat) => (
+            {infrastructure.map((stat) => (
               <StaggerItem key={stat.id}>
                 <StatCard
                   label={stat.label}
@@ -138,7 +143,7 @@ export default function StatisticsPage() {
         </div>
       </section>
 
-      <PointsOfPresenceSection />
+      <PointsOfPresenceSection points={pointsOfPresence} />
     </>
   );
 }

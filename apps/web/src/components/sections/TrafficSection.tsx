@@ -3,11 +3,9 @@ import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FadeIn } from "@/components/shared/FadeIn";
 import { GrafanaEmbed } from "@/components/shared/GrafanaEmbed";
-import { TRAFFIC_PANELS } from "@/data/traffic-panels";
+import type { TrafficPanel } from "@/data/traffic-panels";
 
-const DAILY_PANEL = TRAFFIC_PANELS[0];
-
-export function TrafficSection() {
+export function TrafficSection({ panel }: { panel: TrafficPanel }) {
   return (
     <section className="pt-6 pb-12 md:pt-8 md:pb-16">
       <div className="container-page">
@@ -25,7 +23,7 @@ export function TrafficSection() {
 
         <FadeIn delay={0.1} className="mt-6">
           <GrafanaEmbed
-            src={DAILY_PANEL.src}
+            src={panel.src}
             title="NPIX daily traffic, last 24 hours"
             className="h-[250px] sm:h-[380px]"
           />

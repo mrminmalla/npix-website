@@ -6,8 +6,10 @@ import { NewsDirectory } from "@/components/sections/NewsDirectory";
 import { NewsletterSection } from "@/components/sections/NewsletterSection";
 import { FadeIn } from "@/components/shared/FadeIn";
 import { JsonLd } from "@/components/shared/JsonLd";
-import { NEWS_ITEMS } from "@/data/news";
+import { getAllNews, getFeaturedNews, getUpcomingEvents } from "@/lib/cms/news";
 import { SITE_URL } from "@/constants/site";
+
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: "News & Events",
@@ -23,9 +25,13 @@ export const metadata: Metadata = {
   },
 };
 
-export default function NewsPage() {
-  const featured = NEWS_ITEMS.find((item) => item.featured) ?? NEWS_ITEMS[0];
-  const rest = NEWS_ITEMS.filter((item) => item.id !== featured.id);
+export default async function NewsPage() {
+  const [featured, all, upcoming] = await Promise.all([
+    getFeaturedNews(),
+    getAllNews(),
+    getUpcomingEvents(),
+  ]);
+  const rest = all.filter((item) => item.id !== featured.id);
 
   return (
     <>
@@ -46,7 +52,7 @@ export default function NewsPage() {
         description="Announcements, maintenance notices, new member updates, and upcoming events from NPIX."
       />
 
-      <UpcomingEvents />
+      <UpcomingEvents events={upcoming} />
 
       <section className="bg-surface py-12 md:py-16">
         <div className="container-page">

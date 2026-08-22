@@ -2,16 +2,9 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { NewsCard } from "@/components/cards/NewsCard";
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/shared/FadeIn";
-import { NEWS_ITEMS } from "@/data/news";
-import type { NewsCategory } from "@/types";
+import type { NewsItem } from "@/types";
 
-const EVENT_CATEGORIES: NewsCategory[] = ["Announcements", "Workshops", "Conferences"];
-
-export function EventsAnnouncementsSection() {
-  const latest = NEWS_ITEMS.filter((item) => EVENT_CATEGORIES.includes(item.category))
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-    .slice(0, 4);
-
+export function EventsAnnouncementsSection({ items }: { items: NewsItem[] }) {
   return (
     <section className="py-12 md:py-16">
       <div className="container-page">
@@ -38,7 +31,7 @@ export function EventsAnnouncementsSection() {
         </FadeIn>
 
         <StaggerContainer className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {latest.map((item) => (
+          {items.map((item) => (
             <StaggerItem key={item.id}>
               <NewsCard item={item} />
             </StaggerItem>

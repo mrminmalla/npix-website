@@ -22,8 +22,11 @@ import { FeaturedDocuments } from "@/components/sections/FeaturedDocuments";
 import { DocumentCategoryList } from "@/components/sections/DocumentCategoryList";
 import { QuickActions } from "@/components/sections/QuickActions";
 import { getDownloadableDocuments, getFaqs } from "@/lib/documents";
+import { getDocumentsData } from "@/lib/cms/documents";
 import { SITE_URL } from "@/constants/site";
 import { cn } from "@/lib/utils";
+
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: "Documentation",
@@ -44,9 +47,6 @@ export const metadata: Metadata = {
   },
 };
 
-const FAQS = getFaqs();
-const DOWNLOADS = getDownloadableDocuments();
-
 function formatMonthYear(dateStr: string) {
   return new Date(dateStr).toLocaleDateString("en-US", { month: "long", year: "numeric" });
 }
@@ -58,14 +58,17 @@ function getFileTypeIcon(fileType: string) {
   return FileIcon;
 }
 
-export default function DocumentationPage() {
+export default async function DocumentationPage() {
+  const { documents, categories, faqs } = await getDocumentsData();
+  const downloads = getDownloadableDocuments(documents);
+
   return (
     <>
       <JsonLd
         data={{
           "@context": "https://schema.org",
           "@type": "FAQPage",
-          mainEntity: FAQS.map((faq) => ({
+          mainEntity: faqs.map((faq) => ({
             "@type": "Question",
             name: faq.question,
             acceptedAnswer: { "@type": "Answer", text: faq.answer },
@@ -81,11 +84,11 @@ export default function DocumentationPage() {
 
       <section className="py-8 md:py-10">
         <div className="container-page">
-          <DocumentationSearch />
+          <DocumentationSearch documents={documents} faqs={faqs} />
         </div>
       </section>
 
-      <FeaturedDocuments />
+      <FeaturedDocuments documents={documents} />
 
       <section className="py-12 md:py-16">
         <div className="container-page">
@@ -99,7 +102,7 @@ export default function DocumentationPage() {
           </FadeIn>
 
           <div className="mt-8">
-            <DocumentCategoryList />
+            <DocumentCategoryList categories={categories} documents={documents} />
           </div>
         </div>
       </section>
@@ -119,7 +122,7 @@ export default function DocumentationPage() {
 
           <div className="mt-6">
             <Accordion type="single" collapsible>
-              {FAQS.map((faq) => (
+              {faqs.map((faq) => (
                 <AccordionItem key={faq.id} value={faq.id}>
                   <AccordionTrigger>{faq.question}</AccordionTrigger>
                   <AccordionContent>{faq.answer}</AccordionContent>
@@ -142,14 +145,14 @@ export default function DocumentationPage() {
           </FadeIn>
 
           <StaggerContainer className="mt-8 overflow-hidden rounded-xl border border-border bg-background shadow-sm">
-            {DOWNLOADS.map((item, index) => {
+            {downloads.map((item, index) => {
               const Icon = getFileTypeIcon(item.fileType);
               return (
                 <StaggerItem key={item.id}>
                   <div
                     className={cn(
                       "flex flex-wrap items-start gap-4 p-4 transition-colors hover:bg-surface/60 sm:p-5 lg:flex-nowrap lg:items-center",
-                      index !== DOWNLOADS.length - 1 && "border-b border-border",
+                      index !== downloads.length - 1 && "border-b border-border",
                     )}
                   >
                     <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-secondary/10 text-secondary">

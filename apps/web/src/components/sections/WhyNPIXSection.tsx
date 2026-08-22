@@ -1,7 +1,7 @@
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/shared/FadeIn";
-import { WHY_NPIX } from "@/data/why-npix";
+import type { WhyNpixItem } from "@/types";
 
-export function WhyNPIXSection() {
+export function WhyNPIXSection({ items }: { items: WhyNpixItem[] }) {
   return (
     <section className="bg-surface py-12 md:py-16">
       <div className="container-page">
@@ -19,7 +19,7 @@ export function WhyNPIXSection() {
         </FadeIn>
 
         <StaggerContainer className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {WHY_NPIX.map((item) => {
+          {items.map((item) => {
             const Icon = item.icon;
             return (
               <StaggerItem key={item.id}>

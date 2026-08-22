@@ -1,35 +1,32 @@
-import { DOCUMENT_CATEGORIES, DOCUMENTS, FAQ_ITEMS } from "@/data/documentation";
-import type { DocumentResource, FaqItem } from "@/types";
+import type { DocumentCategoryMeta, DocumentResource, FaqItem } from "@/types";
 
 function bySortOrder<T extends { sortOrder: number }>(items: T[]): T[] {
   return [...items].sort((a, b) => a.sortOrder - b.sortOrder);
 }
 
-export function getDocumentCategories() {
-  return bySortOrder(DOCUMENT_CATEGORIES);
+export function getDocumentCategories(categories: DocumentCategoryMeta[]) {
+  return bySortOrder(categories);
 }
 
-export function getDocumentsByCategory(categoryId: string) {
-  return bySortOrder(
-    DOCUMENTS.filter((doc) => doc.categoryId === categoryId && doc.content),
-  );
+export function getDocumentsByCategory(docs: DocumentResource[], categoryId: string) {
+  return bySortOrder(docs.filter((doc) => doc.categoryId === categoryId && doc.content));
 }
 
-export function getFeaturedDocuments(limit?: number) {
-  const featured = bySortOrder(DOCUMENTS.filter((doc) => doc.featured));
+export function getFeaturedDocuments(docs: DocumentResource[], limit?: number) {
+  const featured = bySortOrder(docs.filter((doc) => doc.featured));
   return typeof limit === "number" ? featured.slice(0, limit) : featured;
 }
 
-export function getDownloadableDocuments() {
-  return bySortOrder(DOCUMENTS.filter((doc) => doc.downloadUrl));
+export function getDownloadableDocuments(docs: DocumentResource[]) {
+  return bySortOrder(docs.filter((doc) => doc.downloadUrl));
 }
 
-export function getAllDocuments() {
-  return DOCUMENTS;
+export function getAllDocuments(docs: DocumentResource[]) {
+  return docs;
 }
 
-export function getFaqs() {
-  return FAQ_ITEMS;
+export function getFaqs(faqs: FaqItem[]) {
+  return faqs;
 }
 
 export function searchDocuments(docs: DocumentResource[], query: string) {

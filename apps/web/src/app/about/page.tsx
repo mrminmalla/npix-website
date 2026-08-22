@@ -1,14 +1,55 @@
 import type { Metadata } from "next";
-import { Target, Eye } from "lucide-react";
+import Image from "next/image";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/shared/FadeIn";
 import { InitialsAvatar } from "@/components/shared/InitialsAvatar";
 import { Timeline } from "@/components/sections/Timeline";
 import { JsonLd } from "@/components/shared/JsonLd";
-import { CORE_VALUES } from "@/data/core-values";
-import { TIMELINE } from "@/data/timeline";
-import { TEAM_MEMBERS } from "@/data/team";
+import { getAboutData, type PageSection } from "@/lib/cms/about";
+import { resolveIcon } from "@/lib/cms/icons";
 import { SITE_URL } from "@/constants/site";
+
+export const revalidate = 60;
+
+// Fallbacks match the original hardcoded copy exactly, so the page still
+// renders correctly even if a given section hasn't been seeded/edited yet.
+const FALLBACKS: Record<string, { eyebrow: string; heading: string; body: string }> = {
+  "who-we-are": {
+    eyebrow: "Who We Are",
+    heading: "A Neutral Home for Nepal's Networks",
+    body: "NPIX (Nepal Internet Exchange) is an independent, carrier-neutral platform that allows Internet Service Providers, banks, government organizations, educational institutions, and technology companies to exchange traffic directly within Nepal. By keeping domestic traffic local, NPIX helps reduce latency, lower transit costs, and strengthen the reliability of Nepal's Internet infrastructure.",
+  },
+  "what-is-ixp": {
+    eyebrow: "What is an Internet Exchange",
+    heading: "The Fabric Behind a Faster Internet",
+    body: "An Internet Exchange Point (IXP) is a physical and logical infrastructure where multiple networks connect to exchange traffic directly, instead of routing it through third-party international transit providers. This reduces the number of hops data must travel, improving speed and reliability for end users across the country.",
+  },
+  "why-npix-exists": {
+    eyebrow: "Our Purpose",
+    heading: "Why NPIX Exists",
+    body: "Before NPIX, domestic internet traffic between Nepali networks often traveled through international links, introducing unnecessary latency and additional costs for purely local communication. NPIX was established to provide Nepal's networks with a fast, neutral, and reliable platform for direct interconnection, ensuring that local traffic remains local whenever possible.",
+  },
+  mission: {
+    eyebrow: "",
+    heading: "Mission",
+    body: "To strengthen Nepal's digital infrastructure by providing a neutral, secure, and highly available platform for domestic internet traffic exchange, enabling efficient connectivity and collaboration among network operators.",
+  },
+  vision: {
+    eyebrow: "",
+    heading: "Vision",
+    body: "To build a digitally connected Nepal where organizations and communities benefit from fast, affordable, resilient, and locally interconnected internet services.",
+  },
+};
+
+function section(sections: Map<string, PageSection>, key: keyof typeof FALLBACKS) {
+  const found = sections.get(key);
+  const fallback = FALLBACKS[key];
+  return {
+    eyebrow: found?.eyebrow ?? fallback.eyebrow,
+    heading: found?.heading ?? fallback.heading,
+    body: found?.body ?? fallback.body,
+  };
+}
 
 export const metadata: Metadata = {
   title: "About Us",
@@ -24,7 +65,16 @@ export const metadata: Metadata = {
   },
 };
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const { coreValues, timeline, team, sections } = await getAboutData();
+  const whoWeAre = section(sections, "who-we-are");
+  const whatIsIxp = section(sections, "what-is-ixp");
+  const whyNpixExists = section(sections, "why-npix-exists");
+  const mission = section(sections, "mission");
+  const vision = section(sections, "vision");
+  const MissionIcon = resolveIcon(sections.get("mission")?.iconName ?? "Target");
+  const VisionIcon = resolveIcon(sections.get("vision")?.iconName ?? "Eye");
+
   return (
     <>
       <JsonLd
@@ -48,34 +98,25 @@ export default function AboutPage() {
         <div className="container-page grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-12">
           <FadeIn>
             <p className="text-sm font-semibold uppercase tracking-widest text-secondary">
-              Who We Are
+              {whoWeAre.eyebrow}
             </p>
             <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground">
-              A Neutral Home for Nepal&apos;s Networks
+              {whoWeAre.heading}
             </h2>
             <p className="mt-4 text-base leading-relaxed text-foreground-secondary">
-              NPIX (Nepal Internet Exchange) is an independent, carrier-neutral platform
-              that allows Internet Service Providers, banks, government organizations,
-              educational institutions, and technology companies to exchange traffic
-              directly within Nepal. By keeping domestic traffic local, NPIX helps reduce
-              latency, lower transit costs, and strengthen the reliability of Nepal&apos;s
-              Internet infrastructure.
+              {whoWeAre.body}
             </p>
           </FadeIn>
 
           <FadeIn delay={0.1}>
             <p className="text-sm font-semibold uppercase tracking-widest text-secondary">
-              What is an Internet Exchange
+              {whatIsIxp.eyebrow}
             </p>
             <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground">
-              The Fabric Behind a Faster Internet
+              {whatIsIxp.heading}
             </h2>
             <p className="mt-4 text-base leading-relaxed text-foreground-secondary">
-              An Internet Exchange Point (IXP) is a physical and logical infrastructure
-              where multiple networks connect to exchange traffic directly, instead of
-              routing it through third-party international transit providers. This
-              reduces the number of hops data must travel, improving speed and
-              reliability for end users across the country.
+              {whatIsIxp.body}
             </p>
           </FadeIn>
         </div>
@@ -85,43 +126,33 @@ export default function AboutPage() {
         <div className="container-page">
           <FadeIn className="mx-auto max-w-2xl text-center">
             <p className="text-sm font-semibold uppercase tracking-widest text-secondary">
-              Our Purpose
+              {whyNpixExists.eyebrow}
             </p>
             <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-              Why NPIX Exists
+              {whyNpixExists.heading}
             </h2>
             <p className="mt-4 text-base leading-relaxed text-foreground-secondary">
-              Before NPIX, domestic internet traffic between Nepali networks often
-              traveled through international links, introducing unnecessary latency and
-              additional costs for purely local communication. NPIX was established to
-              provide Nepal&apos;s networks with a fast, neutral, and reliable platform for
-              direct interconnection, ensuring that local traffic remains local whenever
-              possible.
+              {whyNpixExists.body}
             </p>
           </FadeIn>
 
           <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2">
             <div className="rounded-xl border border-border bg-background p-8 shadow-sm">
               <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-secondary/10 text-secondary">
-                <Target className="h-6 w-6" aria-hidden="true" />
+                <MissionIcon className="h-6 w-6" aria-hidden="true" />
               </div>
-              <h3 className="mt-5 text-xl font-semibold text-foreground">Mission</h3>
+              <h3 className="mt-5 text-xl font-semibold text-foreground">{mission.heading}</h3>
               <p className="mt-3 text-sm leading-relaxed text-foreground-secondary">
-                To strengthen Nepal&apos;s digital infrastructure by providing a neutral,
-                secure, and highly available platform for domestic internet traffic
-                exchange, enabling efficient connectivity and collaboration among network
-                operators.
+                {mission.body}
               </p>
             </div>
             <div className="rounded-xl border border-border bg-background p-8 shadow-sm">
               <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-accent/10 text-accent">
-                <Eye className="h-6 w-6" aria-hidden="true" />
+                <VisionIcon className="h-6 w-6" aria-hidden="true" />
               </div>
-              <h3 className="mt-5 text-xl font-semibold text-foreground">Vision</h3>
+              <h3 className="mt-5 text-xl font-semibold text-foreground">{vision.heading}</h3>
               <p className="mt-3 text-sm leading-relaxed text-foreground-secondary">
-                To build a digitally connected Nepal where organizations and communities
-                benefit from fast, affordable, resilient, and locally interconnected
-                internet services.
+                {vision.body}
               </p>
             </div>
           </div>
@@ -140,7 +171,7 @@ export default function AboutPage() {
           </FadeIn>
 
           <StaggerContainer className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-5">
-            {CORE_VALUES.map((value) => {
+            {coreValues.map((value) => {
               const Icon = value.icon;
               return (
                 <StaggerItem key={value.id}>
@@ -178,7 +209,7 @@ export default function AboutPage() {
           </FadeIn>
 
           <div className="mx-auto mt-8 max-w-3xl">
-            <Timeline entries={TIMELINE} />
+            <Timeline entries={timeline} />
           </div>
         </div>
       </section>
@@ -195,13 +226,20 @@ export default function AboutPage() {
           </FadeIn>
 
           <StaggerContainer className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {TEAM_MEMBERS.map((member) => (
+            {team.map((member) => (
               <StaggerItem key={member.id}>
                 <div className="flex h-full flex-col items-center rounded-xl border border-border bg-background p-6 text-center shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
-                  <InitialsAvatar
-                    name={member.name}
-                    className="h-16 w-16 text-lg"
-                  />
+                  {member.photo ? (
+                    <Image
+                      src={member.photo}
+                      alt={member.name}
+                      width={64}
+                      height={64}
+                      className="h-16 w-16 rounded-lg object-cover"
+                    />
+                  ) : (
+                    <InitialsAvatar name={member.name} className="h-16 w-16 text-lg" />
+                  )}
                   <h3 className="mt-4 text-base font-semibold text-foreground">
                     {member.name}
                   </h3>

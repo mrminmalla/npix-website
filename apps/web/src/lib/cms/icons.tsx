@@ -1,0 +1,80 @@
+import {
+  Activity,
+  TrendingUp,
+  Network,
+  Building2,
+  Zap,
+  PiggyBank,
+  ShieldCheck,
+  Flag,
+  Target,
+  Eye,
+  Scale,
+  Handshake,
+  Lightbulb,
+  GitBranch,
+  Router,
+  MapPin,
+  Megaphone,
+  Wrench,
+  UserPlus,
+  GraduationCap,
+  Users,
+  HelpCircle,
+  FileText,
+  BookOpen,
+  Cable,
+  ClipboardList,
+  Rocket,
+  ScrollText,
+  Settings2,
+  CalendarClock,
+  Gauge,
+  Percent,
+  type LucideIcon,
+} from "lucide-react";
+
+/**
+ * The fixed whitelist of icons admins can assign (matches the admin
+ * panel's icon picker exactly). The CMS stores icon choices as these name
+ * strings; this maps a stored name back to the actual component so
+ * existing components that render `<item.icon />` keep working unchanged.
+ */
+const ICON_MAP: Record<string, LucideIcon> = {
+  Activity,
+  TrendingUp,
+  Network,
+  Building2,
+  Zap,
+  PiggyBank,
+  ShieldCheck,
+  Flag,
+  Target,
+  Eye,
+  Scale,
+  Handshake,
+  Lightbulb,
+  GitBranch,
+  Router,
+  MapPin,
+  Megaphone,
+  Wrench,
+  UserPlus,
+  GraduationCap,
+  Users,
+  HelpCircle,
+  FileText,
+  BookOpen,
+  Cable,
+  ClipboardList,
+  Rocket,
+  ScrollText,
+  Settings2,
+  CalendarClock,
+  Gauge,
+  Percent,
+};
+
+export function resolveIcon(name: string): LucideIcon {
+  return ICON_MAP[name] ?? HelpCircle;
+}

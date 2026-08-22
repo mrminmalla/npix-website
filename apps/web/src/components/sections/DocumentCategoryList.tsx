@@ -12,12 +12,18 @@ import { Badge } from "@/components/ui/badge";
 import { FadeIn } from "@/components/shared/FadeIn";
 import { DocumentModal } from "@/components/shared/DocumentModal";
 import { getDocumentCategories, getDocumentsByCategory } from "@/lib/documents";
-import type { DocumentResource } from "@/types";
+import { resolveIcon } from "@/lib/cms/icons";
+import type { DocumentCategoryMeta, DocumentResource } from "@/types";
 
-const CATEGORIES = getDocumentCategories();
-
-export function DocumentCategoryList() {
+export function DocumentCategoryList({
+  categories,
+  documents,
+}: {
+  categories: DocumentCategoryMeta[];
+  documents: DocumentResource[];
+}) {
   const [activeDocument, setActiveDocument] = React.useState<DocumentResource | null>(null);
+  const CATEGORIES = getDocumentCategories(categories);
 
   return (
     <>
@@ -28,8 +34,8 @@ export function DocumentCategoryList() {
         className="flex flex-col gap-5"
       >
         {CATEGORIES.map((category, index) => {
-          const Icon = category.icon;
-          const items = getDocumentsByCategory(category.id);
+          const Icon = resolveIcon(category.iconName);
+          const items = getDocumentsByCategory(documents, category.id);
           return (
             <FadeIn key={category.id} delay={index * 0.05}>
               <div
