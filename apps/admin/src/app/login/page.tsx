@@ -35,8 +35,9 @@ export default function LoginPage() {
         className="w-full max-w-sm rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-8 shadow-[var(--shadow-card-hover)]"
       >
         <div className="flex items-center gap-3">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[var(--accent)] to-[var(--accent-hover)] text-[11px] font-extrabold tracking-wider text-white shadow-md ring-2 ring-[var(--primary)]">
-            NPIX
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white p-2 shadow-md ring-2 ring-[var(--primary)]">
+            {/* eslint-disable-next-line @next/next/no-img-element -- static local asset, no next/image usage elsewhere in this app */}
+            <img src="/npix_black.png" alt="NPIX" className="h-full w-full object-contain" />
           </div>
           <div>
             <h1 className="text-lg font-extrabold tracking-tight text-[var(--foreground)]">NPIX Admin</h1>

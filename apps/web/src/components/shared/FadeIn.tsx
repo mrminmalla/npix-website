@@ -19,7 +19,12 @@ export function FadeIn({ children, className, delay = 0, y = 20, as = "div" }: F
       className={cn(className)}
       initial={{ opacity: 0, y }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
+      // Small negative margin (see AnimatedCounter.tsx for why this isn't
+      // a larger value): a large inward shrink of the viewport root can be
+      // impossible to satisfy on a short viewport where the whole section
+      // fits on screen without scrolling, permanently stalling `once: true`
+      // reveal animations at their hidden initial state.
+      viewport={{ once: true, margin: "-10px" }}
       transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
     >
       {children}
@@ -39,7 +44,8 @@ export function StaggerContainer({ children, className, staggerDelay = 0.08 }: S
       className={cn(className)}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, margin: "-80px" }}
+      // See the FadeIn margin comment above.
+      viewport={{ once: true, margin: "-10px" }}
       variants={{
         hidden: {},
         visible: {

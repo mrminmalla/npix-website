@@ -140,8 +140,9 @@ export function Sidebar({
         {/* Brand header */}
         <div className="flex h-16 shrink-0 items-center justify-between border-b border-[var(--border)] px-4">
           <Link href="/" className="flex min-w-0 items-center gap-3">
-            <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[var(--accent)] to-[var(--accent-hover)] text-[11px] font-extrabold tracking-wider text-white shadow-md ring-2 ring-[var(--primary)]">
-              NPIX
+            <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white p-1.5 shadow-md ring-2 ring-[var(--primary)]">
+              {/* eslint-disable-next-line @next/next/no-img-element -- static local asset, no next/image usage elsewhere in this app */}
+              <img src="/npix_black.png" alt="NPIX" className="h-full w-full object-contain" />
               <span className="absolute -bottom-1 -right-1 flex h-3 w-3">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-400 opacity-75" />
                 <span className="relative inline-flex h-3 w-3 rounded-full bg-[var(--primary)] ring-1 ring-white" />

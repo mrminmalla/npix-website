@@ -13,7 +13,8 @@ export const revalidate = 60;
 
 // Fallbacks match the original hardcoded copy exactly, so the page still
 // renders correctly even if a given section hasn't been seeded/edited yet.
-const FALLBACKS: Record<string, { eyebrow: string; heading: string; body: string }> = {
+// `iconFallback` is only set for sections that render an icon (mission/vision).
+const FALLBACKS: Record<string, { eyebrow: string; heading: string; body: string; iconFallback?: string }> = {
   "who-we-are": {
     eyebrow: "Who We Are",
     heading: "A Neutral Home for Nepal's Networks",
@@ -33,14 +34,23 @@ const FALLBACKS: Record<string, { eyebrow: string; heading: string; body: string
     eyebrow: "",
     heading: "Mission",
     body: "To strengthen Nepal's digital infrastructure by providing a neutral, secure, and highly available platform for domestic internet traffic exchange, enabling efficient connectivity and collaboration among network operators.",
+    iconFallback: "Target",
   },
   vision: {
     eyebrow: "",
     heading: "Vision",
     body: "To build a digitally connected Nepal where organizations and communities benefit from fast, affordable, resilient, and locally interconnected internet services.",
+    iconFallback: "Eye",
   },
 };
 
+// Resolves the icon here (a plain data helper, not a component) rather than
+// in AboutPage's body — assigning the result of resolveIcon() to a variable
+// used directly as a JSX tag inside a component is flagged by
+// react-hooks/static-components ("component created during render"), the
+// same way `coreValues[i].icon` is pre-resolved in getAboutData() instead of
+// in the page. Consuming `<section(...).Icon />` as a property read sidesteps
+// that, matching the pattern already used for core values below.
 function section(sections: Map<string, PageSection>, key: keyof typeof FALLBACKS) {
   const found = sections.get(key);
   const fallback = FALLBACKS[key];
@@ -48,6 +58,7 @@ function section(sections: Map<string, PageSection>, key: keyof typeof FALLBACKS
     eyebrow: found?.eyebrow ?? fallback.eyebrow,
     heading: found?.heading ?? fallback.heading,
     body: found?.body ?? fallback.body,
+    Icon: fallback.iconFallback ? resolveIcon(found?.iconName ?? fallback.iconFallback) : undefined,
   };
 }
 
@@ -72,8 +83,6 @@ export default async function AboutPage() {
   const whyNpixExists = section(sections, "why-npix-exists");
   const mission = section(sections, "mission");
   const vision = section(sections, "vision");
-  const MissionIcon = resolveIcon(sections.get("mission")?.iconName ?? "Target");
-  const VisionIcon = resolveIcon(sections.get("vision")?.iconName ?? "Eye");
 
   return (
     <>
@@ -139,7 +148,7 @@ export default async function AboutPage() {
           <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2">
             <div className="rounded-xl border border-border bg-background p-8 shadow-sm">
               <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-secondary/10 text-secondary">
-                <MissionIcon className="h-6 w-6" aria-hidden="true" />
+                {mission.Icon && <mission.Icon className="h-6 w-6" aria-hidden="true" />}
               </div>
               <h3 className="mt-5 text-xl font-semibold text-foreground">{mission.heading}</h3>
               <p className="mt-3 text-sm leading-relaxed text-foreground-secondary">
@@ -148,7 +157,7 @@ export default async function AboutPage() {
             </div>
             <div className="rounded-xl border border-border bg-background p-8 shadow-sm">
               <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-accent/10 text-accent">
-                <VisionIcon className="h-6 w-6" aria-hidden="true" />
+                {vision.Icon && <vision.Icon className="h-6 w-6" aria-hidden="true" />}
               </div>
               <h3 className="mt-5 text-xl font-semibold text-foreground">{vision.heading}</h3>
               <p className="mt-3 text-sm leading-relaxed text-foreground-secondary">

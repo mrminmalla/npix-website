@@ -21,7 +21,15 @@ export function AnimatedCounter({
   duration = 1.8,
 }: AnimatedCounterProps) {
   const ref = React.useRef<HTMLSpanElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-40px" });
+  // `margin` shrinks the viewport root inward before an element counts as
+  // "in view" (positive = trigger early, negative = require it deeper into
+  // the visible area). A large negative margin can be mathematically
+  // unsatisfiable on a short/laptop-height viewport if the whole page fits
+  // without scrolling, permanently stalling the counter at its initial "0"
+  // since `once: true` never gets a qualifying intersection to fire on.
+  // Kept small and negative to preserve the "wait until meaningfully
+  // visible" intent without that failure mode.
+  const isInView = useInView(ref, { once: true, margin: "-10px" });
   const motionValue = useMotionValue(0);
   const springValue = useSpring(motionValue, { duration: duration * 1000 });
   const [display, setDisplay] = React.useState("0");
