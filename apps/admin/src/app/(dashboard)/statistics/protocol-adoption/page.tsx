@@ -2,6 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import { api, ApiError } from '@/lib/api';
+import { useToast } from '@/lib/toast-context';
+import { Card } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button';
 
 interface ProtocolAdoption {
   ipv4SharePercent: number;
@@ -9,11 +12,11 @@ interface ProtocolAdoption {
 }
 
 export default function ProtocolAdoptionPage() {
+  const toast = useToast();
   const [values, setValues] = useState<ProtocolAdoption>({ ipv4SharePercent: 0, ipv6SharePercent: 0 });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [saved, setSaved] = useState(false);
 
   useEffect(() => {
     api
@@ -26,12 +29,13 @@ export default function ProtocolAdoptionPage() {
     e.preventDefault();
     setSaving(true);
     setError(null);
-    setSaved(false);
     try {
       await api.patch('/admin/protocol-adoption', values);
-      setSaved(true);
+      toast.push('Protocol adoption saved', 'success');
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : 'Failed to save');
+      const message = err instanceof ApiError ? err.message : 'Failed to save';
+      setError(message);
+      toast.push(message, 'error');
     } finally {
       setSaving(false);
     }
@@ -41,46 +45,43 @@ export default function ProtocolAdoptionPage() {
 
   return (
     <div className="max-w-md">
-      <h1 className="text-lg font-semibold">Protocol Adoption</h1>
-      <p className="text-sm text-[var(--muted)]">
+      <h1 className="text-xl font-extrabold tracking-tight text-[var(--foreground)]">Protocol Adoption</h1>
+      <p className="mt-0.5 text-sm text-[var(--muted)]">
         Static IPv4/IPv6 share percentages shown on the Statistics page. Session counts next to
         them are always computed live from the Members list and are not editable here.
       </p>
-      <form onSubmit={handleSubmit} className="mt-4 space-y-4 rounded-lg border bg-[var(--surface)] p-4">
-        <label className="block text-sm font-medium">
-          IPv4 share (%)
-          <input
-            type="number"
-            min={0}
-            max={100}
-            required
-            value={values.ipv4SharePercent}
-            onChange={(e) => setValues((v) => ({ ...v, ipv4SharePercent: Number(e.target.value) }))}
-            className="mt-1"
-          />
-        </label>
-        <label className="block text-sm font-medium">
-          IPv6 share (%)
-          <input
-            type="number"
-            min={0}
-            max={100}
-            required
-            value={values.ipv6SharePercent}
-            onChange={(e) => setValues((v) => ({ ...v, ipv6SharePercent: Number(e.target.value) }))}
-            className="mt-1"
-          />
-        </label>
-        {error && <p className="text-sm text-[var(--danger)]">{error}</p>}
-        {saved && <p className="text-sm text-green-600">Saved.</p>}
-        <button
-          type="submit"
-          disabled={saving}
-          className="rounded-md bg-[var(--primary)] px-4 py-2 text-sm font-medium text-[var(--primary-foreground)] disabled:opacity-60"
-        >
-          {saving ? 'Saving…' : 'Save'}
-        </button>
-      </form>
+      <Card className="mt-4 p-5">
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <label className="block text-sm font-semibold text-[var(--foreground)]">
+            IPv4 share (%)
+            <input
+              type="number"
+              min={0}
+              max={100}
+              required
+              value={values.ipv4SharePercent}
+              onChange={(e) => setValues((v) => ({ ...v, ipv4SharePercent: Number(e.target.value) }))}
+              className="mt-1.5"
+            />
+          </label>
+          <label className="block text-sm font-semibold text-[var(--foreground)]">
+            IPv6 share (%)
+            <input
+              type="number"
+              min={0}
+              max={100}
+              required
+              value={values.ipv6SharePercent}
+              onChange={(e) => setValues((v) => ({ ...v, ipv6SharePercent: Number(e.target.value) }))}
+              className="mt-1.5"
+            />
+          </label>
+          {error && <p className="text-sm font-medium text-[var(--danger)]">{error}</p>}
+          <Button type="submit" disabled={saving}>
+            {saving ? 'Saving…' : 'Save'}
+          </Button>
+        </form>
+      </Card>
     </div>
   );
 }

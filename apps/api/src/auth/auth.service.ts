@@ -5,6 +5,8 @@ import * as argon2 from 'argon2';
 import { PrismaService } from '../prisma/prisma.service';
 import { JwtPayload } from './types';
 
+const INVALID_CREDENTIALS_MESSAGE = 'Invalid username/email or password.';
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -13,14 +15,29 @@ export class AuthService {
     private readonly config: ConfigService,
   ) {}
 
-  async validateCredentials(email: string, password: string) {
-    const user = await this.prisma.adminUser.findUnique({ where: { email } });
+  /**
+   * Looks a user up by either username or email — whichever the submitted
+   * identifier matches — case-insensitively either way. Deliberately a
+   * single generic failure message regardless of *why* it failed (no such
+   * identifier, wrong password, inactive account) so a login attempt can't
+   * be used to enumerate which usernames/emails exist.
+   */
+  async validateCredentials(identifier: string, password: string) {
+    const trimmed = identifier.trim();
+    const user = await this.prisma.adminUser.findFirst({
+      where: {
+        OR: [
+          { username: { equals: trimmed, mode: 'insensitive' } },
+          { email: { equals: trimmed, mode: 'insensitive' } },
+        ],
+      },
+    });
     if (!user || !user.isActive) {
-      throw new UnauthorizedException('Invalid email or password');
+      throw new UnauthorizedException(INVALID_CREDENTIALS_MESSAGE);
     }
     const passwordMatches = await argon2.verify(user.passwordHash, password);
     if (!passwordMatches) {
-      throw new UnauthorizedException('Invalid email or password');
+      throw new UnauthorizedException(INVALID_CREDENTIALS_MESSAGE);
     }
     return user;
   }
@@ -41,8 +58,8 @@ export class AuthService {
     return { accessToken, refreshToken };
   }
 
-  async login(email: string, password: string) {
-    const user = await this.validateCredentials(email, password);
+  async login(identifier: string, password: string) {
+    const user = await this.validateCredentials(identifier, password);
     await this.prisma.adminUser.update({
       where: { id: user.id },
       data: { lastLoginAt: new Date() },
@@ -50,7 +67,13 @@ export class AuthService {
     const tokens = await this.issueTokens({ sub: user.id, email: user.email, role: user.role });
     return {
       tokens,
-      user: { id: user.id, email: user.email, name: user.name, role: user.role },
+      user: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+      },
     };
   }
 
@@ -73,6 +96,6 @@ export class AuthService {
   async me(userId: string) {
     const user = await this.prisma.adminUser.findUnique({ where: { id: userId } });
     if (!user) throw new UnauthorizedException();
-    return { id: user.id, email: user.email, name: user.name, role: user.role };
+    return { id: user.id, username: user.username, email: user.email, name: user.name, role: user.role };
   }
 }

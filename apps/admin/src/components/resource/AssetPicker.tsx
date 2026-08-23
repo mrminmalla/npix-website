@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { UploadCloud, X } from 'lucide-react';
 import { api, ApiError } from '@/lib/api';
 
 interface Asset {
@@ -48,34 +49,46 @@ export function AssetPicker({
   }
 
   return (
-    <div className="mt-1">
-      {asset && (
-        <div className="mb-2 flex items-center gap-2">
-          <img src={asset.url} alt="" className="h-12 w-12 rounded border object-contain bg-white" />
-          <span className="truncate text-xs text-[var(--muted)]">{asset.originalFilename}</span>
+    <div className="mt-1.5">
+      {asset ? (
+        <div className="flex items-center gap-3 rounded-xl border border-[var(--border)] bg-[var(--surface-hover)] p-2.5">
+          <img
+            src={asset.url}
+            alt=""
+            className="h-12 w-12 shrink-0 rounded-lg border border-[var(--border)] bg-white object-contain"
+          />
+          <span className="min-w-0 flex-1 truncate text-xs font-medium text-[var(--foreground)]">
+            {asset.originalFilename}
+          </span>
           <button
             type="button"
             onClick={() => {
               setAsset(null);
               onChange(undefined);
             }}
-            className="text-xs text-[var(--danger)]"
+            title="Remove"
+            className="shrink-0 rounded-lg p-1.5 text-[var(--danger)] transition hover:bg-[var(--danger-tint)]"
           >
-            Remove
+            <X className="h-4 w-4" />
           </button>
         </div>
+      ) : (
+        <label className="flex cursor-pointer items-center justify-center gap-2 rounded-xl border-2 border-dashed border-[var(--border)] bg-[var(--surface-hover)] px-4 py-3 text-xs font-semibold text-[var(--muted)] transition hover:border-[var(--primary)] hover:text-[var(--primary)]">
+          <UploadCloud className="h-4 w-4" />
+          {uploading ? 'Uploading…' : 'Upload file'}
+          <input
+            type="file"
+            className="hidden"
+            accept="image/png,image/jpeg,image/webp,image/svg+xml,application/pdf"
+            disabled={uploading}
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) handleFile(file);
+            }}
+          />
+        </label>
       )}
-      <input
-        type="file"
-        accept="image/png,image/jpeg,image/webp,image/svg+xml,application/pdf"
-        disabled={uploading}
-        onChange={(e) => {
-          const file = e.target.files?.[0];
-          if (file) handleFile(file);
-        }}
-      />
-      {uploading && <p className="mt-1 text-xs text-[var(--muted)]">Uploading…</p>}
-      {error && <p className="mt-1 text-xs text-[var(--danger)]">{error}</p>}
+      {error && <p className="mt-1 text-xs font-medium text-[var(--danger)]">{error}</p>}
     </div>
   );
 }

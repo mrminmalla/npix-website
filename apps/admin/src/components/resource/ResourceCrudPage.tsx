@@ -1,9 +1,15 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Plus, Pencil, Trash2, ChevronUp, ChevronDown, Inbox, Loader2, Search } from 'lucide-react';
 import { api, ApiError } from '@/lib/api';
+import { useToast } from '@/lib/toast-context';
 import { ResourceConfig } from './types';
 import { ResourceForm } from './ResourceForm';
+import { Button } from '@/components/ui/Button';
+import { Badge } from '@/components/ui/Badge';
+import { Card } from '@/components/ui/Card';
+import { Modal } from '@/components/ui/Modal';
 
 type Row = Record<string, unknown> & { id: string };
 
@@ -18,10 +24,16 @@ function emptyValues(config: ResourceConfig): Record<string, unknown> {
   return Object.fromEntries(config.fields.map((f) => [f.key, defaultFor(f.type)]));
 }
 
+function rowLabel(row: Row, idKey: string) {
+  return String(row.title ?? row.name ?? row.label ?? row.question ?? row[idKey]);
+}
+
 export function ResourceCrudPage({ config }: { config: ResourceConfig }) {
+  const toast = useToast();
   const [rows, setRows] = useState<Row[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [search, setSearch] = useState('');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formValues, setFormValues] = useState<Record<string, unknown>>(emptyValues(config));
   const [showForm, setShowForm] = useState(false);
@@ -45,6 +57,18 @@ export function ResourceCrudPage({ config }: { config: ResourceConfig }) {
   useEffect(() => {
     load();
   }, [load]);
+
+  const filteredRows = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) return rows;
+    return rows.filter((row) =>
+      config.fields.some((f) => {
+        const value = row[f.key];
+        if (value == null) return false;
+        return String(value).toLowerCase().includes(q);
+      }),
+    );
+  }, [rows, search, config.fields]);
 
   function startCreate() {
     setEditingId(null);
@@ -71,27 +95,37 @@ export function ResourceCrudPage({ config }: { config: ResourceConfig }) {
     try {
       if (editingId) {
         await api.patch(`${config.endpoint}/${editingId}`, payload);
+        toast.push('Changes saved', 'success');
       } else {
         await api.post(config.endpoint, payload);
+        toast.push('Created successfully', 'success');
       }
       setShowForm(false);
       await load();
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : 'Failed to save');
+      const message = err instanceof ApiError ? err.message : 'Failed to save';
+      setError(message);
+      toast.push(message, 'error');
     } finally {
       setSaving(false);
     }
   }
 
   async function handleDelete(row: Row) {
-    if (!confirm(`Delete "${row.title ?? row.name ?? row.label ?? row[idKey]}"? This cannot be undone.`)) {
+    const blockReason = config.isRowDeleteBlocked?.(row, rows);
+    if (blockReason) {
+      toast.push(blockReason, 'error');
       return;
     }
+    if (!confirm(`Delete "${rowLabel(row, idKey)}"? This cannot be undone.`)) return;
     try {
       await api.delete(`${config.endpoint}/${row[idKey]}`);
+      toast.push('Deleted', 'success');
       await load();
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : 'Failed to delete');
+      const message = err instanceof ApiError ? err.message : 'Failed to delete';
+      setError(message);
+      toast.push(message, 'error');
     }
   }
 
@@ -105,131 +139,179 @@ export function ResourceCrudPage({ config }: { config: ResourceConfig }) {
   }
 
   const tableFields = config.fields.filter((f) => f.showInTable !== false);
+  const canReorder = config.reorderable && !search.trim();
 
   return (
     <div>
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-lg font-semibold">{config.title}</h1>
-          {config.description && <p className="text-sm text-[var(--muted)]">{config.description}</p>}
+          <h1 className="text-xl font-extrabold tracking-tight text-[var(--foreground)]">{config.title}</h1>
+          {config.description && <p className="mt-0.5 text-sm text-[var(--muted)]">{config.description}</p>}
         </div>
-        <button
-          onClick={startCreate}
-          className="rounded-md bg-[var(--primary)] px-4 py-2 text-sm font-medium text-[var(--primary-foreground)]"
-        >
+        <Button onClick={startCreate}>
+          <Plus className="h-4 w-4" />
           Add new
-        </button>
+        </Button>
       </div>
 
-      {error && <p className="mt-4 text-sm text-[var(--danger)]">{error}</p>}
+      {error && (
+        <p className="mt-4 rounded-lg bg-[var(--danger-tint)] px-3 py-2 text-sm font-medium text-[var(--danger)]">
+          {error}
+        </p>
+      )}
 
-      {showForm && (
-        <form
-          onSubmit={handleSubmit}
-          className="mt-4 rounded-lg border bg-[var(--surface)] p-4"
-        >
+      {rows.length > 0 && (
+        <div className="relative mt-4 w-full sm:max-w-xs">
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--muted)]" />
+          <input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Filter…"
+            className="pl-9"
+          />
+        </div>
+      )}
+
+      <Card className="mt-4 overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-sm">
+            <thead className="border-b border-[var(--border)] bg-[var(--primary-tint)] text-[11px] font-bold uppercase tracking-wider text-[var(--primary)]">
+              <tr>
+                {canReorder && <th className="w-16 px-4 py-3" />}
+                {tableFields.map((f) => (
+                  <th key={f.key} className="px-4 py-3">
+                    {f.label}
+                  </th>
+                ))}
+                <th className="px-4 py-3 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-[var(--border)]">
+              {loading ? (
+                <tr>
+                  <td
+                    className="px-4 py-10 text-center text-sm text-[var(--muted)]"
+                    colSpan={tableFields.length + 2}
+                  >
+                    <Loader2 className="mx-auto mb-2 h-5 w-5 animate-spin text-[var(--primary)]" />
+                    Loading…
+                  </td>
+                </tr>
+              ) : filteredRows.length === 0 ? (
+                <tr>
+                  <td
+                    className="px-4 py-10 text-center text-sm text-[var(--muted)]"
+                    colSpan={tableFields.length + 2}
+                  >
+                    <Inbox className="mx-auto mb-2 h-6 w-6 text-slate-300 dark:text-slate-700" />
+                    {rows.length === 0 ? 'Nothing here yet.' : 'No matches for your filter.'}
+                  </td>
+                </tr>
+              ) : (
+                filteredRows.map((row, index) => (
+                  <tr
+                    key={String(row[idKey])}
+                    className="transition hover:bg-[var(--primary-tint)]/40"
+                  >
+                    {canReorder && (
+                      <td className="px-4 py-3">
+                        <div className="flex flex-col gap-0.5">
+                          <button
+                            onClick={() => move(index, -1)}
+                            disabled={index === 0}
+                            className="rounded text-[var(--muted)] hover:text-[var(--primary)] disabled:opacity-25"
+                          >
+                            <ChevronUp className="h-3.5 w-3.5" />
+                          </button>
+                          <button
+                            onClick={() => move(index, 1)}
+                            disabled={index === rows.length - 1}
+                            className="rounded text-[var(--muted)] hover:text-[var(--primary)] disabled:opacity-25"
+                          >
+                            <ChevronDown className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
+                      </td>
+                    )}
+                    {tableFields.map((f) => (
+                      <td key={f.key} className="max-w-xs truncate px-4 py-3 font-medium text-[var(--foreground)]">
+                        {f.type === 'boolean' ? (
+                          <Badge tone={row[f.key] ? 'success' : 'neutral'}>
+                            {row[f.key] ? 'Yes' : 'No'}
+                          </Badge>
+                        ) : f.type === 'select' ? (
+                          row[f.key] ? (
+                            <Badge tone="info">{String(row[f.key])}</Badge>
+                          ) : (
+                            <span className="text-[var(--muted)]">—</span>
+                          )
+                        ) : f.type === 'asset' ? (
+                          <Badge tone={row[f.key] ? 'info' : 'neutral'}>{row[f.key] ? 'Set' : '—'}</Badge>
+                        ) : f.type === 'tags' ? (
+                          (Array.isArray(row[f.key]) ? (row[f.key] as string[]).join(', ') : '') || (
+                            <span className="text-[var(--muted)]">—</span>
+                          )
+                        ) : f.type === 'json' ? (
+                          <Badge tone={row[f.key] ? 'info' : 'neutral'}>{row[f.key] ? 'Set' : '—'}</Badge>
+                        ) : (
+                          String(row[f.key] ?? '—')
+                        )}
+                      </td>
+                    ))}
+                    <td className="px-4 py-3 text-right">
+                      <div className="flex justify-end gap-1.5">
+                        <button
+                          onClick={() => startEdit(row)}
+                          title="Edit"
+                          className="rounded-lg bg-[var(--primary-tint)] p-1.5 text-[var(--primary)] transition hover:opacity-80"
+                        >
+                          <Pencil className="h-3.5 w-3.5" />
+                        </button>
+                        {(() => {
+                          const blockReason = config.isRowDeleteBlocked?.(row, rows);
+                          return (
+                            <button
+                              onClick={() => handleDelete(row)}
+                              disabled={Boolean(blockReason)}
+                              title={blockReason || 'Delete'}
+                              className="rounded-lg bg-[var(--danger-tint)] p-1.5 text-[var(--danger)] transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-30"
+                            >
+                              <Trash2 className="h-3.5 w-3.5" />
+                            </button>
+                          );
+                        })()}
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </Card>
+
+      <Modal
+        open={showForm}
+        onClose={() => setShowForm(false)}
+        title={editingId ? `Edit ${config.title}` : `Add ${config.title}`}
+        size="lg"
+      >
+        <form onSubmit={handleSubmit}>
           <ResourceForm
             fields={config.fields}
             values={formValues}
             onChange={(key, value) => setFormValues((prev) => ({ ...prev, [key]: value }))}
           />
-          <div className="mt-4 flex gap-2">
-            <button
-              type="submit"
-              disabled={saving}
-              className="rounded-md bg-[var(--primary)] px-4 py-2 text-sm font-medium text-[var(--primary-foreground)] disabled:opacity-60"
-            >
-              {saving ? 'Saving…' : editingId ? 'Save changes' : 'Create'}
-            </button>
-            <button
-              type="button"
-              onClick={() => setShowForm(false)}
-              className="rounded-md border px-4 py-2 text-sm"
-            >
+          <div className="mt-6 flex justify-end gap-2 border-t border-[var(--border)] pt-4">
+            <Button type="button" variant="secondary" onClick={() => setShowForm(false)}>
               Cancel
-            </button>
+            </Button>
+            <Button type="submit" disabled={saving}>
+              {saving ? 'Saving…' : editingId ? 'Save changes' : 'Create'}
+            </Button>
           </div>
         </form>
-      )}
-
-      <div className="mt-6 overflow-x-auto rounded-lg border bg-[var(--surface)]">
-        <table className="w-full text-left text-sm">
-          <thead className="border-b bg-[var(--background)] text-xs uppercase text-[var(--muted)]">
-            <tr>
-              {config.reorderable && <th className="w-16 px-3 py-2" />}
-              {tableFields.map((f) => (
-                <th key={f.key} className="px-3 py-2 font-medium">
-                  {f.label}
-                </th>
-              ))}
-              <th className="px-3 py-2" />
-            </tr>
-          </thead>
-          <tbody>
-            {loading ? (
-              <tr>
-                <td className="px-3 py-4 text-[var(--muted)]" colSpan={tableFields.length + 2}>
-                  Loading…
-                </td>
-              </tr>
-            ) : rows.length === 0 ? (
-              <tr>
-                <td className="px-3 py-4 text-[var(--muted)]" colSpan={tableFields.length + 2}>
-                  Nothing here yet.
-                </td>
-              </tr>
-            ) : (
-              rows.map((row, index) => (
-                <tr key={String(row[idKey])} className="border-b last:border-0">
-                  {config.reorderable && (
-                    <td className="px-3 py-2">
-                      <div className="flex gap-1">
-                        <button onClick={() => move(index, -1)} disabled={index === 0} className="disabled:opacity-30">
-                          ↑
-                        </button>
-                        <button
-                          onClick={() => move(index, 1)}
-                          disabled={index === rows.length - 1}
-                          className="disabled:opacity-30"
-                        >
-                          ↓
-                        </button>
-                      </div>
-                    </td>
-                  )}
-                  {tableFields.map((f) => (
-                    <td key={f.key} className="max-w-xs truncate px-3 py-2">
-                      {f.type === 'boolean'
-                        ? row[f.key]
-                          ? 'Yes'
-                          : 'No'
-                        : f.type === 'asset'
-                          ? row[f.key]
-                            ? 'Set'
-                            : '—'
-                          : f.type === 'tags'
-                            ? (Array.isArray(row[f.key]) ? (row[f.key] as string[]).join(', ') : '') || '—'
-                            : f.type === 'json'
-                              ? row[f.key]
-                                ? 'Set'
-                                : '—'
-                              : String(row[f.key] ?? '—')}
-                    </td>
-                  ))}
-                  <td className="px-3 py-2 text-right">
-                    <button onClick={() => startEdit(row)} className="mr-3 text-[var(--accent)]">
-                      Edit
-                    </button>
-                    <button onClick={() => handleDelete(row)} className="text-[var(--danger)]">
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
+      </Modal>
     </div>
   );
 }

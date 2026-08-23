@@ -7,6 +7,7 @@ export type AdminRole = 'SUPER_ADMIN' | 'EDITOR' | 'VIEWER';
 
 export interface CurrentUser {
   id: string;
+  username: string;
   email: string;
   name: string;
   role: AdminRole;
@@ -15,7 +16,7 @@ export interface CurrentUser {
 interface AuthContextValue {
   user: CurrentUser | null;
   loading: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  login: (identifier: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
 }
 
@@ -40,9 +41,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     refresh();
   }, [refresh]);
 
-  const login = useCallback(async (email: string, password: string) => {
+  const login = useCallback(async (identifier: string, password: string) => {
     const { user: loggedInUser } = await api.post<{ user: CurrentUser }>('/admin/auth/login', {
-      email,
+      identifier,
       password,
     });
     setUser(loggedInUser);

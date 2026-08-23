@@ -121,17 +121,19 @@ async function seedAssetFromPublicFile(relativePath: string, altText: string): P
 async function seedBootstrapAdmin() {
   const email = process.env.BOOTSTRAP_ADMIN_EMAIL ?? 'admin@npix.net.np';
   const password = process.env.BOOTSTRAP_ADMIN_PASSWORD ?? 'change-me-please';
+  const username = process.env.BOOTSTRAP_ADMIN_USERNAME ?? 'npixadmin';
   const existing = await prisma.adminUser.findUnique({ where: { email } });
   if (existing) return;
   await prisma.adminUser.create({
     data: {
       email,
+      username,
       name: 'NPIX Admin',
       role: 'SUPER_ADMIN',
       passwordHash: await argon2.hash(password),
     },
   });
-  console.log(`✓ bootstrap admin user created (${email})`);
+  console.log(`✓ bootstrap admin user created (${email} / ${username})`);
 }
 
 async function seedCoreValues() {

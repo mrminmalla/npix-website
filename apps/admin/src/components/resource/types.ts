@@ -45,6 +45,13 @@ export interface ResourceConfig {
   /** Merged into every create/update payload but not shown as a form field
    *  (e.g. pinning `section` to the page a resource list is scoped to). */
   fixedValues?: Record<string, unknown>;
+  /** Opt-in per-row delete guard (e.g. Users & Roles disabling delete on
+   *  the last active Super Admin). Return a reason string to block the
+   *  row's delete action (shown as the button's title + a toast if
+   *  somehow triggered anyway); return null/undefined to allow it. This
+   *  is UX only — the backend is the actual authority and rejects the
+   *  request independently if this check is ever bypassed. */
+  isRowDeleteBlocked?: (row: Record<string, unknown>, allRows: Record<string, unknown>[]) => string | null | undefined;
 }
 
 /**

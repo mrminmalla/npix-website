@@ -34,7 +34,7 @@ function useDynamicOptions(field: ResourceField) {
 function SelectField({ field, value, onChange }: { field: ResourceField; value: string; onChange: (v: string) => void }) {
   const options = useDynamicOptions(field);
   return (
-    <select required={field.required} value={value ?? ''} onChange={(e) => onChange(e.target.value)} className="mt-1">
+    <select required={field.required} value={value ?? ''} onChange={(e) => onChange(e.target.value)} className="mt-1.5">
       <option value="" disabled>
         Select…
       </option>
@@ -53,7 +53,7 @@ export function ResourceForm({ fields, values, onChange }: Props) {
       {fields.map((field) => (
         <label
           key={field.key}
-          className={`block text-sm font-medium ${
+          className={`block text-sm font-semibold text-[var(--foreground)] ${
             field.type === 'textarea' || field.type === 'json' ? 'sm:col-span-2' : ''
           }`}
         >
@@ -105,11 +105,11 @@ export function ResourceForm({ fields, values, onChange }: Props) {
             <div className="mt-2 flex items-center gap-2">
               <input
                 type="checkbox"
-                className="h-4 w-4"
+                className="h-4 w-4 accent-[var(--primary)]"
                 checked={Boolean(values[field.key])}
                 onChange={(e) => onChange(field.key, e.target.checked)}
               />
-              <span className="text-xs font-normal text-[var(--muted)]">Enabled</span>
+              <span className="text-xs font-medium text-[var(--muted)]">Enabled</span>
             </div>
           ) : field.type === 'asset' ? (
             <AssetPicker

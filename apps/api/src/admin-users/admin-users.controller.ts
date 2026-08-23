@@ -27,6 +27,6 @@ export class AdminUsersController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.service.remove(id);
+    return this.service.removeUser(id);
   }
 }
