@@ -2,6 +2,8 @@ import { FadeIn, StaggerContainer, StaggerItem } from "@/components/shared/FadeI
 import type { WhyNpixItem } from "@/types";
 
 export function WhyNPIXSection({ items }: { items: WhyNpixItem[] }) {
+  if (items.length === 0) return null;
+
   return (
     <section className="bg-surface py-12 md:py-16">
       <div className="container-page">

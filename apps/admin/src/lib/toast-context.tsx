@@ -18,8 +18,12 @@ interface ToastContextValue {
 const ToastContext = createContext<ToastContextValue | null>(null);
 
 const STYLES: Record<ToastType, string> = {
-  success: 'bg-[var(--primary)] text-white',
-  error: 'bg-[var(--danger)] text-white',
+  // `--primary-solid`, not `--primary` — same white-text-on-solid-fill
+  // reasoning as Button.tsx's variants.
+  success: 'bg-[var(--primary-solid)] text-white',
+  // See Button.tsx's `danger` variant comment — `--danger-solid`, not
+  // `--danger`, for the same white-text-on-solid-fill contrast reason.
+  error: 'bg-[var(--danger-solid)] text-white',
   info: 'bg-slate-900 text-white',
 };
 
@@ -42,7 +46,13 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
     (message: string, type: ToastType = 'info') => {
       const id = nextId++;
       setToasts((prev) => [...prev, { id, message, type }]);
-      setTimeout(() => dismiss(id), 3200);
+      // Errors stay until the admin dismisses them — a save/delete failure
+      // is exactly the message someone might glance away for 3 seconds and
+      // then have no idea why their action didn't work. Success/info are
+      // fine to clear themselves.
+      if (type !== 'error') {
+        setTimeout(() => dismiss(id), 3200);
+      }
     },
     [dismiss],
   );
@@ -56,6 +66,9 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
           return (
             <div
               key={toast.id}
+              role={toast.type === 'error' ? 'alert' : 'status'}
+              aria-live={toast.type === 'error' ? 'assertive' : 'polite'}
+              aria-atomic="true"
               className={`animate-toast-in pointer-events-auto flex items-center gap-2.5 rounded-xl px-4 py-3 text-xs font-bold shadow-2xl ${STYLES[toast.type]}`}
             >
               <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />

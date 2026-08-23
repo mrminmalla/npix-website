@@ -8,7 +8,11 @@ const badgeVariants = cva(
     variants: {
       variant: {
         default: "border-transparent bg-primary text-primary-foreground",
-        secondary: "border-transparent bg-secondary text-secondary-foreground",
+        // `text-secondary-foreground` (white) on `bg-secondary` fails WCAG
+        // AA (2.77:1) — `text-primary` on the same background clears 5.8:1+
+        // in both themes without touching the shared `--secondary` token,
+        // which also drives focus rings/links elsewhere.
+        secondary: "border-transparent bg-secondary text-primary",
         accent: "border-transparent bg-accent text-accent-foreground",
         success: "border-transparent bg-success text-white",
         outline: "border-border text-foreground",

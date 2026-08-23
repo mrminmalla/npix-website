@@ -5,6 +5,8 @@ import { FadeIn, StaggerContainer, StaggerItem } from "@/components/shared/FadeI
 import type { NewsItem } from "@/types";
 
 export function NewsSection({ items }: { items: NewsItem[] }) {
+  if (items.length === 0) return null;
+
   return (
     <section className="py-12 md:py-16">
       <div className="container-page">

@@ -46,7 +46,7 @@ export function MemberTable({ members }: { members: Member[] }) {
               <td className="px-5 py-3.5 font-mono text-foreground-secondary">
                 {member.ipAddress || <span>&mdash;</span>}
                 {member.ipv6Address && (
-                  <span className="block text-xs text-foreground-secondary/70">
+                  <span className="block text-xs text-foreground-secondary">
                     {member.ipv6Address}
                   </span>
                 )}

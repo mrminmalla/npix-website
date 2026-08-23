@@ -38,6 +38,15 @@ export function ResourceCrudPage({ config }: { config: ResourceConfig }) {
   const [formValues, setFormValues] = useState<Record<string, unknown>>(emptyValues(config));
   const [showForm, setShowForm] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<Row | null>(null);
+  const [deleteTyped, setDeleteTyped] = useState('');
+  const [deleting, setDeleting] = useState(false);
+  // Errors from saving/deleting render inside the modal that's still open
+  // when they happen, rather than a page-level banner the modal itself
+  // hides. `error` (below) stays reserved for the initial list load, which
+  // never happens with a modal open.
+  const [formError, setFormError] = useState<string | null>(null);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   const idKey = config.idKey ?? 'id';
 
@@ -73,6 +82,7 @@ export function ResourceCrudPage({ config }: { config: ResourceConfig }) {
   function startCreate() {
     setEditingId(null);
     setFormValues(emptyValues(config));
+    setFormError(null);
     setShowForm(true);
   }
 
@@ -81,13 +91,14 @@ export function ResourceCrudPage({ config }: { config: ResourceConfig }) {
     setFormValues(
       Object.fromEntries(config.fields.map((f) => [f.key, row[f.key] ?? defaultFor(f.type)])),
     );
+    setFormError(null);
     setShowForm(true);
   }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setSaving(true);
-    setError(null);
+    setFormError(null);
     const payload = { ...formValues, ...config.fixedValues };
     for (const field of config.fields) {
       if (field.omitIfEmpty && !payload[field.key]) delete payload[field.key];
@@ -104,28 +115,39 @@ export function ResourceCrudPage({ config }: { config: ResourceConfig }) {
       await load();
     } catch (err) {
       const message = err instanceof ApiError ? err.message : 'Failed to save';
-      setError(message);
+      setFormError(message);
       toast.push(message, 'error');
     } finally {
       setSaving(false);
     }
   }
 
-  async function handleDelete(row: Row) {
+  function requestDelete(row: Row) {
     const blockReason = config.isRowDeleteBlocked?.(row, rows);
     if (blockReason) {
       toast.push(blockReason, 'error');
       return;
     }
-    if (!confirm(`Delete "${rowLabel(row, idKey)}"? This cannot be undone.`)) return;
+    setDeleteError(null);
+    setDeleteTarget(row);
+    setDeleteTyped('');
+  }
+
+  async function confirmDelete() {
+    if (!deleteTarget) return;
+    setDeleting(true);
+    setDeleteError(null);
     try {
-      await api.delete(`${config.endpoint}/${row[idKey]}`);
+      await api.delete(`${config.endpoint}/${deleteTarget[idKey]}`);
       toast.push('Deleted', 'success');
+      setDeleteTarget(null);
       await load();
     } catch (err) {
       const message = err instanceof ApiError ? err.message : 'Failed to delete';
-      setError(message);
+      setDeleteError(message);
       toast.push(message, 'error');
+    } finally {
+      setDeleting(false);
     }
   }
 
@@ -271,7 +293,7 @@ export function ResourceCrudPage({ config }: { config: ResourceConfig }) {
                           const blockReason = config.isRowDeleteBlocked?.(row, rows);
                           return (
                             <button
-                              onClick={() => handleDelete(row)}
+                              onClick={() => requestDelete(row)}
                               disabled={Boolean(blockReason)}
                               title={blockReason || 'Delete'}
                               className="rounded-lg bg-[var(--danger-tint)] p-1.5 text-[var(--danger)] transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-30"
@@ -302,6 +324,14 @@ export function ResourceCrudPage({ config }: { config: ResourceConfig }) {
             values={formValues}
             onChange={(key, value) => setFormValues((prev) => ({ ...prev, [key]: value }))}
           />
+          {formError && (
+            <p
+              role="alert"
+              className="mt-4 rounded-lg bg-[var(--danger-tint)] px-3 py-2 text-sm font-medium text-[var(--danger)]"
+            >
+              {formError}
+            </p>
+          )}
           <div className="mt-6 flex justify-end gap-2 border-t border-[var(--border)] pt-4">
             <Button type="button" variant="secondary" onClick={() => setShowForm(false)}>
               Cancel
@@ -311,6 +341,59 @@ export function ResourceCrudPage({ config }: { config: ResourceConfig }) {
             </Button>
           </div>
         </form>
+      </Modal>
+
+      <Modal
+        open={Boolean(deleteTarget)}
+        onClose={() => setDeleteTarget(null)}
+        title={deleteTarget ? `Delete "${rowLabel(deleteTarget, idKey)}"?` : 'Delete'}
+        size="sm"
+      >
+        {deleteTarget && (
+          <div>
+            <p className="text-sm text-[var(--foreground)]">
+              This will permanently delete <strong>&ldquo;{rowLabel(deleteTarget, idKey)}&rdquo;</strong>. This
+              cannot be undone.
+            </p>
+            {config.confirmDeleteByTyping && (
+              <label className="mt-4 block text-sm font-semibold text-[var(--foreground)]">
+                Type &ldquo;{rowLabel(deleteTarget, idKey)}&rdquo; to confirm
+                <input
+                  value={deleteTyped}
+                  onChange={(e) => setDeleteTyped(e.target.value)}
+                  autoComplete="off"
+                  autoFocus
+                  className="mt-1.5"
+                />
+              </label>
+            )}
+            {deleteError && (
+              <p
+                role="alert"
+                className="mt-4 rounded-lg bg-[var(--danger-tint)] px-3 py-2 text-sm font-medium text-[var(--danger)]"
+              >
+                {deleteError}
+              </p>
+            )}
+            <div className="mt-6 flex justify-end gap-2 border-t border-[var(--border)] pt-4">
+              <Button type="button" variant="secondary" onClick={() => setDeleteTarget(null)}>
+                Cancel
+              </Button>
+              <Button
+                type="button"
+                variant="danger"
+                disabled={
+                  deleting ||
+                  (Boolean(config.confirmDeleteByTyping) &&
+                    deleteTyped.trim() !== rowLabel(deleteTarget, idKey))
+                }
+                onClick={confirmDelete}
+              >
+                {deleting ? 'Deleting…' : 'Delete permanently'}
+              </Button>
+            </div>
+          </div>
+        )}
       </Modal>
     </div>
   );

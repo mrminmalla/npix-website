@@ -52,6 +52,10 @@ export interface ResourceConfig {
    *  is UX only — the backend is the actual authority and rejects the
    *  request independently if this check is ever bypassed. */
   isRowDeleteBlocked?: (row: Record<string, unknown>, allRows: Record<string, unknown>[]) => string | null | undefined;
+  /** For high-stakes resources (e.g. Users & Roles): require the admin to
+   *  type the record's exact label into the delete confirmation dialog
+   *  before the Delete button enables, instead of a single click/Enter. */
+  confirmDeleteByTyping?: boolean;
 }
 
 /**

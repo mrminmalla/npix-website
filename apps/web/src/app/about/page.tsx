@@ -168,39 +168,41 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      <section className="py-12 md:py-16">
-        <div className="container-page">
-          <FadeIn className="mx-auto max-w-2xl text-center">
-            <p className="text-sm font-semibold uppercase tracking-widest text-secondary">
-              What Guides Us
-            </p>
-            <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-              Core Values
-            </h2>
-          </FadeIn>
+      {coreValues.length > 0 && (
+        <section className="py-12 md:py-16">
+          <div className="container-page">
+            <FadeIn className="mx-auto max-w-2xl text-center">
+              <p className="text-sm font-semibold uppercase tracking-widest text-secondary">
+                What Guides Us
+              </p>
+              <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+                Core Values
+              </h2>
+            </FadeIn>
 
-          <StaggerContainer className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-5">
-            {coreValues.map((value) => {
-              const Icon = value.icon;
-              return (
-                <StaggerItem key={value.id}>
-                  <div className="flex h-full flex-col items-start rounded-xl border border-border bg-background p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                      <Icon className="h-5 w-5" aria-hidden="true" />
+            <StaggerContainer className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-5">
+              {coreValues.map((value) => {
+                const Icon = value.icon;
+                return (
+                  <StaggerItem key={value.id}>
+                    <div className="flex h-full flex-col items-start rounded-xl border border-border bg-background p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+                      <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+                        <Icon className="h-5 w-5" aria-hidden="true" />
+                      </div>
+                      <h3 className="mt-4 text-base font-semibold text-foreground">
+                        {value.title}
+                      </h3>
+                      <p className="mt-2 text-sm leading-relaxed text-foreground-secondary">
+                        {value.description}
+                      </p>
                     </div>
-                    <h3 className="mt-4 text-base font-semibold text-foreground">
-                      {value.title}
-                    </h3>
-                    <p className="mt-2 text-sm leading-relaxed text-foreground-secondary">
-                      {value.description}
-                    </p>
-                  </div>
-                </StaggerItem>
-              );
-            })}
-          </StaggerContainer>
-        </div>
-      </section>
+                  </StaggerItem>
+                );
+              })}
+            </StaggerContainer>
+          </div>
+        </section>
+      )}
 
       <section className="bg-surface py-12 md:py-16">
         <div className="container-page">
@@ -223,45 +225,47 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      <section className="py-12 md:py-16">
-        <div className="container-page">
-          <FadeIn className="mx-auto max-w-2xl text-center">
-            <p className="text-sm font-semibold uppercase tracking-widest text-secondary">
-              Meet the Team
-            </p>
-            <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-              Leadership Team
-            </h2>
-          </FadeIn>
+      {team.length > 0 && (
+        <section className="py-12 md:py-16">
+          <div className="container-page">
+            <FadeIn className="mx-auto max-w-2xl text-center">
+              <p className="text-sm font-semibold uppercase tracking-widest text-secondary">
+                Meet the Team
+              </p>
+              <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+                Leadership Team
+              </h2>
+            </FadeIn>
 
-          <StaggerContainer className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {team.map((member) => (
-              <StaggerItem key={member.id}>
-                <div className="flex h-full flex-col items-center rounded-xl border border-border bg-background p-6 text-center shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
-                  {member.photo ? (
-                    <Image
-                      src={member.photo}
-                      alt={member.name}
-                      width={64}
-                      height={64}
-                      className="h-16 w-16 rounded-lg object-cover"
-                    />
-                  ) : (
-                    <InitialsAvatar name={member.name} className="h-16 w-16 text-lg" />
-                  )}
-                  <h3 className="mt-4 text-base font-semibold text-foreground">
-                    {member.name}
-                  </h3>
-                  <p className="text-sm font-medium text-secondary">{member.role}</p>
-                  <p className="mt-2 text-sm leading-relaxed text-foreground-secondary">
-                    {member.bio}
-                  </p>
-                </div>
-              </StaggerItem>
-            ))}
-          </StaggerContainer>
-        </div>
-      </section>
+            <StaggerContainer className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              {team.map((member) => (
+                <StaggerItem key={member.id}>
+                  <div className="flex h-full flex-col items-center rounded-xl border border-border bg-background p-6 text-center shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+                    {member.photo ? (
+                      <Image
+                        src={member.photo}
+                        alt={member.name}
+                        width={64}
+                        height={64}
+                        className="h-16 w-16 rounded-lg object-cover"
+                      />
+                    ) : (
+                      <InitialsAvatar name={member.name} className="h-16 w-16 text-lg" />
+                    )}
+                    <h3 className="mt-4 text-base font-semibold text-foreground">
+                      {member.name}
+                    </h3>
+                    <p className="text-sm font-medium text-secondary">{member.role}</p>
+                    <p className="mt-2 text-sm leading-relaxed text-foreground-secondary">
+                      {member.bio}
+                    </p>
+                  </div>
+                </StaggerItem>
+              ))}
+            </StaggerContainer>
+          </div>
+        </section>
+      )}
     </>
   );
 }

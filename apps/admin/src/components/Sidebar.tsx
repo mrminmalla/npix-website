@@ -140,19 +140,19 @@ export function Sidebar({
         {/* Brand header */}
         <div className="flex h-16 shrink-0 items-center justify-between border-b border-[var(--border)] px-4">
           <Link href="/" className="flex min-w-0 items-center gap-3">
-            <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white p-1.5 shadow-md ring-2 ring-[var(--primary)]">
+            <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white p-1.5 shadow-md ring-2 ring-[var(--primary-solid)]">
               {/* eslint-disable-next-line @next/next/no-img-element -- static local asset, no next/image usage elsewhere in this app */}
               <img src="/npix_black.png" alt="NPIX" className="h-full w-full object-contain" />
               <span className="absolute -bottom-1 -right-1 flex h-3 w-3">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-400 opacity-75" />
-                <span className="relative inline-flex h-3 w-3 rounded-full bg-[var(--primary)] ring-1 ring-white" />
+                <span className="relative inline-flex h-3 w-3 rounded-full bg-[var(--primary-solid)] ring-1 ring-white" />
               </span>
             </div>
             {!collapsed && (
               <div className="min-w-0">
                 <div className="flex items-center gap-1.5">
                   <span className="text-base font-extrabold tracking-tight text-[var(--foreground)]">NPIX</span>
-                  <span className="rounded bg-[var(--primary)] px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wide text-white">
+                  <span className="rounded bg-[var(--primary-solid)] px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wide text-white">
                     Admin
                   </span>
                 </div>
@@ -202,7 +202,7 @@ export function Sidebar({
                           'group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition',
                           collapsed && 'justify-center px-0',
                           active
-                            ? 'bg-[var(--primary)] font-semibold text-white shadow-md'
+                            ? 'bg-[var(--primary-solid)] font-semibold text-white shadow-md'
                             : 'text-[var(--foreground)]/80 hover:bg-[var(--primary-tint)] hover:text-[var(--primary)]',
                         )}
                       >
@@ -231,7 +231,7 @@ export function Sidebar({
                 collapsed && 'justify-center',
               )}
             >
-              <div className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[var(--primary)] text-xs font-bold text-white ring-1 ring-[var(--primary-hover)]">
+              <div className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[var(--primary-solid)] text-xs font-bold text-white ring-1 ring-[var(--primary-hover)]">
                 {initials(user.name)}
                 <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-[var(--accent)] ring-2 ring-[var(--surface)]" />
               </div>

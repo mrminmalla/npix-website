@@ -22,7 +22,9 @@ export function MobileMenu() {
   }, [open]);
 
   return (
-    <div className="xl:hidden">
+    // Must flip at the same breakpoint as Navbar's primary <nav> (lg:) so
+    // there's never a width where both or neither are visible.
+    <div className="lg:hidden">
       <Button
         variant="ghost"
         size="icon"

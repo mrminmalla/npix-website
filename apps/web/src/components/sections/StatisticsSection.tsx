@@ -3,6 +3,8 @@ import { FadeIn, StaggerContainer, StaggerItem } from "@/components/shared/FadeI
 import type { StatDatum } from "@/types";
 
 export function StatisticsSection({ stats }: { stats: StatDatum[] }) {
+  if (stats.length === 0) return null;
+
   return (
     <section className="pt-12 pb-6 md:pt-16 md:pb-8">
       <div className="container-page">

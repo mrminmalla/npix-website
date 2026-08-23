@@ -9,6 +9,7 @@ export default function UsersPage() {
         title: 'Users & Roles',
         description: 'Super-admin only. New users must be given a password of at least 8 characters.',
         endpoint: '/admin/users',
+        confirmDeleteByTyping: true,
         fields: [
           { key: 'name', label: 'Name', type: 'text', required: true },
           {

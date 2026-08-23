@@ -34,7 +34,11 @@ export function Navbar() {
       <div className="container-page flex h-16 items-center justify-between gap-3">
         <Logo compact imgClassName="h-10" />
 
-        <nav aria-label="Primary navigation" className="hidden xl:block">
+        {/* 5 short links fit comfortably well below the old 1280px (xl)
+            cutoff — that was hiding the nav, including Members and
+            Statistics, from real laptop/tablet-landscape widths in the
+            1024–1279px range with room to spare. */}
+        <nav aria-label="Primary navigation" className="hidden lg:block">
           <ul className="flex items-center gap-0.5">
             {NAV_LINKS.map((link) => {
               const isActive =

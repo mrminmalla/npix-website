@@ -1,11 +1,33 @@
 @import "tailwindcss";
 
+/* Matches apps/web's radius scale exactly (its `--radius: 0.75rem` theme
+   override) so identical utility classes — rounded-sm/md/lg/xl — render at
+   the same physical size in both apps instead of admin silently falling
+   back to Tailwind's smaller unmodified defaults. */
+@theme inline {
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.25rem;
+}
+
 /*
- * Design tokens adapted from the NPIX admin UI reference design
- * (Nepal flag palette: deep blue #003893, crimson #DC143C). Components
- * consume these via var(--x) rather than Tailwind's dark: variant, so
- * toggling the `dark` class on <html> re-themes the whole app without
- * needing dark: on every element.
+ * Design tokens matching apps/web's palette (same navy `--primary` and
+ * crimson accent) so the admin portal and the public site read as one
+ * product. Components consume these via var(--x) rather than Tailwind's
+ * dark: variant, so toggling the `dark` class on <html> re-themes the
+ * whole app without needing dark: on every element.
+ *
+ * `--primary` vs `--primary-solid`: apps/web's `--primary` only ever fills
+ * a solid dark surface (buttons), so it stays near-black in both themes.
+ * This app also uses "primary" as *text* on a light tint (badges, table
+ * headers, the modal title) — a role web doesn't have. Reusing one token
+ * for both breaks in dark mode: a solid navy button needs a dark
+ * background for white text, but navy text on a barely-tinted dark
+ * surface is nearly unreadable. So: `--primary-solid` is the web-matching
+ * navy for solid fills; `--primary` stays a brighter, theme-adaptive blue
+ * for text/border/outline roles (dark mode reuses web's own dark-mode
+ * `--secondary`, `#38bdf8`, which is exactly that role over there).
  */
 :root {
   --background: #f8fafc;
@@ -15,10 +37,11 @@
   --muted: #64748b;
   --border: #e2e8f0;
 
-  --primary: #003893;
-  --primary-hover: #002a70;
+  --primary: #0b1f3a;
+  --primary-solid: #0b1f3a;
+  --primary-hover: #16304f;
   --primary-foreground: #ffffff;
-  --primary-tint: #eff6ff;
+  --primary-tint: #eef1f6;
 
   --accent: #dc143c;
   --accent-hover: #b80d30;
@@ -29,8 +52,10 @@
   --danger-hover: #b80d30;
   --danger-foreground: #ffffff;
   --danger-tint: #fef2f2;
+  --danger-solid: #dc143c;
 
-  --success: #059669;
+  /* #059669 on --success-tint was 3.58:1 (fails WCAG AA text, 4.5:1) */
+  --success: #047857;
   --success-tint: #ecfdf5;
 
   --shadow-card: 0 1px 3px 0 rgba(0, 56, 147, 0.06), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
@@ -46,10 +71,15 @@
   --muted: #94a3b8;
   --border: #1e293b;
 
-  --primary: #2563eb;
-  --primary-hover: #3b82f6;
+  /* See the `:root` comment above — `#2563eb` was a generic blue with no
+     relation to the brand; text-role `--primary` now reuses the same
+     bright blue apps/web's dark theme already uses for this exact role
+     (`--secondary`), while `--primary-solid` keeps the actual navy. */
+  --primary: #38bdf8;
+  --primary-solid: #071a2e;
+  --primary-hover: #0f2740;
   --primary-foreground: #ffffff;
-  --primary-tint: rgba(37, 99, 235, 0.12);
+  --primary-tint: rgba(56, 189, 248, 0.12);
 
   --accent: #f43f5e;
   --accent-hover: #fb7185;
@@ -60,6 +90,15 @@
   --danger-hover: #fb7185;
   --danger-foreground: #ffffff;
   --danger-tint: rgba(244, 63, 94, 0.12);
+  /* Dedicated solid-fill color for white-text-on-danger buttons/toasts.
+     `--danger` itself is also used as red *text* on light/tinted
+     backgrounds throughout the app (error messages, icon buttons, the
+     required-field asterisk) — those need a lighter red for contrast
+     against a very dark tint here, while a solid button with white text
+     needs a darker one. #dc143c (4.98:1 with white) is also the same
+     crimson used everywhere else — light mode and the public site's
+     accent in both themes — instead of a generic rose. */
+  --danger-solid: #dc143c;
 
   --success: #34d399;
   --success-tint: rgba(52, 211, 153, 0.12);
@@ -89,6 +128,17 @@ code,
 kbd,
 .font-mono {
   font-family: var(--font-mono), "JetBrains Mono", ui-monospace, monospace;
+}
+
+/* Sitewide keyboard-focus ring, matching apps/web's equivalent rule —
+   buttons, links, sidebar nav items, and icon-only row actions had no
+   explicit focus style at all and fell back to inconsistent browser
+   defaults. Lower specificity than `input:focus`/etc. below, which already
+   supply their own box-shadow ring and explicitly turn this outline off,
+   so this only fills the gap rather than doubling up on form fields. */
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
 }
 
 ::-webkit-scrollbar {

@@ -5,6 +5,8 @@ import { Trash2, UploadCloud, Image as ImageIcon } from 'lucide-react';
 import { api, ApiError } from '@/lib/api';
 import { useToast } from '@/lib/toast-context';
 import { Card } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button';
+import { Modal } from '@/components/ui/Modal';
 
 interface Asset {
   id: string;
@@ -22,6 +24,9 @@ export default function MediaLibraryPage() {
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<Asset | null>(null);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   async function load() {
     setLoading(true);
@@ -54,11 +59,27 @@ export default function MediaLibraryPage() {
     }
   }
 
-  async function remove(id: string) {
-    if (!confirm('Delete this asset? Anything referencing it will show as missing.')) return;
-    await api.delete(`/admin/assets/${id}`);
-    toast.push('Asset deleted', 'success');
-    await load();
+  function requestDelete(asset: Asset) {
+    setDeleteError(null);
+    setDeleteTarget(asset);
+  }
+
+  async function confirmDelete() {
+    if (!deleteTarget) return;
+    setDeleting(true);
+    setDeleteError(null);
+    try {
+      await api.delete(`/admin/assets/${deleteTarget.id}`);
+      toast.push('Asset deleted', 'success');
+      setDeleteTarget(null);
+      await load();
+    } catch (err) {
+      const message = err instanceof ApiError ? err.message : 'Failed to delete';
+      setDeleteError(message);
+      toast.push(message, 'error');
+    } finally {
+      setDeleting(false);
+    }
   }
 
   return (
@@ -70,7 +91,7 @@ export default function MediaLibraryPage() {
             Every image and file uploaded from any content form lives here.
           </p>
         </div>
-        <label className="inline-flex shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-xl bg-[var(--primary)] px-4 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-[var(--primary-hover)]">
+        <label className="inline-flex shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-xl bg-[var(--primary-solid)] px-4 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-[var(--primary-hover)]">
           <UploadCloud className="h-4 w-4" />
           {uploading ? 'Uploading…' : 'Upload file'}
           <input
@@ -117,9 +138,10 @@ export default function MediaLibraryPage() {
                 {Math.round(asset.sizeBytes / 1024)} KB
               </p>
               <button
-                onClick={() => remove(asset.id)}
+                onClick={() => requestDelete(asset)}
                 title="Delete"
-                className="absolute right-2 top-2 rounded-lg bg-white/90 p-1.5 text-[var(--danger)] opacity-0 shadow-sm transition group-hover:opacity-100 dark:bg-slate-900/90"
+                aria-label={`Delete ${asset.originalFilename}`}
+                className="absolute right-2 top-2 rounded-lg bg-white/90 p-1.5 text-[var(--danger)] opacity-0 shadow-sm transition group-hover:opacity-100 group-focus-within:opacity-100 focus-visible:opacity-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--danger)] dark:bg-slate-900/90"
               >
                 <Trash2 className="h-3.5 w-3.5" />
               </button>
@@ -127,6 +149,38 @@ export default function MediaLibraryPage() {
           ))
         )}
       </div>
+
+      <Modal
+        open={Boolean(deleteTarget)}
+        onClose={() => setDeleteTarget(null)}
+        title={deleteTarget ? `Delete "${deleteTarget.originalFilename}"?` : 'Delete'}
+        size="sm"
+      >
+        {deleteTarget && (
+          <div>
+            <p className="text-sm text-[var(--foreground)]">
+              This will permanently delete <strong>&ldquo;{deleteTarget.originalFilename}&rdquo;</strong>.
+              Anything referencing it will show as missing. This action cannot be undone.
+            </p>
+            {deleteError && (
+              <p
+                role="alert"
+                className="mt-4 rounded-lg bg-[var(--danger-tint)] px-3 py-2 text-sm font-medium text-[var(--danger)]"
+              >
+                {deleteError}
+              </p>
+            )}
+            <div className="mt-6 flex justify-end gap-2 border-t border-[var(--border)] pt-4">
+              <Button type="button" variant="secondary" onClick={() => setDeleteTarget(null)}>
+                Cancel
+              </Button>
+              <Button type="button" variant="danger" disabled={deleting} onClick={confirmDelete}>
+                {deleting ? 'Deleting…' : 'Delete permanently'}
+              </Button>
+            </div>
+          </div>
+        )}
+      </Modal>
     </div>
   );
 }
