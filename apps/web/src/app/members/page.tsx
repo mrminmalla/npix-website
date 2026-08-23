@@ -57,7 +57,12 @@ export default async function MembersPage() {
 
       <section className="pb-12 md:pb-16">
         <div className="container-page">
-          <MembersDirectory members={regularMembers} />
+          <h2 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+            Regular Members
+          </h2>
+          <div className="mt-6">
+            <MembersDirectory members={regularMembers} />
+          </div>
         </div>
       </section>
 

@@ -18,9 +18,12 @@ interface ToastContextValue {
 const ToastContext = createContext<ToastContextValue | null>(null);
 
 const STYLES: Record<ToastType, string> = {
-  // `--primary-solid`, not `--primary` — same white-text-on-solid-fill
-  // reasoning as Button.tsx's variants.
-  success: 'bg-[var(--primary-solid)] text-white',
+  // `--success-solid` — a dedicated success color instead of reusing the
+  // brand's primary blue (a prior inconsistency with the Badge system's
+  // own success color), and not `--success` itself, which also serves as
+  // green *text* on a light tint elsewhere and needs a different,
+  // theme-adaptive value there than a solid white-text fill needs here.
+  success: 'bg-[var(--success-solid)] text-white',
   // See Button.tsx's `danger` variant comment — `--danger-solid`, not
   // `--danger`, for the same white-text-on-solid-fill contrast reason.
   error: 'bg-[var(--danger-solid)] text-white',

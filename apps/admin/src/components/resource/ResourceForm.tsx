@@ -48,8 +48,16 @@ function SelectField({ field, value, onChange }: { field: ResourceField; value: 
 }
 
 export function ResourceForm({ fields, values, onChange }: Props) {
+  const [jsonErrors, setJsonErrors] = useState<Record<string, string | null>>({});
+  const hasRequiredField = fields.some((f) => f.required);
+
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      {hasRequiredField && (
+        <p className="-mb-1 text-xs font-medium text-[var(--muted)] sm:col-span-2">
+          <span className="text-[var(--danger)]">*</span> Required
+        </p>
+      )}
       {fields.map((field) => (
         <label
           key={field.key}
@@ -70,21 +78,41 @@ export function ResourceForm({ fields, values, onChange }: Props) {
               className="mt-1"
             />
           ) : field.type === 'json' ? (
-            <textarea
-              rows={6}
-              placeholder="[]"
-              className="mt-1 font-mono text-xs"
-              defaultValue={values[field.key] ? JSON.stringify(values[field.key], null, 2) : ''}
-              onBlur={(e) => {
-                if (!e.target.value.trim()) return onChange(field.key, undefined);
-                try {
-                  onChange(field.key, JSON.parse(e.target.value));
-                } catch {
-                  // Leave the last valid value in place; the browser keeps
-                  // showing what the admin typed until it parses cleanly.
-                }
-              }}
-            />
+            <>
+              <textarea
+                rows={6}
+                placeholder="[]"
+                className="mt-1 font-mono text-xs"
+                defaultValue={values[field.key] ? JSON.stringify(values[field.key], null, 2) : ''}
+                aria-invalid={Boolean(jsonErrors[field.key])}
+                onBlur={(e) => {
+                  if (!e.target.value.trim()) {
+                    setJsonErrors((prev) => ({ ...prev, [field.key]: null }));
+                    return onChange(field.key, undefined);
+                  }
+                  try {
+                    onChange(field.key, JSON.parse(e.target.value));
+                    setJsonErrors((prev) => ({ ...prev, [field.key]: null }));
+                  } catch (err) {
+                    // The typed text stays on screen either way — this
+                    // used to fail with zero feedback, silently keeping
+                    // the last value that *did* parse and submitting that
+                    // instead of what the admin sees, with no indication
+                    // anything was wrong.
+                    setJsonErrors((prev) => ({
+                      ...prev,
+                      [field.key]: err instanceof Error ? err.message : 'Invalid JSON',
+                    }));
+                  }
+                }}
+              />
+              {jsonErrors[field.key] && (
+                <p role="alert" className="mt-1 text-xs font-medium text-[var(--danger)]">
+                  Not valid JSON ({jsonErrors[field.key]}) — the last saved value will be used until
+                  this is fixed.
+                </p>
+              )}
+            </>
           ) : field.type === 'tags' ? (
             <input
               type="text"

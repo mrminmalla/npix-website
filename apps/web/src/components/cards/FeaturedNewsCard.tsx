@@ -18,7 +18,10 @@ export function FeaturedNewsCard({ item }: { item: NewsItem }) {
   const readingTime = getReadingTime(item.content);
 
   return (
-    <article className="grid grid-cols-1 overflow-hidden rounded-2xl border border-border bg-background shadow-sm lg:grid-cols-2">
+    // rounded-xl, matching NewsCard/StatCard — this is the largest, most
+    // prominent card on the page; it was previously the one exception
+    // using a *smaller* radius (rounded-2xl) than the ordinary grid cards.
+    <article className="grid grid-cols-1 overflow-hidden rounded-xl border border-border bg-background shadow-sm lg:grid-cols-2">
       <NewsCategoryBanner category={item.category} size="lg" />
       <div className="flex flex-col justify-center p-8 sm:p-10">
         <Badge variant="accent" className="w-fit">

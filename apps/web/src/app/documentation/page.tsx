@@ -82,7 +82,7 @@ export default async function DocumentationPage() {
         description="Everything you need to join, peer, and connect with Nepal Internet Exchange. Explore guides, technical requirements, policies, and downloadable resources."
       />
 
-      <section className="py-8 md:py-10">
+      <section className="py-12 md:py-16">
         <div className="container-page">
           <DocumentationSearch documents={documents} faqs={faqs} />
         </div>
@@ -109,7 +109,7 @@ export default async function DocumentationPage() {
 
       <QuickActions />
 
-      <section id="faqs" className="scroll-mt-24 py-10 md:py-12">
+      <section id="faqs" className="scroll-mt-24 py-12 md:py-16">
         <div className="container-page">
           <FadeIn className="mx-auto max-w-2xl text-center">
             <p className="text-sm font-semibold uppercase tracking-widest text-secondary">

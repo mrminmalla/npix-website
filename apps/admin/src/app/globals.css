@@ -57,6 +57,11 @@
   /* #059669 on --success-tint was 3.58:1 (fails WCAG AA text, 4.5:1) */
   --success: #047857;
   --success-tint: #ecfdf5;
+  /* Dedicated solid-fill color, same reasoning as --danger-solid/
+     --primary-solid: --success is also used as text-on-tint (the Badge
+     success tone) and stays constant across themes for a solid button/
+     toast background with white text (5.6:1). */
+  --success-solid: #047857;
 
   --shadow-card: 0 1px 3px 0 rgba(0, 56, 147, 0.06), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
   --shadow-card-hover: 0 10px 25px -5px rgba(0, 56, 147, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
@@ -102,6 +107,7 @@
 
   --success: #34d399;
   --success-tint: rgba(52, 211, 153, 0.12);
+  --success-solid: #047857;
 
   --shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.3);
   --shadow-card-hover: 0 10px 25px -5px rgba(0, 0, 0, 0.4);

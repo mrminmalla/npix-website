@@ -1,4 +1,9 @@
-export function LiveIndicator({ intervalSeconds = 30 }: { intervalSeconds?: number }) {
+// No `intervalSeconds` prop: this app has no way to know or guarantee how
+// often the embedded Grafana dashboard actually refreshes (that's set
+// inside the dashboard config, not passed to this component), so an exact
+// number here would be an unverifiable claim that can silently drift from
+// reality if the dashboard's own refresh rate ever changes.
+export function LiveIndicator() {
   return (
     <div className="flex items-center gap-2 text-xs text-foreground-secondary">
       <span className="relative flex h-2 w-2">
@@ -6,7 +11,7 @@ export function LiveIndicator({ intervalSeconds = 30 }: { intervalSeconds?: numb
         <span className="relative inline-flex h-2 w-2 rounded-full bg-success" />
       </span>
       <span className="font-semibold text-success">Live</span>
-      <span>&middot; Updated every {intervalSeconds} seconds</span>
+      <span>&middot; Refreshed automatically</span>
     </div>
   );
 }

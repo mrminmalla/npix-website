@@ -32,7 +32,18 @@ export function AnimatedCounter({
   const isInView = useInView(ref, { once: true, margin: "-10px" });
   const motionValue = useMotionValue(0);
   const springValue = useSpring(motionValue, { duration: duration * 1000 });
-  const [display, setDisplay] = React.useState("0");
+  const format = React.useCallback(
+    (n: number) =>
+      n.toLocaleString("en-US", { minimumFractionDigits: decimals, maximumFractionDigits: decimals }),
+    [decimals],
+  );
+  // Seed with the real value, not a literal "0" — this is what server-
+  // rendered HTML (and any visitor with JS disabled) shows permanently,
+  // and what's briefly visible before the reveal animation below kicks in.
+  // The spring still animates the count-up once the counter enters view;
+  // this only fixes the "stuck at / flashes zero" failure mode, not the
+  // animation itself.
+  const [display, setDisplay] = React.useState(() => format(value));
 
   React.useEffect(() => {
     if (isInView) {
@@ -42,15 +53,10 @@ export function AnimatedCounter({
 
   React.useEffect(() => {
     const unsubscribe = springValue.on("change", (latest) => {
-      setDisplay(
-        Number(latest.toFixed(decimals)).toLocaleString("en-US", {
-          minimumFractionDigits: decimals,
-          maximumFractionDigits: decimals,
-        }),
-      );
+      setDisplay(format(latest));
     });
     return unsubscribe;
-  }, [springValue, decimals]);
+  }, [springValue, format]);
 
   return (
     <span ref={ref} className={className}>

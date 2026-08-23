@@ -180,7 +180,10 @@ export default async function AboutPage() {
               </h2>
             </FadeIn>
 
-            <StaggerContainer className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-5">
+            {/* md:3 step avoids jumping straight from 2 to 5 columns —
+                without it, five text-heavy cards get visibly cramped at
+                common laptop/tablet widths (1024–1279px). */}
+            <StaggerContainer className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
               {coreValues.map((value) => {
                 const Icon = value.icon;
                 return (

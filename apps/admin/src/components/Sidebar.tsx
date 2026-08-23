@@ -199,7 +199,7 @@ export function Sidebar({
                         onClick={onCloseMobile}
                         title={collapsed ? item.label : undefined}
                         className={clsx(
-                          'group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition',
+                          'group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition',
                           collapsed && 'justify-center px-0',
                           active
                             ? 'bg-[var(--primary-solid)] font-semibold text-white shadow-md'
@@ -213,6 +213,20 @@ export function Sidebar({
                           )}
                         />
                         {!collapsed && <span className="truncate">{item.label}</span>}
+                        {collapsed && (
+                          // A real tooltip, not just the native `title` —
+                          // several icons in this collapsed rail (the
+                          // Statistics group especially) look similar
+                          // enough that a label is needed, and native
+                          // title tooltips are slow/inconsistent and
+                          // never appear on keyboard focus at all.
+                          <span
+                            role="tooltip"
+                            className="pointer-events-none absolute left-full top-1/2 z-50 ml-2 -translate-y-1/2 whitespace-nowrap rounded-lg bg-[var(--foreground)] px-2.5 py-1.5 text-xs font-semibold text-[var(--background)] opacity-0 shadow-lg transition-opacity duration-150 group-hover:opacity-100 group-focus-visible:opacity-100"
+                          >
+                            {item.label}
+                          </span>
+                        )}
                       </Link>
                     );
                   })}
