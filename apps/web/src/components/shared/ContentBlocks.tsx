@@ -1,9 +1,28 @@
 import Link from "next/link";
 import { Download as DownloadIcon, ArrowRight } from "lucide-react";
-import type { ContentBlock } from "@/types";
+import type { ContentBlock, TextAlign } from "@/types";
+import { cn } from "@/lib/utils";
 
 function isInternalHref(href: string) {
   return href.startsWith("/") || href.startsWith("#");
+}
+
+const ALIGN_CLASS: Record<TextAlign, string> = {
+  left: "text-left",
+  center: "text-center",
+  right: "text-right",
+};
+
+/**
+ * `html` is admin-authored rich text (bold/italic/underline/links), already
+ * sanitized server-side on save (see DocumentsService) before it's ever
+ * stored — safe to inject directly. Blocks written before the rich-text
+ * editor existed have no `html`, only plain `text`, which React already
+ * escapes normally via ordinary interpolation below.
+ */
+function RichText({ html, text }: { html?: string; text: string }) {
+  if (html) return <span dangerouslySetInnerHTML={{ __html: html }} />;
+  return <>{text}</>;
 }
 
 export function ContentBlocks({ blocks }: { blocks: ContentBlock[] }) {
@@ -11,21 +30,43 @@ export function ContentBlocks({ blocks }: { blocks: ContentBlock[] }) {
     <div>
       {blocks.map((block, i) => {
         switch (block.type) {
-          case "heading":
+          case "heading": {
+            const HeadingTag = block.level === 2 ? "h2" : "h3";
             return (
-              <h3
+              <HeadingTag
                 key={i}
-                className="mt-6 text-lg font-semibold text-foreground first:mt-0"
+                className={cn(
+                  "mt-6 font-semibold text-foreground first:mt-0",
+                  block.level === 2 ? "text-xl" : "text-lg",
+                  block.align && ALIGN_CLASS[block.align],
+                )}
               >
-                {block.text}
-              </h3>
+                <RichText html={block.html} text={block.text} />
+              </HeadingTag>
             );
+          }
 
           case "paragraph":
             return (
-              <p key={i} className="mt-3 text-sm leading-relaxed text-foreground-secondary">
-                {block.text}
+              <p
+                key={i}
+                className={cn(
+                  "mt-3 text-sm leading-relaxed text-foreground-secondary",
+                  block.align && ALIGN_CLASS[block.align],
+                )}
+              >
+                <RichText html={block.html} text={block.text} />
               </p>
+            );
+
+          case "blockquote":
+            return (
+              <blockquote
+                key={i}
+                className="mt-4 border-l-4 border-secondary bg-surface py-2 pl-4 text-sm italic leading-relaxed text-foreground-secondary"
+              >
+                <RichText html={block.html} text={block.text} />
+              </blockquote>
             );
 
           case "list": {

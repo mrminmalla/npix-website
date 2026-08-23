@@ -9,7 +9,14 @@ export type FieldType =
   | 'date'
   | 'asset'
   | 'tags'
-  | 'json';
+  | 'json'
+  /** A formatted-text editor (bold/italic/underline, headings, lists,
+   *  links, alignment, quotes) for fields that store structured content
+   *  blocks — the admin edits normal formatted text; ResourceForm
+   *  converts to/from the stored block shape automatically (see
+   *  apps/admin/src/lib/content-blocks.ts). No JSON ever reaches the
+   *  admin. */
+  | 'richtext';
 
 export interface ResourceField {
   key: string;
@@ -29,6 +36,18 @@ export interface ResourceField {
   /** Drop this key from the submit payload entirely when left blank
    *  (e.g. an admin user's password field on edit). */
   omitIfEmpty?: boolean;
+  /** Pre-fills this field when creating a new record (e.g. today's date
+   *  for a "publish date" field the admin can still change). Never
+   *  applied when editing an existing record — that always loads the
+   *  real stored value instead.
+   *
+   *  A literal value works for anything static. `'today'` is a special
+   *  sentinel for `type: 'date'` fields, resolved to the current date
+   *  (as `YYYY-MM-DD`) at the moment the create form opens — this has to
+   *  be a serializable string rather than a function, since these config
+   *  pages are React Server Components and a function value can't cross
+   *  into the Client Component that actually renders the form. */
+  defaultValue?: unknown | 'today';
 }
 
 export interface ResourceConfig {

@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import { api } from '@/lib/api';
 import { ResourceField } from './types';
 import { AssetPicker } from './AssetPicker';
+import { RichTextEditor } from './RichTextEditor';
+import { blocksToEditorHtml, editorHtmlToBlocks, AdminContentBlock } from '@/lib/content-blocks';
 
 interface Props {
   fields: ResourceField[];
@@ -62,7 +64,9 @@ export function ResourceForm({ fields, values, onChange }: Props) {
         <label
           key={field.key}
           className={`block text-sm font-semibold text-[var(--foreground)] ${
-            field.type === 'textarea' || field.type === 'json' ? 'sm:col-span-2' : ''
+            field.type === 'textarea' || field.type === 'json' || field.type === 'richtext'
+              ? 'sm:col-span-2'
+              : ''
           }`}
         >
           {field.label}
@@ -113,6 +117,18 @@ export function ResourceForm({ fields, values, onChange }: Props) {
                 </p>
               )}
             </>
+          ) : field.type === 'richtext' ? (
+            <RichTextEditor
+              value={blocksToEditorHtml(values[field.key] as AdminContentBlock[] | undefined)}
+              onChange={(html) => {
+                const blocks = editorHtmlToBlocks(html);
+                // Matches how every other optional field on this form
+                // omits itself from the save payload when empty, rather
+                // than saving an empty array.
+                onChange(field.key, blocks.length > 0 ? blocks : undefined);
+              }}
+              placeholder={field.placeholder}
+            />
           ) : field.type === 'tags' ? (
             <input
               type="text"

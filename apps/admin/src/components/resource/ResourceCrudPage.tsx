@@ -20,8 +20,52 @@ function defaultFor(type: string): unknown {
   return '';
 }
 
+/**
+ * The admin's own local calendar date, as "YYYY-MM-DD" — reading
+ * year/month/day back off a `Date` (not `.toISOString().slice(0, 10)`,
+ * which is UTC) so "today" means today where the admin actually is. For
+ * anyone east of UTC (Nepal is UTC+5:45), the UTC date rolls over hours
+ * before local midnight — an admin creating a document at 2am NPT would
+ * otherwise see yesterday's date pre-filled as "today".
+ */
+function todayLocal(): string {
+  const now = new Date();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  return `${now.getFullYear()}-${month}-${day}`;
+}
+
+function resolveDefault(field: ResourceConfig['fields'][number]): unknown {
+  if (field.defaultValue === undefined) return defaultFor(field.type);
+  // 'today' is a serializable sentinel (see the ResourceField comment) —
+  // computed here, at form-open time, not baked into the config.
+  if (field.type === 'date' && field.defaultValue === 'today') {
+    return todayLocal();
+  }
+  return field.defaultValue;
+}
+
 function emptyValues(config: ResourceConfig): Record<string, unknown> {
-  return Object.fromEntries(config.fields.map((f) => [f.key, defaultFor(f.type)]));
+  return Object.fromEntries(config.fields.map((f) => [f.key, resolveDefault(f)]));
+}
+
+/**
+ * The API always serializes `DateTime` columns as full ISO-8601 UTC
+ * strings (e.g. "2026-08-23T00:00:00.000Z"), but an `<input type="date">`
+ * only accepts exactly "YYYY-MM-DD" — anything else is silently rejected
+ * and the field just renders empty. Slicing the string directly (rather
+ * than parsing it into a `Date` and reading back local year/month/day)
+ * avoids a timezone-dependent off-by-one: the calendar date this
+ * represents is whatever's in the string, not whatever the browser's
+ * local timezone happens to compute from the UTC instant.
+ */
+function toDateInputValue(value: unknown): string {
+  return typeof value === 'string' && value ? value.slice(0, 10) : '';
+}
+
+function valueForEdit(row: Row, field: ResourceConfig['fields'][number]): unknown {
+  const raw = row[field.key] ?? defaultFor(field.type);
+  return field.type === 'date' ? toDateInputValue(raw) : raw;
 }
 
 function rowLabel(row: Row, idKey: string) {
@@ -88,21 +132,34 @@ export function ResourceCrudPage({ config }: { config: ResourceConfig }) {
 
   function startEdit(row: Row) {
     setEditingId(String(row[idKey]));
-    setFormValues(
-      Object.fromEntries(config.fields.map((f) => [f.key, row[f.key] ?? defaultFor(f.type)])),
-    );
+    setFormValues(Object.fromEntries(config.fields.map((f) => [f.key, valueForEdit(row, f)])));
     setFormError(null);
     setShowForm(true);
   }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setSaving(true);
     setFormError(null);
     const payload = { ...formValues, ...config.fixedValues };
     for (const field of config.fields) {
       if (field.omitIfEmpty && !payload[field.key]) delete payload[field.key];
     }
+    // A rich-text field has no native <input required> to lean on the
+    // way every other required field on this form does — and "only empty
+    // formatting" (an empty bold run, a blank paragraph) needs to count
+    // as empty too. ResourceForm already reduces that down to an empty
+    // array before it ever reaches here, so an empty/missing array is a
+    // reliable signal either way.
+    const emptyRichTextField = config.fields.find((f) => {
+      if (f.type !== 'richtext' || !f.required) return false;
+      const value = payload[f.key];
+      return !(Array.isArray(value) && value.length > 0);
+    });
+    if (emptyRichTextField) {
+      setFormError(`${emptyRichTextField.label} is required.`);
+      return;
+    }
+    setSaving(true);
     try {
       if (editingId) {
         await api.patch(`${config.endpoint}/${editingId}`, payload);

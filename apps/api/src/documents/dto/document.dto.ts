@@ -14,11 +14,13 @@ export class CreateDocumentDto {
   @IsString() @MinLength(1) description!: string;
   @IsString() categoryId!: string;
   @IsOptional() @IsArray() @IsString({ each: true }) tags?: string[];
-  @IsString() fileType!: string;
-  @IsOptional() @IsString() fileSize?: string;
+  // `fileType`/`fileSize`/`updatedDate` are intentionally absent: they're
+  // derived server-side (DocumentsService.deriveFileMeta) from the actual
+  // uploaded asset and the current timestamp, never admin-entered. Any
+  // value a client sent for them would be silently ignored — the backend
+  // is the source of truth here, not just the admin form.
   @IsOptional() @IsString() version?: string;
   @IsDateString() publishDate!: string;
-  @IsDateString() updatedDate!: string;
   @IsOptional() @IsString() fileAssetId?: string;
   @IsOptional() @IsString() previewAssetId?: string;
   @IsOptional() content?: unknown;

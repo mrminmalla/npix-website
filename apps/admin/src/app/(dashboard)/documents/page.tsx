@@ -21,14 +21,35 @@ export default function DocumentsPage() {
             optionsLabelKey: 'title',
           },
           { key: 'description', label: 'Description', type: 'textarea', required: true, showInTable: false },
-          { key: 'fileType', label: 'File type', type: 'text', required: true, placeholder: 'PDF' },
-          { key: 'fileSize', label: 'File size', type: 'text', placeholder: '245 KB' },
+          // File type/size are derived automatically from the uploaded
+          // file itself (see DocumentsService.deriveFileMeta) — never
+          // admin-entered, so there's no field for either here.
           { key: 'version', label: 'Version', type: 'text', showInTable: false },
           { key: 'tags', label: 'Tags', type: 'tags', showInTable: false },
-          { key: 'publishDate', label: 'Publish date', type: 'date', required: true },
-          { key: 'updatedDate', label: 'Updated date', type: 'date', required: true, showInTable: false },
+          {
+            key: 'publishDate',
+            label: 'Publish date',
+            type: 'date',
+            required: true,
+            // Defaults to today for a new document; still fully editable
+            // for scheduling a future/backdated publish date. Only
+            // applies on create — editing an existing document always
+            // loads its real stored value. ('today' rather than a
+            // function: this page is a Server Component, and a function
+            // value can't cross into the Client Component that renders
+            // the form.)
+            defaultValue: 'today',
+          },
+          // Updated date is managed automatically by the backend on every
+          // save (DocumentsService.update) — not an admin-editable field.
           { key: 'fileAssetId', label: 'File', type: 'asset', showInTable: false },
-          { key: 'content', label: 'Content blocks (JSON, advanced)', type: 'json', showInTable: false },
+          {
+            key: 'content',
+            label: 'Document Content',
+            type: 'richtext',
+            showInTable: false,
+            placeholder: 'Write or paste the document content here…',
+          },
           { key: 'isFeatured', label: 'Featured', type: 'boolean' },
         ],
       }}

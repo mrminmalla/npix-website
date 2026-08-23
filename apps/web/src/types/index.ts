@@ -66,9 +66,17 @@ export interface CoreValue {
   icon: LucideIcon;
 }
 
+export type TextAlign = "left" | "center" | "right";
+
 export type ContentBlock =
-  | { type: "heading"; text: string }
-  | { type: "paragraph"; text: string }
+  // `html` (added for the admin rich-text editor) is trusted, pre-sanitized
+  // inline markup (bold/italic/underline/links) for this block's content —
+  // when present it's rendered as-is; `text` is a plain-text fallback used
+  // when it's absent (every block written before the rich-text editor
+  // existed only ever has `text`, and keeps rendering exactly as before).
+  | { type: "heading"; text: string; html?: string; level?: 2 | 3; align?: TextAlign }
+  | { type: "paragraph"; text: string; html?: string; align?: TextAlign }
+  | { type: "blockquote"; text: string; html?: string }
   | { type: "list"; ordered?: boolean; items: string[] }
   | { type: "table"; headers: string[]; rows: string[][] }
   | { type: "code"; language?: string; code: string }

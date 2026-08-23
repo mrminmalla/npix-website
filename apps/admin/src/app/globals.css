@@ -181,6 +181,17 @@ select {
   background: #f8fafc;
 }
 
+/* RichTextEditor (Documents content field) — Tiptap's Placeholder
+   extension only marks the empty node with a data-attribute/class; the
+   actual visible hint text is left to the consuming app's CSS. */
+.ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+  color: var(--muted);
+}
+
 input:focus,
 textarea:focus,
 select:focus {
