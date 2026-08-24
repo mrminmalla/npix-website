@@ -21,6 +21,15 @@ export function MobileMenu() {
     };
   }, [open]);
 
+  React.useEffect(() => {
+    if (!open) return;
+    function handleKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setOpen(false);
+    }
+    document.addEventListener("keydown", handleKey);
+    return () => document.removeEventListener("keydown", handleKey);
+  }, [open]);
+
   return (
     // Must flip at the same breakpoint as Navbar's primary <nav> (lg:) so
     // there's never a width where both or neither are visible.

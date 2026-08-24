@@ -56,6 +56,12 @@ export function Navbar() {
                     )}
                   >
                     {link.label}
+                    {isActive && (
+                      <span
+                        className="absolute inset-x-2.5 -bottom-1 h-0.5 rounded-full bg-secondary"
+                        aria-hidden="true"
+                      />
+                    )}
                   </Link>
                 </li>
               );

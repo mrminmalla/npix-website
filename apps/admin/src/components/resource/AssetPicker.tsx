@@ -67,6 +67,7 @@ export function AssetPicker({
               onChange(undefined);
             }}
             title="Remove"
+            aria-label={`Remove ${asset.originalFilename}`}
             className="shrink-0 rounded-lg p-1.5 text-[var(--danger)] transition hover:bg-[var(--danger-tint)]"
           >
             <X className="h-4 w-4" />

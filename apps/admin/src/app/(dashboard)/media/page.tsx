@@ -123,7 +123,11 @@ export default function MediaLibraryPage() {
               {asset.mimeType.startsWith('image/') ? (
                 <img
                   src={asset.url}
-                  alt={asset.altText ?? ''}
+                  // Falls back to the filename, not empty — an empty alt
+                  // marks the image purely decorative, hiding it from
+                  // screen readers even though it's the primary way to
+                  // tell thumbnails apart in this grid.
+                  alt={asset.altText || asset.originalFilename}
                   className="h-24 w-full rounded-lg border border-[var(--border)] bg-white object-contain"
                 />
               ) : (

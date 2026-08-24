@@ -9,6 +9,8 @@ export function ThemeToggle() {
     <button
       onClick={toggleTheme}
       title="Toggle dark/light mode"
+      aria-label="Toggle dark/light mode"
+      aria-pressed={theme === 'dark'}
       className="rounded-xl p-2 text-[var(--muted)] transition hover:bg-[var(--surface-hover)] hover:text-[var(--primary)]"
     >
       {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}

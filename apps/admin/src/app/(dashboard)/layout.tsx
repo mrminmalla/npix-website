@@ -40,6 +40,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <div className="flex items-center gap-3">
             <button
               onClick={() => setMobileOpen(true)}
+              title="Open menu"
+              aria-label="Open menu"
+              aria-expanded={mobileOpen}
               className="rounded-lg p-2 text-[var(--muted)] hover:bg-[var(--surface-hover)] lg:hidden"
             >
               <Menu className="h-5 w-5" />

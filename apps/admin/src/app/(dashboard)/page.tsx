@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Network, Newspaper, FileText, Percent, ArrowUpRight } from 'lucide-react';
+import { Network, Newspaper, FileText, Percent, ArrowUpRight, Plus } from 'lucide-react';
 import { api } from '@/lib/api';
 import { Card } from '@/components/ui/Card';
 
@@ -39,12 +39,28 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      <Card className="flex flex-col justify-between gap-3 p-6 sm:flex-row sm:items-center">
+      <Card className="flex flex-col justify-between gap-4 p-6 sm:flex-row sm:items-center">
         <div>
           <h1 className="text-2xl font-extrabold tracking-tight text-[var(--foreground)]">Dashboard</h1>
           <p className="mt-1 text-sm font-medium text-[var(--muted)]">
             Overview of the content powering the NPIX public website.
           </p>
+        </div>
+        <div className="flex shrink-0 flex-wrap gap-2">
+          <Link
+            href="/news?new=1"
+            className="inline-flex items-center gap-1.5 rounded-full bg-[var(--primary-solid)] px-4 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-[var(--primary-hover)]"
+          >
+            <Plus className="h-4 w-4" />
+            Add News
+          </Link>
+          <Link
+            href="/documents?new=1"
+            className="inline-flex items-center gap-1.5 rounded-full bg-[var(--surface-hover)] px-4 py-2 text-sm font-bold text-[var(--foreground)] transition hover:bg-[var(--border)]"
+          >
+            <Plus className="h-4 w-4" />
+            Add Document
+          </Link>
         </div>
       </Card>
 

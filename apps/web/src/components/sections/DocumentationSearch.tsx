@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { FileText, HelpCircle, ArrowRight } from "lucide-react";
+import { FileText, HelpCircle, ArrowRight, SearchX } from "lucide-react";
 import { SearchBar } from "@/components/shared/SearchBar";
 import { DocumentModal } from "@/components/shared/DocumentModal";
 import { searchDocuments, searchFaqs } from "@/lib/documents";
@@ -50,9 +50,15 @@ export function DocumentationSearch({
       {isOpen && (
         <div className="mx-auto mt-2 max-w-2xl overflow-hidden rounded-xl border border-border bg-background shadow-lg">
           {!hasResults ? (
-            <p className="px-5 py-6 text-center text-sm text-foreground-secondary">
-              No matches for &ldquo;{query}&rdquo;.
-            </p>
+            // Same "no results" language as EmptyState (SearchX icon +
+            // message) but sized for this compact dropdown rather than
+            // that component's full-page dashed-border card treatment.
+            <div className="flex flex-col items-center gap-2 px-5 py-8 text-center">
+              <SearchX className="h-5 w-5 text-foreground-secondary" aria-hidden="true" />
+              <p className="text-sm text-foreground-secondary">
+                No matches for &ldquo;{query}&rdquo;.
+              </p>
+            </div>
           ) : (
             <div className="max-h-[60vh] overflow-y-auto">
               {matchedDocs.length > 0 && (

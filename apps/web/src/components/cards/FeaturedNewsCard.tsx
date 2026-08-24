@@ -27,7 +27,12 @@ export function FeaturedNewsCard({ item }: { item: NewsItem }) {
         <Badge variant="accent" className="w-fit">
           {item.category}
         </Badge>
-        <h2 className="mt-4 text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+        {/* text-3xl/text-4xl matches the site's normal H2 convention
+            (about/statistics/documentation section headings) — this is
+            the single most prominent element on its page, so it
+            shouldn't be a smaller type step than an ordinary section
+            heading. */}
+        <h2 className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
           {item.title}
         </h2>
         <p className="mt-3 text-base leading-relaxed text-foreground-secondary">
