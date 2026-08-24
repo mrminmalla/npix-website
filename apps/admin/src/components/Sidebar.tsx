@@ -30,6 +30,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
 import { useState } from 'react';
+import type { MouseEvent, FocusEvent } from 'react';
 
 interface NavItem {
   href: string;
@@ -117,6 +118,23 @@ export function Sidebar({
   const { user, logout } = useAuth();
   const router = useRouter();
   const [collapsed, setCollapsed] = useState(false);
+  // The collapsed rail's tooltip used to be a per-item element positioned
+  // via `left-full` off the edge of its own <Link> — CSS-only, but that
+  // meant it lived inside the same scrolling <nav> the rail's own
+  // horizontal-overflow bug came from, so the two couldn't be fixed
+  // independently: clipping the nav (needed to actually kill the
+  // scrolling) also clipped the tooltip down to a few unreadable pixels.
+  // A single `position: fixed` tooltip, positioned in JS from the hovered
+  // item's real screen coordinates, has no ancestor to be clipped by at
+  // all, so the nav can safely clip and the tooltip can still fully
+  // escape it.
+  const [hoverTooltip, setHoverTooltip] = useState<{ label: string; top: number; left: number } | null>(null);
+
+  function showTooltip(e: MouseEvent<HTMLElement> | FocusEvent<HTMLElement>, label: string) {
+    if (!collapsed) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    setHoverTooltip({ label, top: rect.top + rect.height / 2, left: rect.right + 8 });
+  }
 
   const groups = NAV.filter((group) => !group.roles || (user && group.roles.includes(user.role)));
 
@@ -131,14 +149,44 @@ export function Sidebar({
 
       <aside
         className={clsx(
-          'fixed inset-y-0 left-0 z-50 flex h-full shrink-0 flex-col border-r border-[var(--border)] bg-[var(--surface)] shadow-xl transition-all duration-200 lg:static lg:shadow-none',
-          collapsed ? 'lg:w-[76px]' : 'lg:w-64',
+          // lg:relative (not lg:static) so the edge-mounted toggle button
+          // below has something to anchor to at desktop widths — position:
+          // relative behaves identically to static for layout/flex-sibling
+          // purposes, it just also establishes a positioning context.
+          'fixed inset-y-0 left-0 z-50 flex h-full shrink-0 flex-col border-r border-[var(--border)] bg-[var(--surface)] shadow-xl transition-[width] duration-200 ease-in-out lg:relative lg:shadow-none',
+          collapsed ? 'lg:w-[72px]' : 'lg:w-64',
           'w-64',
           mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
         )}
       >
-        {/* Brand header */}
-        <div className="flex h-16 shrink-0 items-center justify-between border-b border-[var(--border)] px-4">
+        {/* Desktop collapse/expand toggle. Deliberately NOT inside the
+            brand header below: at the collapsed width (72px) the header's
+            own horizontal padding leaves only ~40px of content room, which
+            is just enough for the 40px logo alone — adding a second flex
+            child (this button) there doesn't fit and was the actual cause
+            of the reported icon clipping / horizontal overflow. Edge-
+            mounted like this, it never competes with the logo for space
+            and stays in the same, predictable spot in both states. */}
+        <button
+          onClick={() => setCollapsed((c) => !c)}
+          title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+          aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+          aria-pressed={collapsed}
+          className="absolute -right-3.5 top-[18px] z-10 hidden h-7 w-7 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--surface)] text-[var(--muted)] shadow-md transition hover:border-[var(--primary)] hover:text-[var(--primary)] lg:flex"
+        >
+          <ChevronsLeft className={clsx('h-4 w-4 transition-transform', collapsed && 'rotate-180')} />
+        </button>
+
+        {/* Brand header. `lg:justify-center lg:px-2` only take effect at
+            the desktop breakpoint, so the mobile drawer (which always
+            shows the full logo + its own close button, regardless of the
+            desktop-only `collapsed` state) keeps its original layout. */}
+        <div
+          className={clsx(
+            'flex h-16 shrink-0 items-center justify-between border-b border-[var(--border)] px-4',
+            collapsed && 'lg:justify-center lg:px-2',
+          )}
+        >
           <Link href="/" className="flex min-w-0 items-center gap-3">
             <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white p-1.5 shadow-md ring-2 ring-[var(--primary-solid)]">
               {/* eslint-disable-next-line @next/next/no-img-element -- static local asset, no next/image usage elsewhere in this app */}
@@ -164,22 +212,20 @@ export function Sidebar({
           </Link>
 
           <button
-            onClick={() => setCollapsed((c) => !c)}
-            className="hidden rounded-lg p-1.5 text-[var(--muted)] transition hover:bg-[var(--surface-hover)] hover:text-[var(--primary)] lg:flex"
-            title="Toggle sidebar"
-          >
-            <ChevronsLeft className={clsx('h-4 w-4 transition-transform', collapsed && 'rotate-180')} />
-          </button>
-          <button
             onClick={onCloseMobile}
             className="rounded-lg p-1.5 text-[var(--muted)] hover:bg-[var(--surface-hover)] lg:hidden"
+            title="Close menu"
+            aria-label="Close menu"
           >
             <X className="h-5 w-5" />
           </button>
         </div>
 
-        {/* Nav */}
-        <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-3">
+        {/* Nav. overflow-x-hidden: this rail must never scroll sideways —
+            with the tooltip now rendered elsewhere (see hoverTooltip
+            below), there's nothing left that legitimately needs to
+            escape this container's own width, so clipping it is safe. */}
+        <nav className="flex-1 space-y-1 overflow-y-auto overflow-x-hidden px-3 py-3">
           {groups.map((group) => {
             return (
               <div key={group.title || group.items[0].href} className="pb-1">
@@ -197,9 +243,13 @@ export function Sidebar({
                         key={item.href}
                         href={item.href}
                         onClick={onCloseMobile}
+                        onMouseEnter={(e) => showTooltip(e, item.label)}
+                        onMouseLeave={() => setHoverTooltip(null)}
+                        onFocus={(e) => showTooltip(e, item.label)}
+                        onBlur={() => setHoverTooltip(null)}
                         title={collapsed ? item.label : undefined}
                         className={clsx(
-                          'group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition',
+                          'group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition',
                           collapsed && 'justify-center px-0',
                           active
                             ? 'bg-[var(--primary-solid)] font-semibold text-white shadow-md'
@@ -213,20 +263,6 @@ export function Sidebar({
                           )}
                         />
                         {!collapsed && <span className="truncate">{item.label}</span>}
-                        {collapsed && (
-                          // A real tooltip, not just the native `title` —
-                          // several icons in this collapsed rail (the
-                          // Statistics group especially) look similar
-                          // enough that a label is needed, and native
-                          // title tooltips are slow/inconsistent and
-                          // never appear on keyboard focus at all.
-                          <span
-                            role="tooltip"
-                            className="pointer-events-none absolute left-full top-1/2 z-50 ml-2 -translate-y-1/2 whitespace-nowrap rounded-lg bg-[var(--foreground)] px-2.5 py-1.5 text-xs font-semibold text-[var(--background)] opacity-0 shadow-lg transition-opacity duration-150 group-hover:opacity-100 group-focus-visible:opacity-100"
-                          >
-                            {item.label}
-                          </span>
-                        )}
                       </Link>
                     );
                   })}
@@ -260,6 +296,7 @@ export function Sidebar({
               <button
                 onClick={() => logout().then(() => router.replace('/login'))}
                 title="Sign out"
+                aria-label="Sign out"
                 className="shrink-0 rounded-lg p-1.5 text-[var(--muted)] transition hover:bg-[var(--danger-tint)] hover:text-[var(--danger)]"
               >
                 <LogOut className="h-4 w-4" />
@@ -268,6 +305,19 @@ export function Sidebar({
           </div>
         )}
       </aside>
+
+      {/* Single tooltip for the whole collapsed rail, positioned from real
+          screen coordinates rather than CSS relative to its trigger — see
+          the hoverTooltip comment above for why. */}
+      {collapsed && hoverTooltip && (
+        <span
+          role="tooltip"
+          style={{ top: hoverTooltip.top, left: hoverTooltip.left }}
+          className="pointer-events-none fixed z-[60] -translate-y-1/2 whitespace-nowrap rounded-lg bg-[var(--foreground)] px-2.5 py-1.5 text-xs font-semibold text-[var(--background)] shadow-lg"
+        >
+          {hoverTooltip.label}
+        </span>
+      )}
     </>
   );
 }
