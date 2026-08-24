@@ -162,23 +162,48 @@ kbd,
   background: rgba(148, 163, 184, 0.3);
 }
 
-input,
-textarea,
-select {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 0.75rem;
-  padding: 0.5rem 0.75rem;
-  font-size: 0.8125rem;
-  width: 100%;
-  color: var(--foreground);
-  transition: border-color 0.15s, box-shadow 0.15s;
-}
+/* @layer base (matching apps/web's globals.css) — not just style
+   organization: Tailwind's own utilities live inside its internal
+   `utilities` layer, and per the CSS cascade-layers spec, ANY unlayered
+   rule beats ANY layered one regardless of specificity. Left unlayered,
+   this plain `input { padding: ... }` rule silently won over utility
+   classes like `pl-9` meant to make room for an icon inside an input —
+   the padding never actually changed, so the icon and the input's own
+   text/placeholder rendered at the same position and overlapped. */
+@layer base {
+  input,
+  textarea,
+  select {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8125rem;
+    width: 100%;
+    color: var(--foreground);
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
 
-:root:not(.dark) input,
-:root:not(.dark) textarea,
-:root:not(.dark) select {
-  background: #f8fafc;
+  :root:not(.dark) input,
+  :root:not(.dark) textarea,
+  :root:not(.dark) select {
+    background: #f8fafc;
+  }
+
+  input:focus,
+  textarea:focus,
+  select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-tint);
+  }
+
+  input:disabled,
+  textarea:disabled,
+  select:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
 }
 
 /* RichTextEditor (Documents content field) — Tiptap's Placeholder
@@ -190,21 +215,6 @@ select {
   height: 0;
   pointer-events: none;
   color: var(--muted);
-}
-
-input:focus,
-textarea:focus,
-select:focus {
-  outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px var(--primary-tint);
-}
-
-input:disabled,
-textarea:disabled,
-select:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
 }
 
 @keyframes toast-in {

@@ -111,6 +111,23 @@ export function ResourceCrudPage({ config }: { config: ResourceConfig }) {
     load();
   }, [load]);
 
+  // Lets a link elsewhere in the admin (e.g. a dashboard "+ Add" shortcut)
+  // land directly on this resource's create form instead of just its list
+  // — reading window.location directly rather than next/navigation's
+  // useSearchParams(), which would force every one of the ~15 pages using
+  // this shared component into a Suspense boundary for a one-off feature
+  // only two of them use.
+  useEffect(() => {
+    if (typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('new') === '1') {
+      startCreate();
+      window.history.replaceState(null, '', window.location.pathname);
+    }
+    // Intentionally mount-only: startCreate has its own stable identity
+    // per render and re-running this on every render would reopen the
+    // form after the admin closes it.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const filteredRows = useMemo(() => {
     const q = search.trim().toLowerCase();
     if (!q) return rows;
@@ -241,12 +258,13 @@ export function ResourceCrudPage({ config }: { config: ResourceConfig }) {
 
       {rows.length > 0 && (
         <div className="relative mt-4 w-full sm:max-w-xs">
-          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--muted)]" />
+          <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--muted)]" />
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Filter…"
-            className="pl-9"
+            placeholder={`Search ${config.title.toLowerCase()}…`}
+            aria-label={`Search ${config.title}`}
+            className="h-10 pl-9 pr-3.5 text-sm"
           />
         </div>
       )}
@@ -298,6 +316,8 @@ export function ResourceCrudPage({ config }: { config: ResourceConfig }) {
                           <button
                             onClick={() => move(index, -1)}
                             disabled={index === 0}
+                            title="Move up"
+                            aria-label={`Move ${rowLabel(row, idKey)} up`}
                             className="rounded text-[var(--muted)] hover:text-[var(--primary)] disabled:opacity-25"
                           >
                             <ChevronUp className="h-3.5 w-3.5" />
@@ -305,6 +325,8 @@ export function ResourceCrudPage({ config }: { config: ResourceConfig }) {
                           <button
                             onClick={() => move(index, 1)}
                             disabled={index === rows.length - 1}
+                            title="Move down"
+                            aria-label={`Move ${rowLabel(row, idKey)} down`}
                             className="rounded text-[var(--muted)] hover:text-[var(--primary)] disabled:opacity-25"
                           >
                             <ChevronDown className="h-3.5 w-3.5" />
@@ -342,6 +364,7 @@ export function ResourceCrudPage({ config }: { config: ResourceConfig }) {
                         <button
                           onClick={() => startEdit(row)}
                           title="Edit"
+                          aria-label={`Edit ${rowLabel(row, idKey)}`}
                           className="rounded-lg bg-[var(--primary-tint)] p-1.5 text-[var(--primary)] transition hover:opacity-80"
                         >
                           <Pencil className="h-3.5 w-3.5" />
@@ -353,6 +376,7 @@ export function ResourceCrudPage({ config }: { config: ResourceConfig }) {
                               onClick={() => requestDelete(row)}
                               disabled={Boolean(blockReason)}
                               title={blockReason || 'Delete'}
+                              aria-label={blockReason || `Delete ${rowLabel(row, idKey)}`}
                               className="rounded-lg bg-[var(--danger-tint)] p-1.5 text-[var(--danger)] transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-30"
                             >
                               <Trash2 className="h-3.5 w-3.5" />
