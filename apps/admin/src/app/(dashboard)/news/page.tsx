@@ -40,7 +40,19 @@ export default function NewsPage() {
               { value: 'published', label: 'Published' },
             ],
           },
-          { key: 'publishedAt', label: 'Published date', type: 'date', required: true },
+          {
+            key: 'publishedAt',
+            label: 'Published date',
+            type: 'date',
+            required: true,
+            // Defaults to today for a new article/event, same pattern as
+            // Documents' Publish Date — still fully editable (including
+            // backdating or scheduling ahead), and only applies on
+            // create: editing an existing item always loads its real
+            // stored value instead (see ResourceCrudPage's
+            // resolveDefault/valueForEdit split).
+            defaultValue: 'today',
+          },
           { key: 'summary', label: 'Summary', type: 'textarea', required: true, showInTable: false },
           { key: 'content', label: 'Content', type: 'textarea', required: true, showInTable: false },
           {
