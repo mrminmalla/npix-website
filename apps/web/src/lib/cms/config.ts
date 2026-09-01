@@ -33,5 +33,11 @@ export async function cmsFetch<T>(path: string, options: CmsFetchOptions = {}): 
   if (!res.ok) {
     throw new CmsFetchError(`CMS request failed: ${path} (${res.status})`, res.status);
   }
-  return res.json() as Promise<T>;
+  // A Nest controller returning `null` (e.g. "nothing is featured") sends
+  // an empty body, not the literal text "null" — Nest's response handling
+  // treats null and undefined alike and just ends the response. res.json()
+  // throws on an empty body ("Unexpected end of JSON input"), so read text
+  // first and only parse when there's actually something to parse.
+  const text = await res.text();
+  return (text ? JSON.parse(text) : null) as T;
 }

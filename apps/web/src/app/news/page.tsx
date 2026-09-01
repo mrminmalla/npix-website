@@ -31,7 +31,7 @@ export default async function NewsPage() {
     getAllNews(),
     getUpcomingEvents(),
   ]);
-  const rest = all.filter((item) => item.id !== featured.id);
+  const rest = featured ? all.filter((item) => item.id !== featured.id) : all;
 
   return (
     <>
@@ -54,13 +54,15 @@ export default async function NewsPage() {
 
       <UpcomingEvents events={upcoming} />
 
-      <section className="bg-surface py-12 md:py-16">
-        <div className="container-page">
-          <FadeIn>
-            <FeaturedNewsCard item={featured} />
-          </FadeIn>
-        </div>
-      </section>
+      {featured && (
+        <section className="bg-surface py-12 md:py-16">
+          <div className="container-page">
+            <FadeIn>
+              <FeaturedNewsCard item={featured} />
+            </FadeIn>
+          </div>
+        </section>
+      )}
 
       <section className="py-12 md:py-16">
         <div className="container-page">

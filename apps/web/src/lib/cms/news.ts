@@ -60,9 +60,12 @@ export async function getUpcomingEvents(): Promise<NewsItem[]> {
   return items.map(toNewsItem);
 }
 
-export async function getFeaturedNews(): Promise<NewsItem> {
-  const item = await cmsFetch<ApiNewsEvent>("/api/v1/news/featured");
-  return toNewsItem(item);
+/** Null when the admin hasn't marked anything Featured (or the featured
+ *  item is currently a draft) — the News & Events page must handle that by
+ *  simply omitting the featured section, never by picking a stand-in. */
+export async function getFeaturedNews(): Promise<NewsItem | null> {
+  const item = await cmsFetch<ApiNewsEvent | null>("/api/v1/news/featured");
+  return item ? toNewsItem(item) : null;
 }
 
 export async function getNewsBySlug(slug: string): Promise<NewsItem | null> {
