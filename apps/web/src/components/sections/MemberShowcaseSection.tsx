@@ -3,7 +3,10 @@ import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/shared/FadeIn";
 import { uniqueSpecialMembers } from "@/lib/cms/members";
+import { chunkIntoRows } from "@/lib/utils";
 import type { Member } from "@/types";
+
+const ROW_SIZE = 4;
 
 export function MemberShowcaseSection({ members }: { members: Member[] }) {
   const specialMembers = uniqueSpecialMembers(members);
@@ -34,24 +37,28 @@ export function MemberShowcaseSection({ members }: { members: Member[] }) {
           </Link>
         </FadeIn>
 
-        <StaggerContainer className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
-          {specialMembers.map((member) => (
-            <StaggerItem key={member.id}>
-              <a
-                href={member.website}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex h-32 items-center justify-center rounded-xl border border-border bg-white p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
-              >
-                <Image
-                  src={member.logo!}
-                  alt={member.name}
-                  width={160}
-                  height={80}
-                  className="max-h-16 w-auto object-contain"
-                />
-              </a>
-            </StaggerItem>
+        <StaggerContainer className="mt-8 flex flex-col gap-4">
+          {chunkIntoRows(specialMembers, ROW_SIZE).map((row, rowIndex) => (
+            <div key={rowIndex} className="flex flex-col gap-4 sm:flex-row">
+              {row.map((member) => (
+                <StaggerItem key={member.id} className="min-w-0 sm:flex-1">
+                  <a
+                    href={member.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex h-32 items-center justify-center rounded-xl border border-border bg-white p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
+                  >
+                    <Image
+                      src={member.logo!}
+                      alt={member.name}
+                      width={160}
+                      height={80}
+                      className="max-h-16 w-auto object-contain"
+                    />
+                  </a>
+                </StaggerItem>
+              ))}
+            </div>
           ))}
         </StaggerContainer>
       </div>

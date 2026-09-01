@@ -13,7 +13,10 @@ import { FadeIn } from "@/components/shared/FadeIn";
 import { DocumentModal } from "@/components/shared/DocumentModal";
 import { getDocumentCategories, getDocumentsByCategory } from "@/lib/documents";
 import { resolveIcon } from "@/lib/cms/icons";
+import { chunkIntoRows } from "@/lib/utils";
 import type { DocumentCategoryMeta, DocumentResource } from "@/types";
+
+const ROW_SIZE = 2;
 
 export function DocumentCategoryList({
   categories,
@@ -62,26 +65,30 @@ export function DocumentCategoryList({
                     </div>
                   </AccordionTrigger>
                   <AccordionContent className="px-5 sm:px-7">
-                    <div className="grid grid-cols-1 gap-1 border-t border-border pt-4 sm:grid-cols-2">
-                      {items.map((item) => (
-                        <button
-                          key={item.id}
-                          type="button"
-                          onClick={() => setActiveDocument(item)}
-                          className="group/item flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2.5 text-left text-sm text-foreground-secondary transition-colors hover:bg-surface hover:text-foreground"
-                        >
-                          <span className="flex items-center gap-2.5">
-                            <span
-                              className="h-1.5 w-1.5 shrink-0 rounded-full bg-secondary"
-                              aria-hidden="true"
-                            />
-                            {item.title}
-                          </span>
-                          <ChevronRight
-                            className="h-4 w-4 shrink-0 text-foreground-secondary/60 transition-transform group-hover/item:translate-x-0.5"
-                            aria-hidden="true"
-                          />
-                        </button>
+                    <div className="flex flex-col gap-1 border-t border-border pt-4">
+                      {chunkIntoRows(items, ROW_SIZE).map((row, rowIndex) => (
+                        <div key={rowIndex} className="flex flex-col gap-1 sm:flex-row">
+                          {row.map((item) => (
+                            <button
+                              key={item.id}
+                              type="button"
+                              onClick={() => setActiveDocument(item)}
+                              className="group/item flex min-w-0 items-center justify-between gap-3 rounded-lg px-3 py-2.5 text-left text-sm text-foreground-secondary transition-colors hover:bg-surface hover:text-foreground sm:flex-1"
+                            >
+                              <span className="flex items-center gap-2.5">
+                                <span
+                                  className="h-1.5 w-1.5 shrink-0 rounded-full bg-secondary"
+                                  aria-hidden="true"
+                                />
+                                {item.title}
+                              </span>
+                              <ChevronRight
+                                className="h-4 w-4 shrink-0 text-foreground-secondary/60 transition-transform group-hover/item:translate-x-0.5"
+                                aria-hidden="true"
+                              />
+                            </button>
+                          ))}
+                        </div>
                       ))}
                     </div>
                   </AccordionContent>

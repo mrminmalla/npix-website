@@ -7,6 +7,7 @@ import { Timeline } from "@/components/sections/Timeline";
 import { JsonLd } from "@/components/shared/JsonLd";
 import { getAboutData, type PageSection } from "@/lib/cms/about";
 import { resolveIcon } from "@/lib/cms/icons";
+import { chunkIntoRows } from "@/lib/utils";
 import { SITE_URL } from "@/constants/site";
 
 export const revalidate = 60;
@@ -180,28 +181,35 @@ export default async function AboutPage() {
               </h2>
             </FadeIn>
 
-            {/* md:3 step avoids jumping straight from 2 to 5 columns —
-                without it, five text-heavy cards get visibly cramped at
-                common laptop/tablet widths (1024–1279px). */}
-            <StaggerContainer className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
-              {coreValues.map((value) => {
-                const Icon = value.icon;
-                return (
-                  <StaggerItem key={value.id}>
-                    <div className="flex h-full flex-col items-start rounded-xl border border-border bg-background p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
-                      <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                        <Icon className="h-5 w-5" aria-hidden="true" />
-                      </div>
-                      <h3 className="mt-4 text-base font-semibold text-foreground">
-                        {value.title}
-                      </h3>
-                      <p className="mt-2 text-sm leading-relaxed text-foreground-secondary">
-                        {value.description}
-                      </p>
-                    </div>
-                  </StaggerItem>
-                );
-              })}
+            {/* Chunked into rows of at most 5 rather than a fixed 5-column
+                grid: a count that isn't a multiple of 5 no longer strands a
+                partial row at a fraction of the width (see chunkIntoRows).
+                Row layout only kicks in at lg — 5 real cards need the same
+                width the old grid's own final 5-column tier already
+                assumed; below that everything simply stacks. */}
+            <StaggerContainer className="mt-8 flex flex-col gap-6">
+              {chunkIntoRows(coreValues, 5).map((row, rowIndex) => (
+                <div key={rowIndex} className="flex flex-col gap-6 lg:flex-row">
+                  {row.map((value) => {
+                    const Icon = value.icon;
+                    return (
+                      <StaggerItem key={value.id} className="min-w-0 lg:flex-1">
+                        <div className="flex h-full flex-col items-start rounded-xl border border-border bg-background p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+                          <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+                            <Icon className="h-5 w-5" aria-hidden="true" />
+                          </div>
+                          <h3 className="mt-4 text-base font-semibold text-foreground">
+                            {value.title}
+                          </h3>
+                          <p className="mt-2 text-sm leading-relaxed text-foreground-secondary">
+                            {value.description}
+                          </p>
+                        </div>
+                      </StaggerItem>
+                    );
+                  })}
+                </div>
+              ))}
             </StaggerContainer>
           </div>
         </section>
@@ -240,30 +248,37 @@ export default async function AboutPage() {
               </h2>
             </FadeIn>
 
-            <StaggerContainer className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              {team.map((member) => (
-                <StaggerItem key={member.id}>
-                  <div className="flex h-full flex-col items-center rounded-xl border border-border bg-background p-6 text-center shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
-                    {member.photo ? (
-                      <Image
-                        src={member.photo}
-                        alt={member.name}
-                        width={64}
-                        height={64}
-                        className="h-16 w-16 rounded-lg object-cover"
-                      />
-                    ) : (
-                      <InitialsAvatar name={member.name} className="h-16 w-16 text-lg" />
-                    )}
-                    <h3 className="mt-4 text-base font-semibold text-foreground">
-                      {member.name}
-                    </h3>
-                    <p className="text-sm font-medium text-secondary">{member.role}</p>
-                    <p className="mt-2 text-sm leading-relaxed text-foreground-secondary">
-                      {member.bio}
-                    </p>
-                  </div>
-                </StaggerItem>
+            <StaggerContainer className="mt-8 flex flex-col gap-6">
+              {chunkIntoRows(team, 4).map((row, rowIndex) => (
+                // lg, not sm: these cards carry a photo plus 3 lines of
+                // text, so they need the same width the old 4-column grid
+                // only ever assumed at lg.
+                <div key={rowIndex} className="flex flex-col gap-6 lg:flex-row">
+                  {row.map((member) => (
+                    <StaggerItem key={member.id} className="min-w-0 lg:flex-1">
+                      <div className="flex h-full flex-col items-center rounded-xl border border-border bg-background p-6 text-center shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+                        {member.photo ? (
+                          <Image
+                            src={member.photo}
+                            alt={member.name}
+                            width={64}
+                            height={64}
+                            className="h-16 w-16 rounded-lg object-cover"
+                          />
+                        ) : (
+                          <InitialsAvatar name={member.name} className="h-16 w-16 text-lg" />
+                        )}
+                        <h3 className="mt-4 text-base font-semibold text-foreground">
+                          {member.name}
+                        </h3>
+                        <p className="text-sm font-medium text-secondary">{member.role}</p>
+                        <p className="mt-2 text-sm leading-relaxed text-foreground-secondary">
+                          {member.bio}
+                        </p>
+                      </div>
+                    </StaggerItem>
+                  ))}
+                </div>
               ))}
             </StaggerContainer>
           </div>

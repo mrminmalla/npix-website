@@ -7,9 +7,11 @@ import { PointsOfPresenceSection } from "@/components/sections/PointsOfPresenceS
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/shared/FadeIn";
 import { JsonLd } from "@/components/shared/JsonLd";
 import { getStatisticsData } from "@/lib/cms/statistics";
+import { chunkIntoRows } from "@/lib/utils";
 import { SITE_URL } from "@/constants/site";
 
 export const revalidate = 60;
+const STAT_ROW_SIZE = 4;
 
 export const metadata: Metadata = {
   title: "Statistics",
@@ -91,19 +93,23 @@ export default async function StatisticsPage() {
             </p>
           </FadeIn>
 
-          <StaggerContainer className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {trafficInsights.map((stat) => (
-              <StaggerItem key={stat.id}>
-                <StatCard
-                  label={stat.label}
-                  value={stat.value}
-                  icon={stat.icon}
-                  suffix={stat.suffix}
-                  decimals={stat.decimals}
-                  description={stat.description}
-                  className="h-full"
-                />
-              </StaggerItem>
+          <StaggerContainer className="mt-8 flex flex-col gap-5">
+            {chunkIntoRows(trafficInsights, STAT_ROW_SIZE).map((row, rowIndex) => (
+              <div key={rowIndex} className="flex flex-col gap-5 sm:flex-row">
+                {row.map((stat) => (
+                  <StaggerItem key={stat.id} className="min-w-0 sm:flex-1">
+                    <StatCard
+                      label={stat.label}
+                      value={stat.value}
+                      icon={stat.icon}
+                      suffix={stat.suffix}
+                      decimals={stat.decimals}
+                      description={stat.description}
+                      className="h-full"
+                    />
+                  </StaggerItem>
+                ))}
+              </div>
             ))}
           </StaggerContainer>
         </div>
@@ -125,19 +131,23 @@ export default async function StatisticsPage() {
             </p>
           </FadeIn>
 
-          <StaggerContainer className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {infrastructure.map((stat) => (
-              <StaggerItem key={stat.id}>
-                <StatCard
-                  label={stat.label}
-                  value={stat.value}
-                  icon={stat.icon}
-                  suffix={stat.suffix}
-                  decimals={stat.decimals}
-                  description={stat.description}
-                  className="h-full"
-                />
-              </StaggerItem>
+          <StaggerContainer className="mt-8 flex flex-col gap-5">
+            {chunkIntoRows(infrastructure, STAT_ROW_SIZE).map((row, rowIndex) => (
+              <div key={rowIndex} className="flex flex-col gap-5 sm:flex-row">
+                {row.map((stat) => (
+                  <StaggerItem key={stat.id} className="min-w-0 sm:flex-1">
+                    <StatCard
+                      label={stat.label}
+                      value={stat.value}
+                      icon={stat.icon}
+                      suffix={stat.suffix}
+                      decimals={stat.decimals}
+                      description={stat.description}
+                      className="h-full"
+                    />
+                  </StaggerItem>
+                ))}
+              </div>
             ))}
           </StaggerContainer>
         </div>

@@ -8,6 +8,21 @@ import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
 
+const ROW_SIZE = 6;
+
+/** Groups a list into rows of at most `size`, so a fixed N-column grid
+ *  doesn't leave dead space whenever the asset count isn't a multiple of
+ *  N — each row's own item count drives an even flex split instead (see
+ *  apps/web/src/lib/utils.ts's chunkIntoRows for the same pattern; no
+ *  shared utils module exists in this app to import it from). */
+function chunkIntoRows<T>(items: T[], size: number): T[][] {
+  const rows: T[][] = [];
+  for (let i = 0; i < items.length; i += size) {
+    rows.push(items.slice(i, i + size));
+  }
+  return rows;
+}
+
 interface Asset {
   id: string;
   url: string;
@@ -112,44 +127,48 @@ export default function MediaLibraryPage() {
         </p>
       )}
 
-      <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4 lg:grid-cols-6">
+      <div className="mt-6 flex flex-col gap-4">
         {loading ? (
-          <p className="col-span-full text-sm text-[var(--muted)]">Loading…</p>
+          <p className="text-sm text-[var(--muted)]">Loading…</p>
         ) : assets.length === 0 ? (
-          <p className="col-span-full text-sm text-[var(--muted)]">No files uploaded yet.</p>
+          <p className="text-sm text-[var(--muted)]">No files uploaded yet.</p>
         ) : (
-          assets.map((asset) => (
-            <Card key={asset.id} className="group relative overflow-hidden p-2">
-              {asset.mimeType.startsWith('image/') ? (
-                <img
-                  src={asset.url}
-                  // Falls back to the filename, not empty — an empty alt
-                  // marks the image purely decorative, hiding it from
-                  // screen readers even though it's the primary way to
-                  // tell thumbnails apart in this grid.
-                  alt={asset.altText || asset.originalFilename}
-                  className="h-24 w-full rounded-lg border border-[var(--border)] bg-white object-contain"
-                />
-              ) : (
-                <div className="flex h-24 items-center justify-center rounded-lg bg-[var(--surface-hover)] text-[var(--muted)]">
-                  <ImageIcon className="h-6 w-6" />
-                </div>
-              )}
-              <p className="mt-2 truncate text-xs font-semibold text-[var(--foreground)]">
-                {asset.originalFilename}
-              </p>
-              <p className="text-[10px] font-medium text-[var(--muted)]">
-                {Math.round(asset.sizeBytes / 1024)} KB
-              </p>
-              <button
-                onClick={() => requestDelete(asset)}
-                title="Delete"
-                aria-label={`Delete ${asset.originalFilename}`}
-                className="absolute right-2 top-2 rounded-lg bg-white/90 p-1.5 text-[var(--danger)] opacity-0 shadow-sm transition group-hover:opacity-100 group-focus-within:opacity-100 focus-visible:opacity-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--danger)] dark:bg-slate-900/90"
-              >
-                <Trash2 className="h-3.5 w-3.5" />
-              </button>
-            </Card>
+          chunkIntoRows(assets, ROW_SIZE).map((row, rowIndex) => (
+            <div key={rowIndex} className="flex flex-col gap-4 lg:flex-row">
+              {row.map((asset) => (
+                <Card key={asset.id} className="group relative min-w-0 overflow-hidden p-2 lg:flex-1">
+                  {asset.mimeType.startsWith('image/') ? (
+                    <img
+                      src={asset.url}
+                      // Falls back to the filename, not empty — an empty alt
+                      // marks the image purely decorative, hiding it from
+                      // screen readers even though it's the primary way to
+                      // tell thumbnails apart in this grid.
+                      alt={asset.altText || asset.originalFilename}
+                      className="h-24 w-full rounded-lg border border-[var(--border)] bg-white object-contain"
+                    />
+                  ) : (
+                    <div className="flex h-24 items-center justify-center rounded-lg bg-[var(--surface-hover)] text-[var(--muted)]">
+                      <ImageIcon className="h-6 w-6" />
+                    </div>
+                  )}
+                  <p className="mt-2 truncate text-xs font-semibold text-[var(--foreground)]">
+                    {asset.originalFilename}
+                  </p>
+                  <p className="text-[10px] font-medium text-[var(--muted)]">
+                    {Math.round(asset.sizeBytes / 1024)} KB
+                  </p>
+                  <button
+                    onClick={() => requestDelete(asset)}
+                    title="Delete"
+                    aria-label={`Delete ${asset.originalFilename}`}
+                    className="absolute right-2 top-2 rounded-lg bg-white/90 p-1.5 text-[var(--danger)] opacity-0 shadow-sm transition group-hover:opacity-100 group-focus-within:opacity-100 focus-visible:opacity-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--danger)] dark:bg-slate-900/90"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </button>
+                </Card>
+              ))}
+            </div>
           ))
         )}
       </div>

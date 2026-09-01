@@ -13,11 +13,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { StaggerContainer, StaggerItem } from "@/components/shared/FadeIn";
-import { cn } from "@/lib/utils";
+import { chunkIntoRows, cn } from "@/lib/utils";
 import type { NewsItem } from "@/types";
 import { NEWS_CATEGORIES } from "@/data/news";
 
 const PAGE_SIZE = 6;
+const ROW_SIZE = 3;
 
 export function NewsDirectory({ items }: { items: NewsItem[] }) {
   const [query, setQuery] = React.useState("");
@@ -132,12 +133,21 @@ export function NewsDirectory({ items }: { items: NewsItem[] }) {
         ) : (
           <StaggerContainer
             key={`${category}-${year}-${query}-${page}`}
-            className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+            className="flex flex-col gap-6"
           >
-            {paged.map((item) => (
-              <StaggerItem key={item.id}>
-                <NewsCard item={item} />
-              </StaggerItem>
+            {/* Even a "fixed" PAGE_SIZE doesn't guarantee full rows here —
+                the last page of almost any filtered/searched result is a
+                partial row, which a fixed grid would leave stranded. lg,
+                not sm: NewsCard carries a banner image, same reasoning as
+                NewsSection/EventsAnnouncementsSection. */}
+            {chunkIntoRows(paged, ROW_SIZE).map((row, rowIndex) => (
+              <div key={rowIndex} className="flex flex-col gap-6 lg:flex-row">
+                {row.map((item) => (
+                  <StaggerItem key={item.id} className="min-w-0 lg:flex-1">
+                    <NewsCard item={item} />
+                  </StaggerItem>
+                ))}
+              </div>
             ))}
           </StaggerContainer>
         )}

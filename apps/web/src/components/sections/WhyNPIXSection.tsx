@@ -1,5 +1,8 @@
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/shared/FadeIn";
+import { chunkIntoRows } from "@/lib/utils";
 import type { WhyNpixItem } from "@/types";
+
+const ROW_SIZE = 4;
 
 export function WhyNPIXSection({ items }: { items: WhyNpixItem[] }) {
   if (items.length === 0) return null;
@@ -20,23 +23,27 @@ export function WhyNPIXSection({ items }: { items: WhyNpixItem[] }) {
           </p>
         </FadeIn>
 
-        <StaggerContainer className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {items.map((item) => {
-            const Icon = item.icon;
-            return (
-              <StaggerItem key={item.id}>
-                <div className="flex h-full flex-col rounded-xl border border-border bg-background p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-secondary/10 text-secondary">
-                    <Icon className="h-6 w-6" aria-hidden="true" />
-                  </div>
-                  <h3 className="mt-4 text-base font-semibold text-foreground">{item.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-foreground-secondary">
-                    {item.description}
-                  </p>
-                </div>
-              </StaggerItem>
-            );
-          })}
+        <StaggerContainer className="mt-8 flex flex-col gap-6">
+          {chunkIntoRows(items, ROW_SIZE).map((row, rowIndex) => (
+            <div key={rowIndex} className="flex flex-col gap-6 sm:flex-row">
+              {row.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <StaggerItem key={item.id} className="min-w-0 sm:flex-1">
+                    <div className="flex h-full flex-col rounded-xl border border-border bg-background p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-secondary/10 text-secondary">
+                        <Icon className="h-6 w-6" aria-hidden="true" />
+                      </div>
+                      <h3 className="mt-4 text-base font-semibold text-foreground">{item.title}</h3>
+                      <p className="mt-2 text-sm leading-relaxed text-foreground-secondary">
+                        {item.description}
+                      </p>
+                    </div>
+                  </StaggerItem>
+                );
+              })}
+            </div>
+          ))}
         </StaggerContainer>
       </div>
     </section>

@@ -2,7 +2,10 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { NewsCard } from "@/components/cards/NewsCard";
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/shared/FadeIn";
+import { chunkIntoRows } from "@/lib/utils";
 import type { NewsItem } from "@/types";
+
+const ROW_SIZE = 4;
 
 export function NewsSection({ items }: { items: NewsItem[] }) {
   if (items.length === 0) return null;
@@ -32,11 +35,20 @@ export function NewsSection({ items }: { items: NewsItem[] }) {
           </Link>
         </FadeIn>
 
-        <StaggerContainer className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {items.map((item) => (
-            <StaggerItem key={item.id}>
-              <NewsCard item={item} />
-            </StaggerItem>
+        <StaggerContainer className="mt-8 flex flex-col gap-6">
+          {chunkIntoRows(items, ROW_SIZE).map((row, rowIndex) => (
+            // lg, not sm: NewsCard carries a banner image and several text
+            // rows, so cramming up to 4 of them into a tablet-width row
+            // reads worse than stacking — the row layout only kicks in
+            // once there's the same width the old 4-column grid already
+            // assumed at lg. Below that everything just stacks singly.
+            <div key={rowIndex} className="flex flex-col gap-6 lg:flex-row">
+              {row.map((item) => (
+                <StaggerItem key={item.id} className="min-w-0 lg:flex-1">
+                  <NewsCard item={item} />
+                </StaggerItem>
+              ))}
+            </div>
           ))}
         </StaggerContainer>
       </div>
