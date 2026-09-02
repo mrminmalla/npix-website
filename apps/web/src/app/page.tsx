@@ -5,7 +5,6 @@ import { TrafficSection } from "@/components/sections/TrafficSection";
 import { WhyNPIXSection } from "@/components/sections/WhyNPIXSection";
 import { EventsAnnouncementsSection } from "@/components/sections/EventsAnnouncementsSection";
 import { MemberShowcaseSection } from "@/components/sections/MemberShowcaseSection";
-import { NewsSection } from "@/components/sections/NewsSection";
 import { CTASection } from "@/components/sections/CTASection";
 import { JsonLd } from "@/components/shared/JsonLd";
 import { getHomeData } from "@/lib/cms/home";
@@ -25,7 +24,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const { stats, whyNpix, trafficPanel, memberShowcase, eventsAnnouncements, news } =
+  const { stats, whyNpix, trafficPanel, memberShowcase, eventsAnnouncements } =
     await getHomeData();
 
   return (
@@ -47,7 +46,6 @@ export default async function Home() {
       <WhyNPIXSection items={whyNpix} />
       <EventsAnnouncementsSection items={eventsAnnouncements} />
       <MemberShowcaseSection members={memberShowcase} />
-      <NewsSection items={news} />
       <CTASection />
     </>
   );
