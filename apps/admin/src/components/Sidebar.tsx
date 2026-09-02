@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useRouter, usePathname } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
 import {
   LayoutDashboard,
@@ -25,7 +25,6 @@ import {
   UserCog,
   ChevronsLeft,
   X,
-  LogOut,
   type LucideIcon,
 } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
@@ -98,7 +97,9 @@ export const NAV_LABELS: Record<string, string> = Object.fromEntries(
   NAV.flatMap((group) => group.items.map((item) => [item.href, item.label])),
 );
 
-function initials(name: string) {
+/** Also used by the dashboard header's user profile chip (see
+ *  (dashboard)/layout.tsx), which is why this is exported. */
+export function initials(name: string) {
   return name
     .split(' ')
     .filter(Boolean)
@@ -115,8 +116,7 @@ export function Sidebar({
   onCloseMobile: () => void;
 }) {
   const pathname = usePathname();
-  const { user, logout } = useAuth();
-  const router = useRouter();
+  const { user } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
   // The collapsed rail's tooltip used to be a per-item element positioned
   // via `left-full` off the edge of its own <Link> — CSS-only, but that
@@ -272,38 +272,34 @@ export function Sidebar({
           })}
         </nav>
 
-        {/* Footer / user */}
-        {user && (
-          <div className="shrink-0 border-t border-[var(--border)] p-3">
-            <div
-              className={clsx(
-                'flex items-center gap-3 rounded-xl p-2',
-                collapsed && 'justify-center',
-              )}
-            >
-              <div className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[var(--primary-solid)] text-xs font-bold text-white ring-1 ring-[var(--primary-hover)]">
-                {initials(user.name)}
-                <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-[var(--accent)] ring-2 ring-[var(--surface)]" />
-              </div>
-              {!collapsed && (
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-xs font-bold text-[var(--foreground)]">{user.name}</p>
-                  <p className="truncate text-[11px] font-medium text-[var(--muted)]">
-                    {user.role.replace('_', ' ')}
-                  </p>
-                </div>
-              )}
-              <button
-                onClick={() => logout().then(() => router.replace('/login'))}
-                title="Sign out"
-                aria-label="Sign out"
-                className="shrink-0 rounded-lg p-1.5 text-[var(--muted)] transition hover:bg-[var(--danger-tint)] hover:text-[var(--danger)]"
-              >
-                <LogOut className="h-4 w-4" />
-              </button>
-            </div>
+        {/* Footer / brand banner. The user's identity and sign-out action
+            now live in the dashboard header instead (see
+            (dashboard)/layout.tsx) — this footer is purely branding, so it
+            has no per-user state and renders identically regardless of
+            `user`. Two different source images (not one image resized):
+            the square icon mark is what actually reads cleanly at the
+            collapsed rail's narrow content width — shrinking the wide
+            full logo down that far would make its wordmark illegible. */}
+        <div className="shrink-0 border-t border-[var(--border)] p-3">
+          <div
+            className={clsx(
+              'flex items-center justify-center rounded-xl bg-[var(--surface-hover)] px-3 py-2.5',
+              collapsed && 'px-0',
+            )}
+          >
+            {collapsed ? (
+              // eslint-disable-next-line @next/next/no-img-element -- static local asset, matches the brand-header logo above
+              <img src="/workalaya-icon.png" alt="Workalaya" className="h-8 w-8 object-contain" />
+            ) : (
+              // eslint-disable-next-line @next/next/no-img-element -- static local asset
+              <img
+                src="/workalaya-flogo.png"
+                alt="Workalaya"
+                className="h-8 w-auto max-w-full object-contain"
+              />
+            )}
           </div>
-        )}
+        </div>
       </aside>
 
       {/* Single tooltip for the whole collapsed rail, positioned from real

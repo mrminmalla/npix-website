@@ -2,13 +2,13 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { Menu, ChevronRight } from 'lucide-react';
+import { Menu, ChevronRight, LogOut } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
-import { Sidebar, NAV_LABELS } from '@/components/Sidebar';
+import { Sidebar, NAV_LABELS, initials } from '@/components/Sidebar';
 import { ThemeToggle } from '@/components/ThemeToggle';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const { user, loading } = useAuth();
+  const { user, loading, logout } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -58,8 +58,38 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </nav>
           </div>
 
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1.5">
             <ThemeToggle />
+
+            {/* User profile: moved here from the sidebar footer (which is
+                now pure branding) so identity/role/sign-out live with the
+                rest of the header's top-right actions. Name/role text
+                hides below sm so the chip stays compact next to the
+                breadcrumb on narrow headers — the avatar alone still
+                identifies the account. */}
+            <div className="flex items-center gap-2 rounded-xl py-1 pl-1 pr-1.5 sm:bg-[var(--surface-hover)]">
+              <div className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[var(--primary-solid)] text-[11px] font-bold text-white ring-1 ring-[var(--primary-hover)]">
+                {initials(user.name)}
+                <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-[var(--accent)] ring-2 ring-[var(--surface)]" />
+              </div>
+              <div className="hidden min-w-0 sm:block">
+                <p className="max-w-[9rem] truncate text-xs font-bold leading-tight text-[var(--foreground)]">
+                  {user.name}
+                </p>
+                <p className="truncate text-[10px] font-semibold uppercase leading-tight tracking-wide text-[var(--muted)]">
+                  {user.role.replace('_', ' ')}
+                </p>
+              </div>
+            </div>
+
+            <button
+              onClick={() => logout().then(() => router.replace('/login'))}
+              title="Sign out"
+              aria-label="Sign out"
+              className="shrink-0 rounded-lg p-2 text-[var(--muted)] transition hover:bg-[var(--danger-tint)] hover:text-[var(--danger)]"
+            >
+              <LogOut className="h-4 w-4" />
+            </button>
           </div>
         </header>
 
