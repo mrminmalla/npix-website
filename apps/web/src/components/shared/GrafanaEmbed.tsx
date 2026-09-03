@@ -70,7 +70,7 @@ export function GrafanaEmbed({
       {mounted && status === "error" && (
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 px-6 text-center">
           <AlertTriangle className="h-6 w-6 text-foreground-secondary" aria-hidden="true" />
-          <p className="text-sm text-foreground-secondary">
+          <p className="text-sm text-foreground">
             Unable to load the traffic graph right now.
           </p>
           <button

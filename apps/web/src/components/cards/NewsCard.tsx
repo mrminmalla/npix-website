@@ -35,7 +35,7 @@ export function NewsCard({ item, className }: { item: NewsItem; className?: stri
           {item.summary}
         </p>
 
-        <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-foreground-secondary">
+        <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-foreground">
           <span className="inline-flex items-center gap-1.5">
             <CalendarDays className="h-3.5 w-3.5" aria-hidden="true" />
             {formatDate(item.date)}
@@ -46,7 +46,7 @@ export function NewsCard({ item, className }: { item: NewsItem; className?: stri
           </span>
         </div>
         {item.location && (
-          <span className="mt-1 inline-flex items-center gap-1.5 text-xs text-foreground-secondary">
+          <span className="mt-1 inline-flex items-center gap-1.5 text-xs text-foreground">
             <MapPin className="h-3.5 w-3.5" aria-hidden="true" />
             {item.location}
           </span>

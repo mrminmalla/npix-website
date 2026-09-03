@@ -27,7 +27,7 @@ export function EmptyState({
       </div>
       <p className="text-base font-medium text-foreground">{title}</p>
       {description && (
-        <p className="max-w-sm text-sm text-foreground-secondary">{description}</p>
+        <p className="max-w-sm text-sm text-foreground">{description}</p>
       )}
     </div>
   );

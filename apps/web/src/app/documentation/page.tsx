@@ -165,7 +165,7 @@ export default async function DocumentationPage() {
                       <p className="mt-0.5 text-sm text-text-secondary">
                         {item.description}
                       </p>
-                      <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-foreground-secondary/70">
+                      <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-foreground/70">
                         <Badge variant="outline">{item.fileType}</Badge>
                         <span>{item.fileSize}</span>
                         <span aria-hidden="true">&middot;</span>

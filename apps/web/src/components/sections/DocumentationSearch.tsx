@@ -55,7 +55,7 @@ export function DocumentationSearch({
             // that component's full-page dashed-border card treatment.
             <div className="flex flex-col items-center gap-2 px-5 py-8 text-center">
               <SearchX className="h-5 w-5 text-foreground-secondary" aria-hidden="true" />
-              <p className="text-sm text-foreground-secondary">
+              <p className="text-sm text-foreground">
                 No matches for &ldquo;{query}&rdquo;.
               </p>
             </div>
@@ -63,7 +63,7 @@ export function DocumentationSearch({
             <div className="max-h-[60vh] overflow-y-auto">
               {matchedDocs.length > 0 && (
                 <div className="py-2">
-                  <p className="px-5 py-1.5 text-xs font-semibold uppercase tracking-wide text-foreground-secondary">
+                  <p className="px-5 py-1.5 text-xs font-semibold uppercase tracking-wide text-foreground">
                     Documents
                   </p>
                   {matchedDocs.map((doc) => (
@@ -84,7 +84,7 @@ export function DocumentationSearch({
                         <span className="block truncate text-sm font-medium text-foreground">
                           {doc.title}
                         </span>
-                        <span className="block truncate text-xs text-foreground-secondary">
+                        <span className="block truncate text-xs text-foreground">
                           {doc.description}
                         </span>
                       </span>
@@ -95,7 +95,7 @@ export function DocumentationSearch({
 
               {matchedFaqs.length > 0 && (
                 <div className="border-t border-border py-2">
-                  <p className="px-5 py-1.5 text-xs font-semibold uppercase tracking-wide text-foreground-secondary">
+                  <p className="px-5 py-1.5 text-xs font-semibold uppercase tracking-wide text-foreground">
                     FAQs
                   </p>
                   {matchedFaqs.map((faq) => (

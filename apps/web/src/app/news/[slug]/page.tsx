@@ -93,7 +93,7 @@ export default async function NewsDetailPage({
             {item.title}
           </h1>
 
-          <div className="mt-4 flex items-center gap-1.5 text-sm text-foreground-secondary">
+          <div className="mt-4 flex items-center gap-1.5 text-sm text-foreground">
             <CalendarDays className="h-4 w-4" aria-hidden="true" />
             {formatDate(item.date)}
           </div>

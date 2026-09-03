@@ -101,7 +101,7 @@ export function Footer() {
       </div>
 
       <div className="border-t border-border">
-        <div className="container-page flex flex-col items-center justify-between gap-2 py-6 text-xs text-foreground-secondary sm:flex-row">
+        <div className="container-page flex flex-col items-center justify-between gap-2 py-6 text-xs text-foreground sm:flex-row">
           <p>&copy; {year} NPIX &ndash; Nepal Internet Exchange. All rights reserved.</p>
           <p>
             Powered by{" "}

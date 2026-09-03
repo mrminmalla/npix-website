@@ -40,21 +40,21 @@ export function MemberTable({ members }: { members: Member[] }) {
                   <span className="text-foreground">{member.name}</span>
                 )}
               </td>
-              <td className="px-5 py-3.5 font-mono text-foreground-secondary">
+              <td className="px-5 py-3.5 font-mono text-foreground">
                 {member.asn}
               </td>
-              <td className="px-5 py-3.5 font-mono text-foreground-secondary">
+              <td className="px-5 py-3.5 font-mono text-foreground">
                 {member.ipAddress || <span>&mdash;</span>}
                 {member.ipv6Address && (
-                  <span className="block text-xs text-foreground-secondary">
+                  <span className="block text-xs text-foreground">
                     {member.ipv6Address}
                   </span>
                 )}
               </td>
-              <td className="px-5 py-3.5 font-mono text-foreground-secondary">
+              <td className="px-5 py-3.5 font-mono text-foreground">
                 {member.datahub || <span>&mdash;</span>}
                 {member.datahubIpv6 && (
-                  <span className="block text-xs text-foreground-secondary/70">
+                  <span className="block text-xs text-foreground/70">
                     {member.datahubIpv6}
                   </span>
                 )}

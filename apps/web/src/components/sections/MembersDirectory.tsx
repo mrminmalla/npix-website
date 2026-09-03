@@ -32,7 +32,7 @@ export function MembersDirectory({ members }: { members: Member[] }) {
         className="w-full sm:max-w-sm"
       />
 
-      <p className="mt-5 text-sm text-foreground-secondary">
+      <p className="mt-5 text-sm text-foreground">
         Showing {filtered.length} of {members.length} members, sorted alphabetically
       </p>
 

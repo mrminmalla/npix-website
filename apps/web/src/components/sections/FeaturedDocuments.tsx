@@ -47,7 +47,7 @@ export function FeaturedDocuments({ documents }: { documents: DocumentResource[]
                       <Badge variant="outline">{doc.fileType}</Badge>
                     </div>
                     <h3 className="mt-4 text-lg font-semibold text-foreground">{doc.title}</h3>
-                    <p className="mt-1 text-xs text-foreground-secondary">
+                    <p className="mt-1 text-xs text-foreground">
                       Version {doc.version} &middot; Updated {formatMonthYear(doc.updatedDate)}
                     </p>
                     <p className="mt-3 flex-1 text-sm leading-relaxed text-text-secondary">

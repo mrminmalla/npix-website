@@ -46,7 +46,7 @@ export function UpcomingEvents({ events }: { events: NewsItem[] }) {
                       {formatDate(item.date)}
                     </p>
                     {item.location && (
-                      <span className="mt-1.5 inline-flex items-center gap-1.5 text-xs text-foreground-secondary">
+                      <span className="mt-1.5 inline-flex items-center gap-1.5 text-xs text-foreground">
                         <MapPin className="h-3.5 w-3.5" aria-hidden="true" />
                         {item.location}
                       </span>

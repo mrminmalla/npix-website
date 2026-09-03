@@ -30,7 +30,7 @@ export function TrafficTabs({
 
       {panels.map((panel) => (
         <TabsContent key={panel.id} value={panel.id}>
-          <p className="mb-3 text-xs font-medium uppercase tracking-wide text-foreground-secondary">
+          <p className="mb-3 text-xs font-medium uppercase tracking-wide text-foreground">
             {panel.sublabel}
           </p>
           <GrafanaEmbed
