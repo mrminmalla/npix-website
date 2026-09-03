@@ -24,11 +24,12 @@ import {
   Settings,
   UserCog,
   ChevronsLeft,
+  ChevronRight,
   X,
   type LucideIcon,
 } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { MouseEvent, FocusEvent } from 'react';
 
 interface NavItem {
@@ -97,6 +98,11 @@ export const NAV_LABELS: Record<string, string> = Object.fromEntries(
   NAV.flatMap((group) => group.items.map((item) => [item.href, item.label])),
 );
 
+/** Persists which nav section headers are expanded, following the same
+ *  localStorage pattern as theme-context.tsx (a namespaced key, read back
+ *  in an effect so SSR/first paint never depends on it). */
+const SECTION_STORAGE_KEY = 'npix_admin_sidebar_sections';
+
 /** Also used by the dashboard header's user profile chip (see
  *  (dashboard)/layout.tsx), which is why this is exported. */
 export function initials(name: string) {
@@ -134,6 +140,58 @@ export function Sidebar({
     if (!collapsed) return;
     const rect = e.currentTarget.getBoundingClientRect();
     setHoverTooltip({ label, top: rect.top + rect.height / 2, left: rect.right + 8 });
+  }
+
+  const activeTitle = useMemo(() => {
+    const group = NAV.find((g) => g.items.some((item) => pathname === item.href));
+    return group?.title || null;
+  }, [pathname]);
+
+  // Accordion: at most one section open at a time, tracked by title
+  // (null = all collapsed). Seeded from the active route so the very
+  // first render (including SSR) already has the right section open —
+  // no flash of every-section-collapsed before an effect corrects it.
+  const [openTitle, setOpenTitle] = useState<string | null>(activeTitle);
+
+  // Restores the last section the user had open (e.g. after a reload
+  // that lands back on the Dashboard, which has no section of its own).
+  // Runs alongside the effect below, in declaration order — when
+  // `activeTitle` is set, that effect's setOpenTitle(activeTitle) is the
+  // one that wins, so a real route match always takes precedence over a
+  // stale stored preference.
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem(SECTION_STORAGE_KEY);
+      if (stored === null) return;
+      const parsed = JSON.parse(stored);
+      if (parsed === null || typeof parsed === 'string') setOpenTitle(parsed);
+    } catch {
+      // Malformed JSON or storage blocked (private browsing, etc.) —
+      // just keep the active-route default from useState above.
+    }
+  }, []);
+
+  // Auto-expand (and switch to) whichever section contains the current
+  // route whenever navigation changes it, so landing on a page (direct
+  // link, bookmark, a dashboard shortcut) never hides the very section
+  // that explains where you are — even if a different section was left
+  // open before. Doesn't fire on every render, only when the route's
+  // section actually changes, so manually opening another section to
+  // browse it (without navigating) is left alone.
+  useEffect(() => {
+    if (activeTitle) setOpenTitle(activeTitle);
+  }, [activeTitle]);
+
+  function toggleSection(title: string) {
+    setOpenTitle((prev) => {
+      const next = prev === title ? null : title;
+      try {
+        localStorage.setItem(SECTION_STORAGE_KEY, JSON.stringify(next));
+      } catch {
+        // ignore
+      }
+      return next;
+    });
   }
 
   const groups = NAV.filter((group) => !group.roles || (user && group.roles.includes(user.role)));
@@ -227,45 +285,73 @@ export function Sidebar({
             escape this container's own width, so clipping it is safe. */}
         <nav className="flex-1 space-y-1 overflow-y-auto overflow-x-hidden px-3 py-3">
           {groups.map((group) => {
+            // Only real, titled groups are collapsible — the untitled
+            // top-level Dashboard link (and every group whenever the
+            // whole rail is icon-only collapsed, which has no room for
+            // headers at all) always renders fully open, exactly as
+            // before this change.
+            const collapsible = Boolean(group.title) && !collapsed;
+            const isOpen = collapsible ? openTitle === group.title : true;
             return (
               <div key={group.title || group.items[0].href} className="pb-1">
                 {group.title && !collapsed && (
-                  <div className="px-2 pb-1 pt-2 text-[11px] font-bold uppercase tracking-wider text-[var(--muted)]">
-                    {group.title}
-                  </div>
+                  <button
+                    type="button"
+                    onClick={() => toggleSection(group.title)}
+                    aria-expanded={isOpen}
+                    className="flex w-full items-center justify-between rounded-lg px-2 pb-1 pt-2 text-[11px] font-bold uppercase tracking-wider text-black transition hover:text-[var(--primary)]"
+                  >
+                    <span>{group.title}</span>
+                    <ChevronRight
+                      className={clsx(
+                        'h-3.5 w-3.5 shrink-0 transition-transform duration-200',
+                        isOpen && 'rotate-90',
+                      )}
+                      aria-hidden="true"
+                    />
+                  </button>
                 )}
-                <div className="space-y-0.5">
-                  {group.items.map((item) => {
-                    const active = pathname === item.href;
-                    const Icon = item.icon;
-                    return (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        onClick={onCloseMobile}
-                        onMouseEnter={(e) => showTooltip(e, item.label)}
-                        onMouseLeave={() => setHoverTooltip(null)}
-                        onFocus={(e) => showTooltip(e, item.label)}
-                        onBlur={() => setHoverTooltip(null)}
-                        title={collapsed ? item.label : undefined}
-                        className={clsx(
-                          'group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition',
-                          collapsed && 'justify-center px-0',
-                          active
-                            ? 'bg-[var(--primary-solid)] font-semibold text-white shadow-md'
-                            : 'text-[var(--foreground)]/80 hover:bg-[var(--primary-tint)] hover:text-[var(--primary)]',
-                        )}
-                      >
-                        <Icon
+                <div
+                  className={clsx(
+                    'grid transition-[grid-template-rows] duration-200 ease-in-out',
+                    collapsible && !isOpen ? 'grid-rows-[0fr]' : 'grid-rows-[1fr]',
+                  )}
+                  aria-hidden={collapsible ? !isOpen : undefined}
+                  inert={collapsible && !isOpen ? true : undefined}
+                >
+                  <div className="min-h-0 space-y-0.5 overflow-hidden">
+                    {group.items.map((item) => {
+                      const active = pathname === item.href;
+                      const Icon = item.icon;
+                      return (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          onClick={onCloseMobile}
+                          onMouseEnter={(e) => showTooltip(e, item.label)}
+                          onMouseLeave={() => setHoverTooltip(null)}
+                          onFocus={(e) => showTooltip(e, item.label)}
+                          onBlur={() => setHoverTooltip(null)}
+                          title={collapsed ? item.label : undefined}
                           className={clsx(
-                            'h-[18px] w-[18px] shrink-0',
-                            active ? 'text-white' : 'text-[var(--muted)] group-hover:text-[var(--primary)]',
+                            'group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition',
+                            collapsed && 'justify-center px-0',
+                            active
+                              ? 'bg-[var(--primary-solid)] font-semibold text-white shadow-md'
+                              : 'text-[var(--foreground)]/80 hover:bg-[var(--primary-tint)] hover:text-[var(--primary)]',
                           )}
-                        />
-                        {!collapsed && <span className="truncate">{item.label}</span>}
-                      </Link>
-                    );
-                  })}
+                        >
+                          <Icon
+                            className={clsx(
+                              'h-[18px] w-[18px] shrink-0',
+                              active ? 'text-white' : 'text-[var(--muted)] group-hover:text-[var(--primary)]',
+                            )}
+                          />
+                          {!collapsed && <span className="truncate">{item.label}</span>}
+                        </Link>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
             );
