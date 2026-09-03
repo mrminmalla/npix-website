@@ -39,7 +39,7 @@ export function FeaturedNewsCard({ item }: { item: NewsItem }) {
           {item.summary}
         </p>
 
-        <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-foreground-secondary">
+        <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-foreground">
           <span className="inline-flex items-center gap-1.5">
             <CalendarDays className="h-4 w-4" aria-hidden="true" />
             {formatDate(item.date)}
@@ -57,7 +57,12 @@ export function FeaturedNewsCard({ item }: { item: NewsItem }) {
         </div>
 
         <div className="mt-6">
-          <Button asChild size="sm">
+          {/* One-off red per an explicit request for this exact hex, not
+              the shared --accent crimson — scoped to this instance via
+              className (twMerge overrides just the background/text
+              utilities) rather than touching the shared "default" button
+              variant, which Pagination's current-page button also uses. */}
+          <Button asChild size="sm" className="bg-[#d71920] text-white">
             <Link href={`/news/${item.slug}`}>
               Read More
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
