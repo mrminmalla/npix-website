@@ -51,14 +51,14 @@ export function Navbar() {
                     className={cn(
                       "relative whitespace-nowrap rounded-full px-2.5 py-2 text-sm font-medium transition-colors",
                       isActive
-                        ? "text-secondary"
-                        : "text-foreground-secondary hover:text-foreground",
+                        ? "text-accent"
+                        : "text-black hover:text-primary-solid",
                     )}
                   >
                     {link.label}
                     {isActive && (
                       <span
-                        className="absolute inset-x-2.5 -bottom-1 h-0.5 rounded-full bg-secondary"
+                        className="absolute inset-x-2.5 -bottom-1 h-0.5 rounded-full bg-accent"
                         aria-hidden="true"
                       />
                     )}
