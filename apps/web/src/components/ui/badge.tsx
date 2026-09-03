@@ -17,7 +17,11 @@ const badgeVariants = cva(
         // variant above.
         secondary: "border-transparent bg-[#0369a1] text-white",
         accent: "border-transparent bg-accent text-accent-foreground",
-        success: "border-transparent bg-success text-white",
+        // White on the shared `--success` token fails WCAG AA (2.54:1) —
+        // same issue and same fix as `secondary` above: a dedicated
+        // darker green (5.48:1 with white) rather than darkening
+        // --success itself, which also colors LiveIndicator's dot/text.
+        success: "border-transparent bg-[#047857] text-white",
         outline: "border-border text-foreground",
       },
     },
