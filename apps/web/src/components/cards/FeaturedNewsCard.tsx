@@ -35,7 +35,7 @@ export function FeaturedNewsCard({ item }: { item: NewsItem }) {
         <h2 className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
           {item.title}
         </h2>
-        <p className="mt-3 text-base leading-relaxed text-foreground-secondary">
+        <p className="mt-3 text-base leading-relaxed text-text-secondary">
           {item.summary}
         </p>
 

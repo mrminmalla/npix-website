@@ -10,7 +10,7 @@ function getInitials(name: string) {
 }
 
 const PALETTE = [
-  "bg-primary text-primary-foreground",
+  "bg-primary-solid text-primary-foreground",
   "bg-secondary text-secondary-foreground",
   "bg-accent text-accent-foreground",
 ];

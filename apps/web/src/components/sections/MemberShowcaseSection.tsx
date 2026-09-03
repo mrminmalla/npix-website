@@ -22,7 +22,7 @@ export function MemberShowcaseSection({ members }: { members: Member[] }) {
             <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
               Special Members
             </h2>
-            <p className="mt-3 text-base text-foreground-secondary">
+            <p className="mt-3 text-base text-text-secondary">
               Leading organizations and infrastructure providers connected to NPIX,
               helping strengthen Nepal&apos;s internet ecosystem through collaboration and
               local interconnection.
@@ -30,7 +30,7 @@ export function MemberShowcaseSection({ members }: { members: Member[] }) {
           </div>
           <Link
             href="/members"
-            className="inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold text-slate-600 transition-colors duration-200 hover:text-sky-600 dark:text-slate-300 dark:hover:text-sky-400"
+            className="inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold text-foreground transition-colors duration-200 hover:text-sky-600 dark:hover:text-sky-400"
           >
             View All Members
             <ArrowRight className="h-4 w-4" aria-hidden="true" />

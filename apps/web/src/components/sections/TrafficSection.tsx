@@ -16,7 +16,7 @@ export function TrafficSection({ panel }: { panel: TrafficPanel }) {
           <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
             Internet Exchange Traffic
           </h2>
-          <p className="mt-4 text-base text-foreground-secondary">
+          <p className="mt-4 text-base text-text-secondary">
             Real-time traffic exchanged across Nepal Internet Exchange.
           </p>
         </FadeIn>

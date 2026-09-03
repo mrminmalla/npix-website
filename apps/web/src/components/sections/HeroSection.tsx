@@ -7,7 +7,7 @@ import { CONTACT_EMAIL } from "@/constants/site";
 
 export function HeroSection() {
   return (
-    <section className="relative overflow-hidden bg-primary py-16 md:py-20">
+    <section className="relative overflow-hidden bg-primary-solid py-16 md:py-20">
       <HeroBackground />
 
       <div className="container-page relative">

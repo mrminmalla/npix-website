@@ -50,7 +50,7 @@ export function FeaturedDocuments({ documents }: { documents: DocumentResource[]
                     <p className="mt-1 text-xs text-foreground-secondary">
                       Version {doc.version} &middot; Updated {formatMonthYear(doc.updatedDate)}
                     </p>
-                    <p className="mt-3 flex-1 text-sm leading-relaxed text-foreground-secondary">
+                    <p className="mt-3 flex-1 text-sm leading-relaxed text-text-secondary">
                       {doc.description}
                     </p>
                     <div className="mt-5 flex items-center gap-2">

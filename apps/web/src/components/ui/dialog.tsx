@@ -84,7 +84,7 @@ function DialogDescription({
 }: React.ComponentProps<typeof DialogPrimitive.Description>) {
   return (
     <DialogPrimitive.Description
-      className={cn("text-sm text-foreground-secondary", className)}
+      className={cn("text-sm text-text-secondary", className)}
       {...props}
     />
   );

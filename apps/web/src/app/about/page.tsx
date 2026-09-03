@@ -113,7 +113,7 @@ export default async function AboutPage() {
             <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground">
               {whoWeAre.heading}
             </h2>
-            <p className="mt-4 text-base leading-relaxed text-foreground-secondary">
+            <p className="mt-4 text-base leading-relaxed text-text-secondary">
               {whoWeAre.body}
             </p>
           </FadeIn>
@@ -125,7 +125,7 @@ export default async function AboutPage() {
             <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground">
               {whatIsIxp.heading}
             </h2>
-            <p className="mt-4 text-base leading-relaxed text-foreground-secondary">
+            <p className="mt-4 text-base leading-relaxed text-text-secondary">
               {whatIsIxp.body}
             </p>
           </FadeIn>
@@ -141,7 +141,7 @@ export default async function AboutPage() {
             <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
               {whyNpixExists.heading}
             </h2>
-            <p className="mt-4 text-base leading-relaxed text-foreground-secondary">
+            <p className="mt-4 text-base leading-relaxed text-text-secondary">
               {whyNpixExists.body}
             </p>
           </FadeIn>
@@ -152,7 +152,7 @@ export default async function AboutPage() {
                 {mission.Icon && <mission.Icon className="h-6 w-6" aria-hidden="true" />}
               </div>
               <h3 className="mt-5 text-xl font-semibold text-foreground">{mission.heading}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-foreground-secondary">
+              <p className="mt-3 text-sm leading-relaxed text-text-secondary">
                 {mission.body}
               </p>
             </div>
@@ -161,7 +161,7 @@ export default async function AboutPage() {
                 {vision.Icon && <vision.Icon className="h-6 w-6" aria-hidden="true" />}
               </div>
               <h3 className="mt-5 text-xl font-semibold text-foreground">{vision.heading}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-foreground-secondary">
+              <p className="mt-3 text-sm leading-relaxed text-text-secondary">
                 {vision.body}
               </p>
             </div>
@@ -195,13 +195,13 @@ export default async function AboutPage() {
                     return (
                       <StaggerItem key={value.id} className="min-w-0 lg:flex-1">
                         <div className="flex h-full flex-col items-start rounded-xl border border-border bg-background p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
-                          <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+                          <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-primary-solid text-primary-foreground">
                             <Icon className="h-5 w-5" aria-hidden="true" />
                           </div>
                           <h3 className="mt-4 text-base font-semibold text-foreground">
                             {value.title}
                           </h3>
-                          <p className="mt-2 text-sm leading-relaxed text-foreground-secondary">
+                          <p className="mt-2 text-sm leading-relaxed text-text-secondary">
                             {value.description}
                           </p>
                         </div>
@@ -224,7 +224,7 @@ export default async function AboutPage() {
             <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
               NPIX Timeline
             </h2>
-            <p className="mt-4 text-base leading-relaxed text-foreground-secondary">
+            <p className="mt-4 text-base leading-relaxed text-text-secondary">
               Key milestones in the growth of Nepal Internet Exchange and its contribution
               to Nepal&apos;s digital ecosystem.
             </p>
@@ -272,7 +272,7 @@ export default async function AboutPage() {
                           {member.name}
                         </h3>
                         <p className="text-sm font-medium text-secondary">{member.role}</p>
-                        <p className="mt-2 text-sm leading-relaxed text-foreground-secondary">
+                        <p className="mt-2 text-sm leading-relaxed text-text-secondary">
                           {member.bio}
                         </p>
                       </div>

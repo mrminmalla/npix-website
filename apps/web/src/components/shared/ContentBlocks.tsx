@@ -51,7 +51,7 @@ export function ContentBlocks({ blocks }: { blocks: ContentBlock[] }) {
               <p
                 key={i}
                 className={cn(
-                  "mt-3 text-sm leading-relaxed text-foreground-secondary",
+                  "mt-3 text-sm leading-relaxed text-text-secondary",
                   block.align && ALIGN_CLASS[block.align],
                 )}
               >
@@ -63,7 +63,7 @@ export function ContentBlocks({ blocks }: { blocks: ContentBlock[] }) {
             return (
               <blockquote
                 key={i}
-                className="mt-4 border-l-4 border-secondary bg-surface py-2 pl-4 text-sm italic leading-relaxed text-foreground-secondary"
+                className="mt-4 border-l-4 border-secondary bg-surface py-2 pl-4 text-sm italic leading-relaxed text-text-secondary"
               >
                 <RichText html={block.html} text={block.text} />
               </blockquote>
@@ -74,7 +74,7 @@ export function ContentBlocks({ blocks }: { blocks: ContentBlock[] }) {
             return (
               <ListTag key={i} className="mt-3 space-y-2">
                 {block.items.map((item, j) => (
-                  <li key={j} className="flex items-start gap-2.5 text-sm text-foreground-secondary">
+                  <li key={j} className="flex items-start gap-2.5 text-sm text-text-secondary">
                     {block.ordered ? (
                       <span className="mt-0.5 shrink-0 font-mono text-xs font-semibold text-secondary">
                         {j + 1}.
@@ -119,7 +119,7 @@ export function ContentBlocks({ blocks }: { blocks: ContentBlock[] }) {
                         className="border-b border-border last:border-b-0 hover:bg-surface/60"
                       >
                         {row.map((cell, c) => (
-                          <td key={c} className="px-4 py-3 text-foreground-secondary">
+                          <td key={c} className="px-4 py-3 text-text-secondary">
                             {cell}
                           </td>
                         ))}
@@ -143,7 +143,7 @@ export function ContentBlocks({ blocks }: { blocks: ContentBlock[] }) {
           case "link": {
             const Icon = block.download ? DownloadIcon : ArrowRight;
             const linkClassName =
-              "mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-slate-600 transition-colors duration-200 hover:text-sky-600 dark:text-slate-300 dark:hover:text-sky-400";
+              "mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-foreground transition-colors duration-200 hover:text-sky-600 dark:hover:text-sky-400";
             return (
               <div key={i}>
                 {!block.download && isInternalHref(block.href) ? (

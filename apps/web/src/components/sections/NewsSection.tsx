@@ -21,14 +21,14 @@ export function NewsSection({ items }: { items: NewsItem[] }) {
             <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
               Latest News
             </h2>
-            <p className="mt-4 text-base text-foreground-secondary">
+            <p className="mt-4 text-base text-text-secondary">
               The latest announcements, maintenance notices, infrastructure updates, and
               developments from Nepal Internet Exchange.
             </p>
           </div>
           <Link
             href="/news"
-            className="inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold text-slate-600 transition-colors duration-200 hover:text-sky-600 dark:text-slate-300 dark:hover:text-sky-400"
+            className="inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold text-foreground transition-colors duration-200 hover:text-sky-600 dark:hover:text-sky-400"
           >
             View All News
             <ArrowRight className="h-4 w-4" aria-hidden="true" />

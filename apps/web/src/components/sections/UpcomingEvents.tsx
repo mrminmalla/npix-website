@@ -51,12 +51,12 @@ export function UpcomingEvents({ events }: { events: NewsItem[] }) {
                         {item.location}
                       </span>
                     )}
-                    <p className="mt-3 flex-1 text-sm leading-relaxed text-foreground-secondary">
+                    <p className="mt-3 flex-1 text-sm leading-relaxed text-text-secondary">
                       {item.summary}
                     </p>
                     <Link
                       href={`/news/${item.slug}`}
-                      className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-slate-600 transition-colors duration-200 hover:text-sky-600 dark:text-slate-300 dark:hover:text-sky-400"
+                      className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-foreground transition-colors duration-200 hover:text-sky-600 dark:hover:text-sky-400"
                     >
                       View Details
                       <ArrowRight className="h-4 w-4" aria-hidden="true" />

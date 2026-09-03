@@ -21,14 +21,14 @@ export function EventsAnnouncementsSection({ items }: { items: NewsItem[] }) {
             <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
               Latest Events &amp; Announcements
             </h2>
-            <p className="mt-4 text-base text-foreground-secondary">
+            <p className="mt-4 text-base text-text-secondary">
               Stay informed about workshops, industry events, peering activities, and
               important updates from Nepal Internet Exchange.
             </p>
           </div>
           <Link
             href="/news"
-            className="inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold text-slate-600 transition-colors duration-200 hover:text-sky-600 dark:text-slate-300 dark:hover:text-sky-400"
+            className="inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold text-foreground transition-colors duration-200 hover:text-sky-600 dark:hover:text-sky-400"
           >
             View All
             <ArrowRight className="h-4 w-4" aria-hidden="true" />

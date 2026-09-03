@@ -16,7 +16,7 @@ export function NewsCategoryBanner({
   return (
     <div
       className={cn(
-        "relative flex items-center justify-center overflow-hidden bg-gradient-to-br from-primary to-secondary/70",
+        "relative flex items-center justify-center overflow-hidden bg-gradient-to-br from-primary-solid to-secondary/70",
         size === "sm" ? "h-40" : "min-h-[220px]",
         className,
       )}

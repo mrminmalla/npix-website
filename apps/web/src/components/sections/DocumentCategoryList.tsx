@@ -55,7 +55,7 @@ export function DocumentCategoryList({
                         <h3 className="text-base font-semibold text-foreground sm:text-lg">
                           {category.title}
                         </h3>
-                        <p className="mt-0.5 line-clamp-1 text-sm font-normal text-foreground-secondary sm:line-clamp-none">
+                        <p className="mt-0.5 line-clamp-1 text-sm font-normal text-text-secondary sm:line-clamp-none">
                           {category.description}
                         </p>
                       </div>

@@ -64,7 +64,7 @@ export default async function StatisticsPage() {
             <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
               Exchange Traffic Statistics
             </h2>
-            <p className="mt-4 text-base text-foreground-secondary">
+            <p className="mt-4 text-base text-text-secondary">
               Monitor real-time and historical traffic exchanged across the NPIX peering
               fabric.
             </p>
@@ -88,7 +88,7 @@ export default async function StatisticsPage() {
             <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
               Traffic Insights
             </h2>
-            <p className="mt-4 text-base text-foreground-secondary">
+            <p className="mt-4 text-base text-text-secondary">
               Key traffic indicators derived from exchange traffic.
             </p>
           </FadeIn>
@@ -96,7 +96,7 @@ export default async function StatisticsPage() {
           <StaggerContainer className="mt-8 flex flex-col gap-5">
             {chunkIntoRows(trafficInsights, STAT_ROW_SIZE).map((row, rowIndex) => (
               <div key={rowIndex} className="flex flex-col gap-5 sm:flex-row">
-                {row.map((stat) => (
+                {row.map((stat, i) => (
                   <StaggerItem key={stat.id} className="min-w-0 sm:flex-1">
                     <StatCard
                       label={stat.label}
@@ -106,6 +106,7 @@ export default async function StatisticsPage() {
                       decimals={stat.decimals}
                       description={stat.description}
                       className="h-full"
+                      tone={(rowIndex * STAT_ROW_SIZE + i) % 2 === 0 ? "blue" : "crimson"}
                     />
                   </StaggerItem>
                 ))}
@@ -126,7 +127,7 @@ export default async function StatisticsPage() {
             <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
               Exchange Infrastructure
             </h2>
-            <p className="mt-4 text-base text-foreground-secondary">
+            <p className="mt-4 text-base text-text-secondary">
               Physical infrastructure and operational capacity supporting NPIX.
             </p>
           </FadeIn>
@@ -134,7 +135,7 @@ export default async function StatisticsPage() {
           <StaggerContainer className="mt-8 flex flex-col gap-5">
             {chunkIntoRows(infrastructure, STAT_ROW_SIZE).map((row, rowIndex) => (
               <div key={rowIndex} className="flex flex-col gap-5 sm:flex-row">
-                {row.map((stat) => (
+                {row.map((stat, i) => (
                   <StaggerItem key={stat.id} className="min-w-0 sm:flex-1">
                     <StatCard
                       label={stat.label}
@@ -144,6 +145,7 @@ export default async function StatisticsPage() {
                       decimals={stat.decimals}
                       description={stat.description}
                       className="h-full"
+                      tone={(rowIndex * STAT_ROW_SIZE + i) % 2 === 0 ? "blue" : "crimson"}
                     />
                   </StaggerItem>
                 ))}

@@ -16,7 +16,7 @@ export function PointsOfPresenceSection({ points }: { points: PointOfPresence[] 
           <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
             Points of Presence
           </h2>
-          <p className="mt-4 text-base text-foreground-secondary">
+          <p className="mt-4 text-base text-text-secondary">
             NPIX currently operates two active interconnection facilities.
           </p>
         </FadeIn>
@@ -33,10 +33,10 @@ export function PointsOfPresenceSection({ points }: { points: PointOfPresence[] 
                       </div>
                       <div>
                         <h3 className="text-base font-semibold text-foreground">{pop.name}</h3>
-                        <p className="text-xs text-foreground-secondary">{pop.city}</p>
+                        <p className="text-xs text-text-secondary">{pop.city}</p>
                       </div>
                     </div>
-                    <p className="mt-4 text-sm leading-relaxed text-foreground-secondary">
+                    <p className="mt-4 text-sm leading-relaxed text-text-secondary">
                       {pop.description}
                     </p>
                   </div>

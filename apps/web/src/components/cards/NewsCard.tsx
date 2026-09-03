@@ -31,7 +31,7 @@ export function NewsCard({ item, className }: { item: NewsItem; className?: stri
         <h3 className="mt-3 line-clamp-2 text-lg font-semibold text-foreground">
           {item.title}
         </h3>
-        <p className="mt-2 line-clamp-3 flex-1 text-sm leading-relaxed text-foreground-secondary">
+        <p className="mt-2 line-clamp-3 flex-1 text-sm leading-relaxed text-text-secondary">
           {item.summary}
         </p>
 
@@ -55,7 +55,7 @@ export function NewsCard({ item, className }: { item: NewsItem; className?: stri
         <div className="mt-4 flex items-center justify-end">
           <Link
             href={`/news/${item.slug}`}
-            className="inline-flex items-center gap-1 text-sm font-semibold text-slate-600 transition-colors duration-200 hover:text-sky-600 group-hover:gap-2 dark:text-slate-300 dark:hover:text-sky-400"
+            className="inline-flex items-center gap-1 text-sm font-semibold text-foreground transition-colors duration-200 hover:text-sky-600 group-hover:gap-2 dark:hover:text-sky-400"
           >
             Read More
             <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />

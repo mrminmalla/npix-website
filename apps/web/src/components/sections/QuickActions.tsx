@@ -65,7 +65,7 @@ export function QuickActions() {
                   <h3 className="mt-4 text-base font-semibold text-foreground">
                     {action.title}
                   </h3>
-                  <p className="mt-2 flex-1 text-sm leading-relaxed text-foreground-secondary">
+                  <p className="mt-2 flex-1 text-sm leading-relaxed text-text-secondary">
                     {action.description}
                   </p>
                   <Button asChild size="sm" variant="outline" className="mt-5">

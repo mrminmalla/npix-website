@@ -162,7 +162,7 @@ export default async function DocumentationPage() {
                       <h3 className="text-base font-semibold text-foreground">
                         {item.title}
                       </h3>
-                      <p className="mt-0.5 text-sm text-foreground-secondary">
+                      <p className="mt-0.5 text-sm text-text-secondary">
                         {item.description}
                       </p>
                       <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-foreground-secondary/70">

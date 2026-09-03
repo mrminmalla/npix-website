@@ -71,7 +71,7 @@ export default async function MembersPage() {
           <h2 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
             Special Members
           </h2>
-          <p className="mt-2 max-w-2xl text-sm text-foreground-secondary">
+          <p className="mt-2 max-w-2xl text-sm text-text-secondary">
             Root server operators, DNS anycast nodes, and the exchange operator itself.
           </p>
           <div className="mt-6">

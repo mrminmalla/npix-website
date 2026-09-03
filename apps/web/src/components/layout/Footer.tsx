@@ -59,10 +59,10 @@ export function Footer() {
       <div className="container-page grid grid-cols-1 gap-8 py-12 sm:grid-cols-2 md:py-16 lg:grid-cols-4">
         <div className="sm:col-span-2 lg:col-span-2">
           <Logo />
-          <p className="mt-4 max-w-sm text-sm leading-relaxed text-foreground-secondary">
+          <p className="mt-4 max-w-sm text-sm leading-relaxed text-text-secondary">
             {FOOTER_DESCRIPTION}
           </p>
-          <ul className="mt-6 space-y-3 text-sm text-foreground-secondary">
+          <ul className="mt-6 space-y-3 text-sm text-text-secondary">
             <li className="flex items-start gap-2">
               <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-secondary" aria-hidden="true" />
               <span>{OFFICE_ADDRESS}</span>

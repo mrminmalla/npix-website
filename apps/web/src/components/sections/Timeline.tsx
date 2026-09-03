@@ -26,7 +26,7 @@ export function Timeline({ entries }: { entries: TimelineEntry[] }) {
               >
                 <p className="text-sm font-semibold text-secondary">{entry.year}</p>
                 <h3 className="mt-1 text-lg font-semibold text-foreground">{entry.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-foreground-secondary">
+                <p className="mt-2 text-sm leading-relaxed text-text-secondary">
                   {entry.description}
                 </p>
               </FadeIn>

@@ -21,7 +21,7 @@ export function ProtocolAdoptionSection({ adoption }: { adoption: ProtocolAdopti
           <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
             Protocol Adoption
           </h2>
-          <p className="mt-4 text-base text-foreground-secondary">
+          <p className="mt-4 text-base text-text-secondary">
             Overview of IPv4 and IPv6 traffic exchanged through NPIX.
           </p>
         </FadeIn>

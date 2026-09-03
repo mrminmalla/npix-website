@@ -7,9 +7,32 @@
 :root {
   --background: #ffffff;
   --surface: #f8fafc;
-  --foreground: #0f172a;
+  /* Brand-aligned dark navy for default heading/body text on light
+     backgrounds. --foreground aliases this (rather than duplicating the
+     value) so every existing `text-foreground` usage — the sitewide
+     default text color — picks it up automatically with no
+     per-component changes. Dark-theme text intentionally does NOT
+     reference this: .dark's own --foreground stays near-white, since a
+     dark navy would be unreadable against that theme's dark surfaces. */
+  --text-primary: #002a3a;
+  --foreground: var(--text-primary);
   --foreground-secondary: #64748b;
+  /* For card/section body copy that needs to sit a step below a heading
+     in the hierarchy but should still read as the brand navy rather than
+     an unrelated gray (e.g. "Why NPIX Matters" card descriptions). A
+     lightened tint of --text-primary, not a separate hardcoded hex — 75%
+     mix computes to ~6.8:1 contrast on white, clearing WCAG AA.
+     --foreground-secondary above is unchanged and still means true
+     muted/meta text: timestamps, captions, placeholders, nav links. */
+  --text-secondary: color-mix(in srgb, var(--text-primary) 75%, transparent);
+  /* Kept dark (not the flag navy below) — this is the one place a text
+     color, not a background fill, is driven by "primary": Badge's
+     `secondary` variant sets `text-primary` on a `bg-secondary` (sky
+     blue) chip, and needs this to stay near-black for contrast in both
+     themes (see badge.tsx's comment). --primary-solid is what every
+     background fill (Hero, CTAs, page banners, etc.) uses instead. */
   --primary: #0b1f3a;
+  --primary-solid: #003893;
   --primary-foreground: #ffffff;
   --secondary: #0ea5e9;
   --secondary-foreground: #ffffff;
@@ -25,7 +48,12 @@
   --surface: #0f172a;
   --foreground: #f8fafc;
   --foreground-secondary: #94a3b8;
+  /* Dark theme keeps the original gray exactly as it was — the navy tint
+     above is a light-background-only concept and would be near-invisible
+     against this theme's dark surfaces. */
+  --text-secondary: var(--foreground-secondary);
   --primary: #071a2e;
+  --primary-solid: #003893;
   --primary-foreground: #f8fafc;
   --secondary: #38bdf8;
   --secondary-foreground: #071a2e;
@@ -38,9 +66,12 @@
 @theme inline {
   --color-background: var(--background);
   --color-surface: var(--surface);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
   --color-foreground: var(--foreground);
   --color-foreground-secondary: var(--foreground-secondary);
   --color-primary: var(--primary);
+  --color-primary-solid: var(--primary-solid);
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
@@ -145,9 +176,15 @@
   }
 
   .text-gradient {
+    /* The Hero (the only place this is used) sits on bg-primary-solid —
+       starting the gradient at that exact same color made the leading
+       letter(s) of the clipped text invisible against their own section
+       background. Lightening the start stop (derived from the same
+       token, not a new hardcoded hex) keeps it recognizably blue while
+       guaranteeing it never matches the navy backdrop behind it. */
     background: linear-gradient(
       135deg,
-      var(--color-secondary),
+      color-mix(in srgb, var(--color-primary-solid) 55%, white),
       var(--color-accent)
     );
     -webkit-background-clip: text;

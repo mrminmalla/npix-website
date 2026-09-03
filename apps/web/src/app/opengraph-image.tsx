@@ -16,7 +16,11 @@ export default async function OpengraphImage() {
           alignItems: "flex-start",
           justifyContent: "center",
           padding: "80px",
-          background: "linear-gradient(135deg, #0B1F3A 0%, #071A2E 100%)",
+          // Can't reference the site's CSS custom properties here — next/og
+          // renders in an isolated satori environment, not a browser DOM —
+          // so these mirror --primary-solid (#003893) and --accent
+          // (#DC143C) from globals.css as literal hex.
+          background: "linear-gradient(135deg, #003893 0%, #001F52 100%)",
           fontFamily: "sans-serif",
         }}
       >
@@ -32,13 +36,13 @@ export default async function OpengraphImage() {
               width: 64,
               height: 64,
               borderRadius: 16,
-              background: "#0EA5E9",
+              background: "#DC143C",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               fontSize: 32,
               fontWeight: 700,
-              color: "#0B1F3A",
+              color: "#FFFFFF",
             }}
           >
             N

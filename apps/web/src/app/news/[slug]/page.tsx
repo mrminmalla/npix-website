@@ -78,7 +78,7 @@ export default async function NewsDetailPage({
           <div className="flex flex-wrap items-center gap-3">
             <Link
               href="/news"
-              className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-600 transition-colors duration-200 hover:text-sky-600 dark:text-slate-300 dark:hover:text-sky-400"
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground transition-colors duration-200 hover:text-sky-600 dark:hover:text-sky-400"
             >
               <ArrowLeft className="h-4 w-4" aria-hidden="true" />
               Back to News & Events
@@ -98,9 +98,9 @@ export default async function NewsDetailPage({
             {formatDate(item.date)}
           </div>
 
-          <div className="mt-8 h-56 w-full rounded-xl bg-gradient-to-br from-primary to-secondary/60 sm:h-72" />
+          <div className="mt-8 h-56 w-full rounded-xl bg-gradient-to-br from-primary-solid to-secondary/60 sm:h-72" />
 
-          <p className="mt-8 text-lg leading-relaxed text-foreground-secondary">
+          <p className="mt-8 text-lg leading-relaxed text-text-secondary">
             {item.content}
           </p>
         </div>

@@ -5,7 +5,7 @@ import { CONTACT_EMAIL } from "@/constants/site";
 
 export function CTASection() {
   return (
-    <section className="relative overflow-hidden bg-primary py-12 md:py-16">
+    <section className="relative overflow-hidden bg-primary-solid py-12 md:py-16">
       <div
         className="pointer-events-none absolute -top-20 right-10 h-64 w-64 rounded-full bg-secondary/20 blur-[90px]"
         aria-hidden="true"
