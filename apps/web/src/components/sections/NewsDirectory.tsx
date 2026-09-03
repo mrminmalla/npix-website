@@ -13,7 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { StaggerContainer, StaggerItem } from "@/components/shared/FadeIn";
-import { chunkIntoRows, cn } from "@/lib/utils";
+import { chunkIntoRows } from "@/lib/utils";
 import type { NewsItem } from "@/types";
 import { NEWS_CATEGORIES } from "@/data/news";
 
@@ -51,16 +51,16 @@ export function NewsDirectory({ items }: { items: NewsItem[] }) {
 
   return (
     <div>
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-2.5 rounded-md bg-surface p-4 sm:flex-row sm:items-center">
         <SearchBar
           value={query}
           onChange={(value) => {
             setQuery(value);
             setPage(1);
           }}
-          placeholder="Search news, events, workshops, and announcements..."
+          placeholder="Search news, events, workshops, and announcements"
           aria-label="Search news"
-          className="w-full lg:w-[360px]"
+          className="w-full flex-1"
         />
 
         {years.length > 1 && (
@@ -71,11 +71,11 @@ export function NewsDirectory({ items }: { items: NewsItem[] }) {
               setPage(1);
             }}
           >
-            <SelectTrigger className="w-full sm:w-36" aria-label="Filter by year">
+            <SelectTrigger className="w-full sm:w-[150px]" aria-label="Filter by year">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="All">All Years</SelectItem>
+              <SelectItem value="All">All years</SelectItem>
               {years.map((y) => (
                 <SelectItem key={y} value={y}>
                   {y}
@@ -84,44 +84,26 @@ export function NewsDirectory({ items }: { items: NewsItem[] }) {
             </SelectContent>
           </Select>
         )}
-      </div>
 
-      <div className="mt-5 flex flex-wrap gap-2">
-        <button
-          type="button"
-          aria-pressed={category === "All"}
-          onClick={() => {
-            setCategory("All");
+        <Select
+          value={category}
+          onValueChange={(value) => {
+            setCategory(value as NewsItem["category"] | "All");
             setPage(1);
           }}
-          className={cn(
-            "rounded-full border px-4 py-1.5 text-sm font-medium transition-colors",
-            category === "All"
-              ? "border-secondary bg-secondary text-secondary-foreground"
-              : "border-border text-foreground-secondary hover:border-secondary hover:text-secondary",
-          )}
         >
-          All
-        </button>
-        {NEWS_CATEGORIES.map((cat) => (
-          <button
-            key={cat}
-            type="button"
-            aria-pressed={category === cat}
-            onClick={() => {
-              setCategory(cat);
-              setPage(1);
-            }}
-            className={cn(
-              "rounded-full border px-4 py-1.5 text-sm font-medium transition-colors",
-              category === cat
-                ? "border-secondary bg-secondary text-secondary-foreground"
-                : "border-border text-foreground-secondary hover:border-secondary hover:text-secondary",
-            )}
-          >
-            {cat}
-          </button>
-        ))}
+          <SelectTrigger className="w-full sm:w-[170px]" aria-label="Filter by category">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="All">All categories</SelectItem>
+            {NEWS_CATEGORIES.map((cat) => (
+              <SelectItem key={cat} value={cat}>
+                {cat}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       <div className="mt-8">
