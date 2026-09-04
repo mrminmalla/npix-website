@@ -21,7 +21,6 @@ export function NewsCategoryBanner({
         className,
       )}
     >
-      <div className="absolute inset-0 bg-grid opacity-[0.15]" aria-hidden="true" />
       <div
         className={cn(
           "relative flex items-center justify-center rounded-full bg-primary-foreground/10 backdrop-blur-sm",

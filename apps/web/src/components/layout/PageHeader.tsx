@@ -24,10 +24,6 @@ export function PageHeader({
       )}
     >
       <div
-        className="pointer-events-none absolute inset-0 bg-grid opacity-[0.06]"
-        aria-hidden="true"
-      />
-      <div
         className="pointer-events-none absolute -top-24 right-0 h-72 w-72 rounded-full bg-secondary/20 blur-3xl"
         aria-hidden="true"
       />

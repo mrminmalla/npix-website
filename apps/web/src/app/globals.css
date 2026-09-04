@@ -91,8 +91,6 @@
 
   --animate-fade-in: fade-in 0.6s ease-out forwards;
   --animate-float: float 6s ease-in-out infinite;
-  --animate-pulse-slow: pulse-slow 4s ease-in-out infinite;
-  --animate-dash: dash 20s linear infinite;
   --animate-marquee: marquee 40s linear infinite;
 
   @keyframes fade-in {
@@ -112,20 +110,6 @@
     }
     50% {
       transform: translateY(-14px);
-    }
-  }
-  @keyframes pulse-slow {
-    0%,
-    100% {
-      opacity: 0.4;
-    }
-    50% {
-      opacity: 0.9;
-    }
-  }
-  @keyframes dash {
-    to {
-      stroke-dashoffset: -1000;
     }
   }
   @keyframes marquee {
@@ -166,13 +150,6 @@
 @layer utilities {
   .container-page {
     @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
-  }
-
-  .bg-grid {
-    background-image:
-      linear-gradient(to right, var(--color-border) 1px, transparent 1px),
-      linear-gradient(to bottom, var(--color-border) 1px, transparent 1px);
-    background-size: 40px 40px;
   }
 
   .text-gradient {
