@@ -13,7 +13,7 @@ export function HeroSection() {
       <div className="container-page relative">
         <FadeIn delay={0.08}>
           <h1 className="max-w-3xl text-4xl font-bold tracking-tight text-primary-foreground sm:text-5xl lg:text-6xl">
-            Connecting Nepal&apos;s <span className="text-gradient">Digital Ecosystem</span>
+            Connecting Nepal&apos;s <span className="text-accent">Digital Ecosystem</span>
           </h1>
         </FadeIn>
 

@@ -152,23 +152,6 @@
     @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
   }
 
-  .text-gradient {
-    /* The Hero (the only place this is used) sits on bg-primary-solid —
-       starting the gradient at that exact same color made the leading
-       letter(s) of the clipped text invisible against their own section
-       background. Lightening the start stop (derived from the same
-       token, not a new hardcoded hex) keeps it recognizably blue while
-       guaranteeing it never matches the navy backdrop behind it. */
-    background: linear-gradient(
-      135deg,
-      color-mix(in srgb, var(--color-primary-solid) 55%, white),
-      var(--color-accent)
-    );
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-
   .glass {
     background: color-mix(in srgb, var(--color-surface) 60%, transparent);
     backdrop-filter: blur(12px);
