@@ -9,7 +9,7 @@ export function StatisticsSection({ stats }: { stats: StatDatum[] }) {
   if (stats.length === 0) return null;
 
   return (
-    <section className="pt-12 pb-6 md:pt-16 md:pb-8">
+    <section className="bg-surface pt-12 pb-6 md:pt-16 md:pb-8">
       <div className="container-page">
         <FadeIn className="max-w-2xl">
           <p className="text-sm font-semibold uppercase tracking-widest text-secondary">
