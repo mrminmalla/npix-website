@@ -5,7 +5,6 @@ import { useRouter, usePathname } from 'next/navigation';
 import { Menu, ChevronRight, LogOut } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
 import { Sidebar, NAV_LABELS, initials } from '@/components/Sidebar';
-import { ThemeToggle } from '@/components/ThemeToggle';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { user, loading, logout } = useAuth();
@@ -59,7 +58,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </div>
 
           <div className="flex items-center gap-1.5">
-            <ThemeToggle />
+            {/* ThemeToggle hidden for now, per explicit request — re-add
+                `<ThemeToggle />` here if it comes back. Component file
+                (components/ThemeToggle.tsx) is untouched. */}
 
             {/* User profile: moved here from the sidebar footer (which is
                 now pure branding) so identity/role/sign-out live with the

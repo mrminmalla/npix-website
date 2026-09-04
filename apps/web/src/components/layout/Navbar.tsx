@@ -4,7 +4,6 @@ import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Logo } from "@/components/shared/Logo";
-import { ThemeSwitcher } from "@/components/shared/ThemeSwitcher";
 import { MobileMenu } from "@/components/layout/MobileMenu";
 import { Button } from "@/components/ui/button";
 import { NAV_LINKS } from "@/constants/nav";
@@ -70,7 +69,9 @@ export function Navbar() {
         </nav>
 
         <div className="flex shrink-0 items-center gap-2">
-          <ThemeSwitcher />
+          {/* ThemeSwitcher hidden for now, per explicit request — re-add
+              `<ThemeSwitcher />` here if it comes back. Component file
+              (components/shared/ThemeSwitcher.tsx) is untouched. */}
           <Button asChild variant="accent" size="sm" className="hidden sm:inline-flex">
             <a href={`mailto:${CONTACT_EMAIL}?subject=Membership%20Inquiry`}>Join NPIX</a>
           </Button>
