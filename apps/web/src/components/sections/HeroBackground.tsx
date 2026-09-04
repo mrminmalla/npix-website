@@ -15,8 +15,6 @@ export function HeroBackground() {
           strokeWidth="3"
         />
       </svg>
-
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background" />
     </div>
   );
 }
