@@ -1,24 +1,114 @@
 services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: npix-cms-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: npix
+      POSTGRES_PASSWORD: npix
+      POSTGRES_DB: npix
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U npix"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  minio:
+    image: minio/minio:latest
+    container_name: npix-cms-minio
+    restart: unless-stopped
+    command: server /data --console-address ":9101"
+    environment:
+      MINIO_ROOT_USER: npix
+      MINIO_ROOT_PASSWORD: npix12345
+    ports:
+      - "9100:9000" # S3 API (MinIO always listens on 9000 internally)
+      - "9101:9101" # Web console (matches --console-address below)
+    volumes:
+      - minio_data:/data
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    container_name: npix-cms-api
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "4100:4100"
+    volumes:
+      - .:/app
+      - api_node_modules:/app/node_modules
+      - api_uploads:/app/apps/api/uploads
+    environment:
+      NODE_ENV: development
+      PORT: 4100
+      DATABASE_URL: postgresql://npix:npix@postgres:5432/npix?schema=public
+      CORS_ORIGINS: http://localhost:3005,http://localhost:3006
+      STORAGE_DRIVER: local
+      UPLOADS_DIR: ./uploads
+      PUBLIC_ASSET_BASE_URL: http://localhost:4100/uploads
+      JWT_ACCESS_SECRET: dev-access-secret
+      JWT_REFRESH_SECRET: dev-refresh-secret
+      BOOTSTRAP_ADMIN_EMAIL: admin@npix.net.np
+      BOOTSTRAP_ADMIN_PASSWORD: change-me-please
+      # Internal service hostname, not localhost — this call happens
+      # container-to-container, not from a browser.
+      WEB_REVALIDATE_URL: http://frontend:3005/api/revalidate
+      WEB_REVALIDATE_SECRET: dev-revalidate-secret
+    command: sh -c "pnpm --filter @npix/api prisma:deploy && pnpm --filter @npix/api dev"
+
+  admin:
+    build:
+      context: .
+      dockerfile: apps/admin/Dockerfile
+    container_name: npix-cms-admin
+    depends_on:
+      - api
+    ports:
+      - "3006:3006"
+    volumes:
+      - .:/app
+      - admin_node_modules:/app/node_modules
+      - admin_next:/app/apps/admin/.next
+    environment:
+      NODE_ENV: development
+      NEXT_PUBLIC_API_URL: http://localhost:4100
+    command: pnpm --filter @npix/admin dev
+
   frontend:
     build:
       context: .
-      dockerfile: Dockerfile
-
-    container_name: npix-new-frontend
-
+      dockerfile: apps/web/Dockerfile
+    container_name: npix-cms-web
+    depends_on:
+      - api
     ports:
       - "3005:3005"
-
     volumes:
       - .:/app
       - frontend_node_modules:/app/node_modules
-      - frontend_next:/app/.next
-
+      - frontend_next:/app/apps/web/.next
     environment:
       NODE_ENV: development
-
-    command: npm run dev -- -p 3005
+      # Server-side fetches (Server Components) go container-to-container;
+      # next/image loading CMS-uploaded assets happens in the browser, so it
+      # still uses the host-mapped localhost:4100 (next.config.ts default).
+      API_URL: http://api:4100
+      WEB_REVALIDATE_SECRET: dev-revalidate-secret
+    command: pnpm --filter @npix/web dev
 
 volumes:
+  postgres_data:
+  minio_data:
+  api_node_modules:
+  api_uploads:
+  admin_node_modules:
+  admin_next:
   frontend_node_modules:
   frontend_next:

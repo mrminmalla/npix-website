@@ -1,0 +1,209 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { Trash2, UploadCloud, Image as ImageIcon } from 'lucide-react';
+import { api, ApiError } from '@/lib/api';
+import { useToast } from '@/lib/toast-context';
+import { Card } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button';
+import { Modal } from '@/components/ui/Modal';
+
+const ROW_SIZE = 6;
+
+/** Groups a list into rows of at most `size`, so a fixed N-column grid
+ *  doesn't leave dead space whenever the asset count isn't a multiple of
+ *  N — each row's own item count drives an even flex split instead (see
+ *  apps/web/src/lib/utils.ts's chunkIntoRows for the same pattern; no
+ *  shared utils module exists in this app to import it from). */
+function chunkIntoRows<T>(items: T[], size: number): T[][] {
+  const rows: T[][] = [];
+  for (let i = 0; i < items.length; i += size) {
+    rows.push(items.slice(i, i + size));
+  }
+  return rows;
+}
+
+interface Asset {
+  id: string;
+  url: string;
+  originalFilename: string;
+  mimeType: string;
+  sizeBytes: number;
+  altText?: string;
+  createdAt: string;
+}
+
+export default function MediaLibraryPage() {
+  const toast = useToast();
+  const [assets, setAssets] = useState<Asset[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<Asset | null>(null);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState(false);
+
+  async function load() {
+    setLoading(true);
+    try {
+      setAssets(await api.get<Asset[]>('/admin/assets'));
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : 'Failed to load');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    load();
+  }, []);
+
+  async function handleUpload(file: File) {
+    setUploading(true);
+    setError(null);
+    try {
+      await api.upload('/admin/assets', file);
+      toast.push('File uploaded', 'success');
+      await load();
+    } catch (err) {
+      const message = err instanceof ApiError ? err.message : 'Upload failed';
+      setError(message);
+      toast.push(message, 'error');
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  function requestDelete(asset: Asset) {
+    setDeleteError(null);
+    setDeleteTarget(asset);
+  }
+
+  async function confirmDelete() {
+    if (!deleteTarget) return;
+    setDeleting(true);
+    setDeleteError(null);
+    try {
+      await api.delete(`/admin/assets/${deleteTarget.id}`);
+      toast.push('Asset deleted', 'success');
+      setDeleteTarget(null);
+      await load();
+    } catch (err) {
+      const message = err instanceof ApiError ? err.message : 'Failed to delete';
+      setDeleteError(message);
+      toast.push(message, 'error');
+    } finally {
+      setDeleting(false);
+    }
+  }
+
+  return (
+    <div>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-xl font-extrabold tracking-tight text-[var(--foreground)]">Media Library</h1>
+          <p className="mt-0.5 text-sm text-[var(--muted)]">
+            Every image and file uploaded from any content form lives here.
+          </p>
+        </div>
+        <label className="inline-flex shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-xl bg-[var(--primary-solid)] px-4 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-[var(--primary-hover)]">
+          <UploadCloud className="h-4 w-4" />
+          {uploading ? 'Uploading…' : 'Upload file'}
+          <input
+            type="file"
+            className="hidden"
+            disabled={uploading}
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) handleUpload(file);
+            }}
+          />
+        </label>
+      </div>
+
+      {error && (
+        <p className="mt-4 rounded-lg bg-[var(--danger-tint)] px-3 py-2 text-sm font-medium text-[var(--danger)]">
+          {error}
+        </p>
+      )}
+
+      <div className="mt-6 flex flex-col gap-4">
+        {loading ? (
+          <p className="text-sm text-[var(--muted)]">Loading…</p>
+        ) : assets.length === 0 ? (
+          <p className="text-sm text-[var(--muted)]">No files uploaded yet.</p>
+        ) : (
+          chunkIntoRows(assets, ROW_SIZE).map((row, rowIndex) => (
+            <div key={rowIndex} className="flex flex-col gap-4 lg:flex-row">
+              {row.map((asset) => (
+                <Card key={asset.id} className="group relative min-w-0 overflow-hidden p-2 lg:flex-1">
+                  {asset.mimeType.startsWith('image/') ? (
+                    <img
+                      src={asset.url}
+                      // Falls back to the filename, not empty — an empty alt
+                      // marks the image purely decorative, hiding it from
+                      // screen readers even though it's the primary way to
+                      // tell thumbnails apart in this grid.
+                      alt={asset.altText || asset.originalFilename}
+                      className="h-24 w-full rounded-lg border border-[var(--border)] bg-white object-contain"
+                    />
+                  ) : (
+                    <div className="flex h-24 items-center justify-center rounded-lg bg-[var(--surface-hover)] text-[var(--muted)]">
+                      <ImageIcon className="h-6 w-6" />
+                    </div>
+                  )}
+                  <p className="mt-2 truncate text-xs font-semibold text-[var(--foreground)]">
+                    {asset.originalFilename}
+                  </p>
+                  <p className="text-[10px] font-medium text-[var(--muted)]">
+                    {Math.round(asset.sizeBytes / 1024)} KB
+                  </p>
+                  <button
+                    onClick={() => requestDelete(asset)}
+                    title="Delete"
+                    aria-label={`Delete ${asset.originalFilename}`}
+                    className="absolute right-2 top-2 rounded-lg bg-white/90 p-1.5 text-[var(--danger)] opacity-0 shadow-sm transition group-hover:opacity-100 group-focus-within:opacity-100 focus-visible:opacity-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--danger)] dark:bg-slate-900/90"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </button>
+                </Card>
+              ))}
+            </div>
+          ))
+        )}
+      </div>
+
+      <Modal
+        open={Boolean(deleteTarget)}
+        onClose={() => setDeleteTarget(null)}
+        title={deleteTarget ? `Delete "${deleteTarget.originalFilename}"?` : 'Delete'}
+        size="sm"
+      >
+        {deleteTarget && (
+          <div>
+            <p className="text-sm text-[var(--foreground)]">
+              This will permanently delete <strong>&ldquo;{deleteTarget.originalFilename}&rdquo;</strong>.
+              Anything referencing it will show as missing. This action cannot be undone.
+            </p>
+            {deleteError && (
+              <p
+                role="alert"
+                className="mt-4 rounded-lg bg-[var(--danger-tint)] px-3 py-2 text-sm font-medium text-[var(--danger)]"
+              >
+                {deleteError}
+              </p>
+            )}
+            <div className="mt-6 flex justify-end gap-2 border-t border-[var(--border)] pt-4">
+              <Button type="button" variant="secondary" onClick={() => setDeleteTarget(null)}>
+                Cancel
+              </Button>
+              <Button type="button" variant="danger" disabled={deleting} onClick={confirmDelete}>
+                {deleting ? 'Deleting…' : 'Delete permanently'}
+              </Button>
+            </div>
+          </div>
+        )}
+      </Modal>
+    </div>
+  );
+}

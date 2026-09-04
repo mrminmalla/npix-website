@@ -1,0 +1,161 @@
+@import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
+@plugin "tailwindcss-animate";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --background: #ffffff;
+  --surface: #f8fafc;
+  /* Brand-aligned dark navy for default heading/body text on light
+     backgrounds. --foreground aliases this (rather than duplicating the
+     value) so every existing `text-foreground` usage — the sitewide
+     default text color — picks it up automatically with no
+     per-component changes. Dark-theme text intentionally does NOT
+     reference this: .dark's own --foreground stays near-white, since a
+     dark navy would be unreadable against that theme's dark surfaces. */
+  --text-primary: #002a3a;
+  --foreground: var(--text-primary);
+  --foreground-secondary: #64748b;
+  /* For card/section body copy that needs to sit a step below a heading
+     in the hierarchy but should still read as the brand navy rather than
+     an unrelated gray (e.g. "Why NPIX Matters" card descriptions). A
+     lightened tint of --text-primary, not a separate hardcoded hex — 75%
+     mix computes to ~6.8:1 contrast on white, clearing WCAG AA.
+     --foreground-secondary above is unchanged and still means true
+     muted/meta text: timestamps, captions, placeholders, nav links. */
+  --text-secondary: color-mix(in srgb, var(--text-primary) 75%, transparent);
+  /* Kept dark (not the flag navy below) — this is the one place a text
+     color, not a background fill, is driven by "primary": Badge's
+     `secondary` variant sets `text-primary` on a `bg-secondary` (sky
+     blue) chip, and needs this to stay near-black for contrast in both
+     themes (see badge.tsx's comment). --primary-solid is what every
+     background fill (Hero, CTAs, page banners, etc.) uses instead. */
+  --primary: #0b1f3a;
+  --primary-solid: #003893;
+  --primary-foreground: #ffffff;
+  --secondary: #0ea5e9;
+  --secondary-foreground: #ffffff;
+  --accent: #dc143c;
+  --accent-foreground: #ffffff;
+  --success: #10b981;
+  --border: #e2e8f0;
+  --radius: 0.75rem;
+}
+
+.dark {
+  --background: #020617;
+  --surface: #0f172a;
+  --foreground: #f8fafc;
+  --foreground-secondary: #94a3b8;
+  /* Dark theme keeps the original gray exactly as it was — the navy tint
+     above is a light-background-only concept and would be near-invisible
+     against this theme's dark surfaces. */
+  --text-secondary: var(--foreground-secondary);
+  --primary: #071a2e;
+  --primary-solid: #003893;
+  --primary-foreground: #f8fafc;
+  --secondary: #38bdf8;
+  --secondary-foreground: #071a2e;
+  --accent: #dc143c;
+  --accent-foreground: #ffffff;
+  --success: #10b981;
+  --border: #334155;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-foreground: var(--foreground);
+  --color-foreground-secondary: var(--foreground-secondary);
+  --color-primary: var(--primary);
+  --color-primary-solid: var(--primary-solid);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-success: var(--success);
+  --color-border: var(--border);
+  --color-ring: var(--secondary);
+
+  --radius-sm: calc(var(--radius) - 0.25rem);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 0.25rem);
+  --radius-xl: calc(var(--radius) + 0.5rem);
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  --animate-fade-in: fade-in 0.6s ease-out forwards;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-marquee: marquee 40s linear infinite;
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-14px);
+    }
+  }
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: var(--color-background);
+    color: var(--color-foreground);
+  }
+
+  ::selection {
+    background: var(--color-secondary);
+    color: var(--color-secondary-foreground);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-secondary);
+    outline-offset: 2px;
+  }
+}
+
+@layer utilities {
+  .container-page {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .glass {
+    background: color-mix(in srgb, var(--color-surface) 60%, transparent);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid color-mix(in srgb, var(--color-border) 60%, transparent);
+  }
+}

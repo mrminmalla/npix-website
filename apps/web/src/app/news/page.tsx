@@ -1,0 +1,76 @@
+import type { Metadata } from "next";
+import { PageHeader } from "@/components/layout/PageHeader";
+import { FeaturedNewsCard } from "@/components/cards/FeaturedNewsCard";
+import { UpcomingEvents } from "@/components/sections/UpcomingEvents";
+import { NewsDirectory } from "@/components/sections/NewsDirectory";
+import { NewsletterSection } from "@/components/sections/NewsletterSection";
+import { FadeIn } from "@/components/shared/FadeIn";
+import { JsonLd } from "@/components/shared/JsonLd";
+import { getAllNews, getFeaturedNews, getUpcomingEvents } from "@/lib/cms/news";
+import { SITE_URL } from "@/constants/site";
+
+export const revalidate = 60;
+
+export const metadata: Metadata = {
+  title: "News & Events",
+  description:
+    "Stay up to date with NPIX announcements, maintenance notices, new member updates, workshops, conferences, and infrastructure upgrades.",
+  keywords: ["NPIX news", "Nepal Internet Exchange events", "IXP announcements Nepal"],
+  alternates: { canonical: "/news" },
+  openGraph: {
+    title: "News & Events | NPIX",
+    description:
+      "Stay up to date with NPIX announcements, maintenance notices, workshops, and infrastructure upgrades.",
+    url: `${SITE_URL}/news`,
+  },
+};
+
+export default async function NewsPage() {
+  const [featured, all, upcoming] = await Promise.all([
+    getFeaturedNews(),
+    getAllNews(),
+    getUpcomingEvents(),
+  ]);
+  const rest = featured ? all.filter((item) => item.id !== featured.id) : all;
+
+  return (
+    <>
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+            { "@type": "ListItem", position: 2, name: "News & Events", item: `${SITE_URL}/news` },
+          ],
+        }}
+      />
+
+      <PageHeader
+        eyebrow="Stay Informed"
+        title="News & Events"
+        description="Announcements, maintenance notices, new member updates, and upcoming events from NPIX."
+      />
+
+      <UpcomingEvents events={upcoming} />
+
+      {featured && (
+        <section className="bg-surface py-12 md:py-16">
+          <div className="container-page">
+            <FadeIn>
+              <FeaturedNewsCard item={featured} />
+            </FadeIn>
+          </div>
+        </section>
+      )}
+
+      <section className="py-12 md:py-16">
+        <div className="container-page">
+          <NewsDirectory items={rest} />
+        </div>
+      </section>
+
+      <NewsletterSection />
+    </>
+  );
+}

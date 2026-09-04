@@ -1,0 +1,45 @@
+"use client";
+
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { GrafanaEmbed } from "@/components/shared/GrafanaEmbed";
+import { LiveIndicator } from "@/components/shared/LiveIndicator";
+import type { TrafficPanel } from "@/data/traffic-panels";
+import { cn } from "@/lib/utils";
+
+export function TrafficTabs({
+  panels,
+  graphClassName,
+}: {
+  panels: TrafficPanel[];
+  graphClassName?: string;
+}) {
+  return (
+    <Tabs defaultValue={panels[0]?.id}>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="-mx-1 overflow-x-auto px-1">
+          <TabsList>
+            {panels.map((panel) => (
+              <TabsTrigger key={panel.id} value={panel.id}>
+                {panel.label}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        </div>
+        <LiveIndicator />
+      </div>
+
+      {panels.map((panel) => (
+        <TabsContent key={panel.id} value={panel.id}>
+          <p className="mb-3 text-xs font-medium uppercase tracking-wide text-foreground">
+            {panel.sublabel}
+          </p>
+          <GrafanaEmbed
+            src={panel.src}
+            title={`NPIX ${panel.label.toLowerCase()} traffic, ${panel.sublabel.toLowerCase()}`}
+            className={cn("h-[300px] sm:h-[450px]", graphClassName)}
+          />
+        </TabsContent>
+      ))}
+    </Tabs>
+  );
+}

@@ -1,0 +1,248 @@
+@import "tailwindcss";
+
+/* Matches apps/web's radius scale exactly (its `--radius: 0.75rem` theme
+   override) so identical utility classes — rounded-sm/md/lg/xl — render at
+   the same physical size in both apps instead of admin silently falling
+   back to Tailwind's smaller unmodified defaults. */
+@theme inline {
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.25rem;
+}
+
+/*
+ * Design tokens matching apps/web's palette (same navy `--primary` and
+ * crimson accent) so the admin portal and the public site read as one
+ * product. Components consume these via var(--x) rather than Tailwind's
+ * dark: variant, so toggling the `dark` class on <html> re-themes the
+ * whole app without needing dark: on every element.
+ *
+ * `--primary` vs `--primary-solid`: apps/web's `--primary` only ever fills
+ * a solid dark surface (buttons), so it stays near-black in both themes.
+ * This app also uses "primary" as *text* on a light tint (badges, table
+ * headers, the modal title) — a role web doesn't have. Reusing one token
+ * for both breaks in dark mode: a solid navy button needs a dark
+ * background for white text, but navy text on a barely-tinted dark
+ * surface is nearly unreadable. So: `--primary-solid` is the web-matching
+ * navy for solid fills; `--primary` stays a brighter, theme-adaptive blue
+ * for text/border/outline roles (dark mode reuses web's own dark-mode
+ * `--secondary`, `#38bdf8`, which is exactly that role over there).
+ */
+:root {
+  --background: #f8fafc;
+  --surface: #ffffff;
+  --surface-hover: #f8fafc;
+  --foreground: #0f172a;
+  --muted: #64748b;
+  --border: #e2e8f0;
+
+  --primary: #0b1f3a;
+  --primary-solid: #0b1f3a;
+  --primary-hover: #16304f;
+  --primary-foreground: #ffffff;
+  --primary-tint: #eef1f6;
+
+  --accent: #dc143c;
+  --accent-hover: #b80d30;
+  --accent-foreground: #ffffff;
+  --accent-tint: #fef2f2;
+
+  --danger: #dc143c;
+  --danger-hover: #b80d30;
+  --danger-foreground: #ffffff;
+  --danger-tint: #fef2f2;
+  --danger-solid: #dc143c;
+
+  /* #059669 on --success-tint was 3.58:1 (fails WCAG AA text, 4.5:1) */
+  --success: #047857;
+  --success-tint: #ecfdf5;
+  /* Dedicated solid-fill color, same reasoning as --danger-solid/
+     --primary-solid: --success is also used as text-on-tint (the Badge
+     success tone) and stays constant across themes for a solid button/
+     toast background with white text (5.6:1). */
+  --success-solid: #047857;
+
+  --shadow-card: 0 1px 3px 0 rgba(0, 56, 147, 0.06), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
+  --shadow-card-hover: 0 10px 25px -5px rgba(0, 56, 147, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+  --shadow-modal: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+:root.dark {
+  --background: #020617;
+  --surface: #0f172a;
+  --surface-hover: #1e293b;
+  --foreground: #f1f5f9;
+  --muted: #94a3b8;
+  --border: #1e293b;
+
+  /* See the `:root` comment above — `#2563eb` was a generic blue with no
+     relation to the brand; text-role `--primary` now reuses the same
+     bright blue apps/web's dark theme already uses for this exact role
+     (`--secondary`), while `--primary-solid` keeps the actual navy. */
+  --primary: #38bdf8;
+  --primary-solid: #071a2e;
+  --primary-hover: #0f2740;
+  --primary-foreground: #ffffff;
+  --primary-tint: rgba(56, 189, 248, 0.12);
+
+  --accent: #f43f5e;
+  --accent-hover: #fb7185;
+  --accent-foreground: #ffffff;
+  --accent-tint: rgba(244, 63, 94, 0.12);
+
+  --danger: #f43f5e;
+  --danger-hover: #fb7185;
+  --danger-foreground: #ffffff;
+  --danger-tint: rgba(244, 63, 94, 0.12);
+  /* Dedicated solid-fill color for white-text-on-danger buttons/toasts.
+     `--danger` itself is also used as red *text* on light/tinted
+     backgrounds throughout the app (error messages, icon buttons, the
+     required-field asterisk) — those need a lighter red for contrast
+     against a very dark tint here, while a solid button with white text
+     needs a darker one. #dc143c (4.98:1 with white) is also the same
+     crimson used everywhere else — light mode and the public site's
+     accent in both themes — instead of a generic rose. */
+  --danger-solid: #dc143c;
+
+  --success: #34d399;
+  --success-tint: rgba(52, 211, 153, 0.12);
+  --success-solid: #047857;
+
+  --shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.3);
+  --shadow-card-hover: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+  --shadow-modal: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+}
+
+* {
+  border-color: var(--border);
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+code,
+kbd,
+.font-mono {
+  font-family: var(--font-mono), "JetBrains Mono", ui-monospace, monospace;
+}
+
+/* Sitewide keyboard-focus ring, matching apps/web's equivalent rule —
+   buttons, links, sidebar nav items, and icon-only row actions had no
+   explicit focus style at all and fell back to inconsistent browser
+   defaults. Lower specificity than `input:focus`/etc. below, which already
+   supply their own box-shadow ring and explicitly turn this outline off,
+   so this only fills the gap rather than doubling up on form fields. */
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 56, 147, 0.2);
+  border-radius: 9999px;
+}
+:root.dark ::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.3);
+}
+
+/* @layer base (matching apps/web's globals.css) — not just style
+   organization: Tailwind's own utilities live inside its internal
+   `utilities` layer, and per the CSS cascade-layers spec, ANY unlayered
+   rule beats ANY layered one regardless of specificity. Left unlayered,
+   this plain `input { padding: ... }` rule silently won over utility
+   classes like `pl-9` meant to make room for an icon inside an input —
+   the padding never actually changed, so the icon and the input's own
+   text/placeholder rendered at the same position and overlapped. */
+@layer base {
+  input,
+  textarea,
+  select {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8125rem;
+    width: 100%;
+    color: var(--foreground);
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+
+  :root:not(.dark) input,
+  :root:not(.dark) textarea,
+  :root:not(.dark) select {
+    background: #f8fafc;
+  }
+
+  input:focus,
+  textarea:focus,
+  select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-tint);
+  }
+
+  input:disabled,
+  textarea:disabled,
+  select:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+/* RichTextEditor (Documents content field) — Tiptap's Placeholder
+   extension only marks the empty node with a data-attribute/class; the
+   actual visible hint text is left to the consuming app's CSS. */
+.ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+  color: var(--muted);
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-toast-in {
+  animation: toast-in 0.18s ease-out;
+}
+
+.animate-modal-in {
+  animation: modal-in 0.15s ease-out;
+}
