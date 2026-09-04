@@ -51,7 +51,7 @@ export function Navbar() {
                       "relative whitespace-nowrap rounded-full px-2.5 py-2 text-sm font-medium transition-colors",
                       isActive
                         ? "text-accent"
-                        : "text-black hover:text-primary-solid",
+                        : "text-foreground hover:text-primary-solid",
                     )}
                   >
                     {link.label}

@@ -5,8 +5,39 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --background: #ffffff;
-  --surface: #f8fafc;
+  /* Redesign palette — the actual source of truth for the site's brand
+     colors. Every semantic token below (--background, --primary-solid,
+     --accent, --secondary, ...) aliases one of these rather than
+     duplicating a hex, so the whole site (not just the homepage) picks
+     up the system through the existing --color-* Tailwind utilities.
+     Kept constant across both themes (see .dark below) — same reasoning
+     as the old --primary-solid/--accent brand-color precedent this file
+     already established: a brand hue shouldn't shift when a visitor
+     toggles theme. --navy/--navy-deep/--coral/--teal are close to
+     WCAG-AA on their own for large text/icons/fills; --teal-text and
+     --coral-text are deliberately darkened variants (still visibly
+     teal/coral) for small uppercase eyebrow-style text on light
+     backgrounds, where the pure hues fall short of 4.5:1 — see the
+     per-pairing contrast notes below.
+     Verified sRGB relative-luminance contrast (WCAG AA):
+       white/navy 16.9:1, white/navy-deep 18.7:1, navy/cream 15.9:1,
+       navy/coral 4.44:1 (used for accent-foreground below), teal-text/
+       cream 5.6:1, coral-text/cream 5.2:1 (4.8:1 on cream-alt). */
+  --navy: #0d1b3d;
+  --navy-deep: #081227;
+  --coral: #e2523f;
+  --teal: #0f8b8d;
+  --cream: #faf8f4;
+  --cream-alt: #f2efe7;
+  --teal-text: #0c6f71;
+  --coral-text: #b54232;
+  /* Lightened teal for small text (e.g. the Hero eyebrow label) directly
+     on the navy Hero background — pure --teal only measures 4.1:1 there;
+     this mix clears 8.7:1. */
+  --teal-light: color-mix(in srgb, var(--teal) 50%, white);
+
+  --background: var(--cream);
+  --surface: var(--cream-alt);
   /* Brand-aligned dark navy for default heading/body text on light
      backgrounds. --foreground aliases this (rather than duplicating the
      value) so every existing `text-foreground` usage — the sitewide
@@ -14,14 +45,18 @@
      per-component changes. Dark-theme text intentionally does NOT
      reference this: .dark's own --foreground stays near-white, since a
      dark navy would be unreadable against that theme's dark surfaces. */
-  --text-primary: #002a3a;
+  --text-primary: var(--navy);
   --foreground: var(--text-primary);
-  --foreground-secondary: #64748b;
+  /* Slate-600, not slate-500 — slate-500 (#64748b) measured 4.49:1 on the
+     new --cream background (was ~5.4:1 against the old pure-white
+     background), just under the 4.5:1 AA threshold. Slate-600 clears it
+     comfortably (7.1:1) on both --cream and --surface. */
+  --foreground-secondary: #475569;
   /* For card/section body copy that needs to sit a step below a heading
      in the hierarchy but should still read as the brand navy rather than
      an unrelated gray (e.g. "Why NPIX Matters" card descriptions). A
-     lightened tint of --text-primary, not a separate hardcoded hex — 75%
-     mix computes to ~6.8:1 contrast on white, clearing WCAG AA.
+     lightened tint of --text-primary, not a separate hardcoded hex —
+     75% mix computes to ~7.3:1 contrast on --cream, clearing WCAG AA.
      --foreground-secondary above is unchanged and still means true
      muted/meta text: timestamps, captions, placeholders, nav links. */
   --text-secondary: color-mix(in srgb, var(--text-primary) 75%, transparent);
@@ -32,12 +67,15 @@
      themes (see badge.tsx's comment). --primary-solid is what every
      background fill (Hero, CTAs, page banners, etc.) uses instead. */
   --primary: #0b1f3a;
-  --primary-solid: #003893;
+  --primary-solid: var(--navy);
   --primary-foreground: #ffffff;
-  --secondary: #0ea5e9;
+  --secondary: var(--teal);
   --secondary-foreground: #ffffff;
-  --accent: #dc143c;
-  --accent-foreground: #ffffff;
+  --accent: var(--coral);
+  /* Navy, not white — white on the new (lighter/more orange) coral only
+     measures 3.81:1, failing AA for normal text; navy on coral clears
+     4.44:1. This affects every filled accent button/badge sitewide. */
+  --accent-foreground: var(--navy);
   --success: #10b981;
   --border: #e2e8f0;
   --radius: 0.75rem;
@@ -53,17 +91,33 @@
      against this theme's dark surfaces. */
   --text-secondary: var(--foreground-secondary);
   --primary: #071a2e;
-  --primary-solid: #003893;
+  --primary-solid: var(--navy);
   --primary-foreground: #f8fafc;
-  --secondary: #38bdf8;
-  --secondary-foreground: #071a2e;
-  --accent: #dc143c;
-  --accent-foreground: #ffffff;
+  --secondary: var(--teal);
+  --secondary-foreground: #ffffff;
+  --accent: var(--coral);
+  --accent-foreground: var(--navy);
   --success: #10b981;
   --border: #334155;
+  /* Eyebrow text needs a lighter variant against dark surfaces than the
+     light-mode darkened versions above — the pure hues read at 4.3-5.3:1
+     against this theme's dark backgrounds, so no separate dark-specific
+     shade is needed. */
+  --teal-text: var(--teal);
+  --coral-text: var(--coral);
 }
 
 @theme inline {
+  --color-navy: var(--navy);
+  --color-navy-deep: var(--navy-deep);
+  --color-coral: var(--coral);
+  --color-teal: var(--teal);
+  --color-cream: var(--cream);
+  --color-cream-alt: var(--cream-alt);
+  --color-teal-text: var(--teal-text);
+  --color-coral-text: var(--coral-text);
+  --color-teal-light: var(--teal-light);
+
   --color-background: var(--background);
   --color-surface: var(--surface);
   --color-text-primary: var(--text-primary);

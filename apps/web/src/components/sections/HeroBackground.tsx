@@ -1,8 +1,8 @@
 export function HeroBackground() {
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-      <div className="absolute -top-32 left-1/4 h-96 w-96 rounded-full bg-secondary/20 blur-[100px]" />
-      <div className="absolute -bottom-32 right-1/4 h-96 w-96 rounded-full bg-accent/10 blur-[100px]" />
+      <div className="absolute -top-24 -right-16 h-[380px] w-[380px] rounded-full bg-teal/15 blur-[70px]" />
+      <div className="absolute -bottom-24 -left-16 h-[380px] w-[380px] rounded-full bg-coral/15 blur-[70px]" />
 
       <svg
         className="absolute right-[-8%] top-1/2 h-[130%] w-auto -translate-y-1/2 opacity-[0.07]"

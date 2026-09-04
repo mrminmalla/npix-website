@@ -1,5 +1,5 @@
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/shared/FadeIn";
-import { chunkIntoRows, cn } from "@/lib/utils";
+import { chunkIntoRows } from "@/lib/utils";
 import type { WhyNpixItem } from "@/types";
 
 const ROW_SIZE = 4;
@@ -11,7 +11,7 @@ export function WhyNPIXSection({ items }: { items: WhyNpixItem[] }) {
     <section className="bg-surface py-12 md:py-16">
       <div className="container-page">
         <FadeIn className="max-w-2xl">
-          <p className="text-sm font-semibold uppercase tracking-widest text-secondary">
+          <p className="text-sm font-semibold uppercase tracking-widest text-coral-text">
             Why It Matters
           </p>
           <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
@@ -26,20 +26,12 @@ export function WhyNPIXSection({ items }: { items: WhyNpixItem[] }) {
         <StaggerContainer className="mt-8 flex flex-col gap-6">
           {chunkIntoRows(items, ROW_SIZE).map((row, rowIndex) => (
             <div key={rowIndex} className="flex flex-col gap-6 sm:flex-row">
-              {row.map((item, i) => {
+              {row.map((item) => {
                 const Icon = item.icon;
-                // Alternates blue/crimson (the flag palette) per icon so
-                // the row doesn't read as one flat tint block.
-                const isCrimson = (rowIndex * ROW_SIZE + i) % 2 !== 0;
                 return (
                   <StaggerItem key={item.id} className="min-w-0 sm:flex-1">
                     <div className="flex h-full flex-col rounded-xl border border-border bg-background p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
-                      <div
-                        className={cn(
-                          "flex h-12 w-12 items-center justify-center rounded-lg",
-                          isCrimson ? "bg-accent/10 text-accent" : "bg-primary-solid/10 text-primary-solid",
-                        )}
-                      >
+                      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-coral/10 text-coral-text">
                         <Icon className="h-6 w-6" aria-hidden="true" />
                       </div>
                       <h3 className="mt-4 text-base font-semibold text-foreground">{item.title}</h3>

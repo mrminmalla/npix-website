@@ -8,10 +8,11 @@ export default function manifest(): MetadataRoute.Manifest {
     description: SITE_TAGLINE,
     start_url: "/",
     display: "standalone",
-    background_color: "#ffffff",
-    // Matches --primary-solid in globals.css (can't reference a CSS custom
-    // property here — this file has no runtime access to the stylesheet).
-    theme_color: "#003893",
+    background_color: "#faf8f4",
+    // Matches --primary-solid (= --navy) in globals.css (can't reference a
+    // CSS custom property here — this file has no runtime access to the
+    // stylesheet).
+    theme_color: "#0d1b3d",
     icons: [
       { src: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
       { src: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },

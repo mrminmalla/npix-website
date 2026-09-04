@@ -16,7 +16,7 @@ export function MemberShowcaseSection({ members }: { members: Member[] }) {
       <div className="container-page">
         <FadeIn className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
           <div className="max-w-2xl">
-            <p className="text-sm font-semibold uppercase tracking-widest text-secondary">
+            <p className="text-sm font-semibold uppercase tracking-widest text-coral-text">
               Trusted By Nepal&apos;s Digital Leaders
             </p>
             <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
@@ -30,7 +30,7 @@ export function MemberShowcaseSection({ members }: { members: Member[] }) {
           </div>
           <Link
             href="/members"
-            className="inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold text-foreground transition-colors duration-200 hover:text-sky-600 dark:hover:text-sky-400"
+            className="inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold text-foreground transition-colors duration-200 hover:text-coral-text"
           >
             View All Members
             <ArrowRight className="h-4 w-4" aria-hidden="true" />

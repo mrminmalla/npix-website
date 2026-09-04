@@ -8,14 +8,12 @@ const badgeVariants = cva(
     variants: {
       variant: {
         default: "border-transparent bg-primary-solid text-primary-foreground",
-        // White on the shared `--secondary` token (a light sky blue) fails
-        // WCAG AA (2.1-2.8:1 depending on theme). Rather than reuse
-        // --secondary itself — which also drives focus rings/links
-        // elsewhere and would darken those too — this variant gets its
-        // own fixed, darker blue (5.93:1 with white, both themes) so it
-        // still reads as "blue" and distinct from the navy `default`
-        // variant above.
-        secondary: "border-transparent bg-[#0369a1] text-white",
+        // Light teal tint + the darkened --teal-text (5.6:1 on cream,
+        // 4.3-4.9:1 on dark surfaces) rather than the old solid dark-blue
+        // chip — reads as a soft "tag" pill matching the redesign's teal
+        // accent, and stays legible in both themes since --teal-text has
+        // its own dark-mode value (see globals.css).
+        secondary: "border-transparent bg-teal/10 text-teal-text",
         accent: "border-transparent bg-accent text-accent-foreground",
         // White on the shared `--success` token fails WCAG AA (2.54:1) —
         // same issue and same fix as `secondary` above: a dedicated
