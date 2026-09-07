@@ -12,9 +12,10 @@ export function Logo({
   imgClassName?: string;
   compact?: boolean;
   /** For placing the logo on a permanently-dark surface (e.g. the navy
-   *  footer) regardless of the site's own light/dark theme toggle — the
-   *  source PNG is dark-on-transparent, so it needs to be unconditionally
-   *  inverted to white there, not just in dark theme (`dark:invert`). */
+   *  footer/navbar) regardless of the site's own light/dark theme toggle —
+   *  the source PNG is dark-on-transparent, so it needs to be
+   *  unconditionally inverted to white there, not just in dark theme
+   *  (`dark:invert`). */
   light?: boolean;
 }) {
   return (
