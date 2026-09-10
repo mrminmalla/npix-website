@@ -13,7 +13,7 @@ export function MemberTable({ members }: { members: Member[] }) {
               AS
             </th>
             <th scope="col" className="px-5 py-3.5 font-semibold text-foreground">
-              IP Address
+              Access World
             </th>
             <th scope="col" className="px-5 py-3.5 font-semibold text-foreground">
               Datahub
