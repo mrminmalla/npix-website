@@ -3,7 +3,6 @@ import { PageHeader } from "@/components/layout/PageHeader";
 import { FeaturedNewsCard } from "@/components/cards/FeaturedNewsCard";
 import { UpcomingEvents } from "@/components/sections/UpcomingEvents";
 import { NewsDirectory } from "@/components/sections/NewsDirectory";
-import { NewsletterSection } from "@/components/sections/NewsletterSection";
 import { FadeIn } from "@/components/shared/FadeIn";
 import { JsonLd } from "@/components/shared/JsonLd";
 import { getAllNews, getFeaturedNews, getUpcomingEvents } from "@/lib/cms/news";
@@ -69,8 +68,6 @@ export default async function NewsPage() {
           <NewsDirectory items={rest} />
         </div>
       </section>
-
-      <NewsletterSection />
     </>
   );
 }

@@ -5,7 +5,6 @@ import { TrafficSection } from "@/components/sections/TrafficSection";
 import { WhyNPIXSection } from "@/components/sections/WhyNPIXSection";
 import { EventsAnnouncementsSection } from "@/components/sections/EventsAnnouncementsSection";
 import { MemberShowcaseSection } from "@/components/sections/MemberShowcaseSection";
-import { CTASection } from "@/components/sections/CTASection";
 import { JsonLd } from "@/components/shared/JsonLd";
 import { getHomeData } from "@/lib/cms/home";
 import { SITE_NAME, SITE_TAGLINE, SITE_URL, SITE_DESCRIPTION } from "@/constants/site";
@@ -46,7 +45,6 @@ export default async function Home() {
       <WhyNPIXSection items={whyNpix} />
       <EventsAnnouncementsSection items={eventsAnnouncements} />
       <MemberShowcaseSection members={memberShowcase} />
-      <CTASection />
     </>
   );
 }
