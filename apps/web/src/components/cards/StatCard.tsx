@@ -13,8 +13,12 @@ interface StatCardProps {
   className?: string;
   /** Alternates the icon tint between the flag's blue and crimson so a
    *  row of stat cards doesn't read as one flat color block — callers
-   *  pass e.g. `index % 2 === 0 ? "blue" : "crimson"`. Defaults to blue. */
-  tone?: "blue" | "crimson";
+   *  pass e.g. `index % 2 === 0 ? "blue" : "crimson"`. "teal" is a
+   *  uniform (non-alternating) treatment for the redesigned Home stats
+   *  row — a circular badge instead of the rounded-square blue/crimson
+   *  ones, since it's meant to look distinct from that older pattern
+   *  rather than just swap its color. Defaults to blue. */
+  tone?: "blue" | "crimson" | "teal";
 }
 
 export function StatCard({
@@ -28,7 +32,12 @@ export function StatCard({
   className,
   tone = "blue",
 }: StatCardProps) {
-  const tint = tone === "crimson" ? "bg-accent/10 text-accent" : "bg-primary-solid/10 text-primary-solid";
+  const tint =
+    tone === "crimson"
+      ? "bg-accent/10 text-accent"
+      : tone === "teal"
+        ? "bg-teal/10 text-teal-text"
+        : "bg-primary-solid/10 text-primary-solid";
 
   return (
     <div
@@ -40,11 +49,17 @@ export function StatCard({
       <div
         className={cn(
           "pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full blur-2xl transition-opacity group-hover:opacity-100",
-          tone === "crimson" ? "bg-accent/10" : "bg-primary-solid/10",
+          tone === "crimson" ? "bg-accent/10" : tone === "teal" ? "bg-teal/10" : "bg-primary-solid/10",
         )}
         aria-hidden="true"
       />
-      <div className={cn("relative flex h-10 w-10 items-center justify-center rounded-lg", tint)}>
+      <div
+        className={cn(
+          "relative flex h-10 w-10 items-center justify-center",
+          tone === "teal" ? "rounded-full" : "rounded-lg",
+          tint,
+        )}
+      >
         <Icon className="h-4 w-4" aria-hidden="true" />
       </div>
       <p className="relative mt-3 text-2xl font-bold tracking-tight text-foreground">

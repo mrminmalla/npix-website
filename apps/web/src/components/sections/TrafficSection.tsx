@@ -10,7 +10,7 @@ export function TrafficSection({ panel }: { panel: TrafficPanel }) {
     <section className="pt-6 pb-12 md:pt-8 md:pb-16">
       <div className="container-page">
         <FadeIn className="max-w-2xl">
-          <p className="text-sm font-semibold uppercase tracking-widest text-secondary">
+          <p className="text-sm font-semibold uppercase tracking-widest text-teal-text">
             Live Traffic
           </p>
           <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">

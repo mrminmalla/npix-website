@@ -32,7 +32,7 @@ function FooterColumn({
 }) {
   return (
     <div>
-      <h3 className="mb-4 text-sm font-semibold uppercase tracking-wide text-foreground">
+      <h3 className="mb-4 text-sm font-semibold uppercase tracking-wide text-white">
         {title}
       </h3>
       <ul className="space-y-3">
@@ -40,7 +40,7 @@ function FooterColumn({
           <li key={link.href}>
             <Link
               href={link.href}
-              className="text-sm text-foreground-secondary transition-colors hover:text-secondary"
+              className="text-sm text-white/70 transition-colors hover:text-white"
             >
               {link.label}
             </Link>
@@ -55,27 +55,31 @@ export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-border bg-surface">
+    <footer className="border-t border-white/10 bg-navy-deep">
       <div className="container-page grid grid-cols-1 gap-8 py-12 sm:grid-cols-2 md:py-16 lg:grid-cols-4">
         <div className="sm:col-span-2 lg:col-span-2">
-          <Logo />
-          <p className="mt-4 max-w-sm text-sm leading-relaxed text-text-secondary">
+          {/* light: the source PNG is dark-on-transparent — on this
+              permanently-navy footer it needs to be unconditionally
+              inverted to white, regardless of the site's own light/dark
+              theme toggle (dark:invert only fires in that theme). */}
+          <Logo light />
+          <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/70">
             {FOOTER_DESCRIPTION}
           </p>
-          <ul className="mt-6 space-y-3 text-sm text-text-secondary">
+          <ul className="mt-6 space-y-3 text-sm text-white/70">
             <li className="flex items-start gap-2">
               <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-secondary" aria-hidden="true" />
               <span>{OFFICE_ADDRESS}</span>
             </li>
             <li className="flex items-center gap-2">
               <Phone className="h-4 w-4 shrink-0 text-secondary" aria-hidden="true" />
-              <a href={`tel:${CONTACT_PHONE}`} className="hover:text-secondary">
+              <a href={`tel:${CONTACT_PHONE}`} className="hover:text-white">
                 {CONTACT_PHONE}
               </a>
             </li>
             <li className="flex items-center gap-2">
               <Mail className="h-4 w-4 shrink-0 text-secondary" aria-hidden="true" />
-              <a href={`mailto:${CONTACT_EMAIL}`} className="hover:text-secondary">
+              <a href={`mailto:${CONTACT_EMAIL}`} className="hover:text-white">
                 {CONTACT_EMAIL}
               </a>
             </li>
@@ -88,7 +92,7 @@ export function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={social.label}
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-border text-foreground-secondary transition-colors hover:border-secondary hover:text-secondary"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-white/20 text-white transition-colors hover:border-secondary hover:bg-white/10 hover:text-secondary"
               >
                 <social.icon className="h-4 w-4" aria-hidden="true" />
               </a>
@@ -100,8 +104,8 @@ export function Footer() {
         <FooterColumn title="Documentation" links={FOOTER_DOC_LINKS} />
       </div>
 
-      <div className="border-t border-border">
-        <div className="container-page flex flex-col items-center justify-between gap-2 py-6 text-xs text-foreground sm:flex-row">
+      <div className="border-t border-white/10">
+        <div className="container-page flex flex-col items-center justify-between gap-2 py-6 text-xs text-white/70 sm:flex-row">
           <p>&copy; {year} NPIX &ndash; Nepal Internet Exchange. All rights reserved.</p>
           <p>
             Powered by{" "}

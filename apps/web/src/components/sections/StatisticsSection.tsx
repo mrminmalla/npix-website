@@ -9,10 +9,10 @@ export function StatisticsSection({ stats }: { stats: StatDatum[] }) {
   if (stats.length === 0) return null;
 
   return (
-    <section className="bg-surface pt-12 pb-6 md:pt-16 md:pb-8">
+    <section className="bg-background pt-12 pb-6 md:pt-16 md:pb-8">
       <div className="container-page">
         <FadeIn className="max-w-2xl">
-          <p className="text-sm font-semibold uppercase tracking-widest text-secondary">
+          <p className="text-sm font-semibold uppercase tracking-widest text-teal-text">
             Live Network Statistics
           </p>
           <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
@@ -27,7 +27,7 @@ export function StatisticsSection({ stats }: { stats: StatDatum[] }) {
         <StaggerContainer className="mt-8 flex flex-col gap-5">
           {chunkIntoRows(stats, ROW_SIZE).map((row, rowIndex) => (
             <div key={rowIndex} className="flex flex-col gap-5 sm:flex-row">
-              {row.map((stat, i) => (
+              {row.map((stat) => (
                 <StaggerItem key={stat.id} className="min-w-0 sm:flex-1">
                   <StatCard
                     label={stat.label}
@@ -38,7 +38,7 @@ export function StatisticsSection({ stats }: { stats: StatDatum[] }) {
                     decimals={stat.decimals}
                     description={stat.description}
                     className="h-full"
-                    tone={(rowIndex * ROW_SIZE + i) % 2 === 0 ? "blue" : "crimson"}
+                    tone="teal"
                   />
                 </StaggerItem>
               ))}

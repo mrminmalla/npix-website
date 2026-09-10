@@ -41,6 +41,9 @@ export function MobileMenu() {
         aria-expanded={open}
         aria-controls="mobile-nav-drawer"
         onClick={() => setOpen((v) => !v)}
+        // Sits directly on the Navbar's dark navy background — the ghost
+        // variant's default text-foreground would be invisible there.
+        className="text-white hover:bg-white/10 hover:text-white"
       >
         {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
       </Button>

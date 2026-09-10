@@ -18,9 +18,9 @@ export default async function OpengraphImage() {
           padding: "80px",
           // Can't reference the site's CSS custom properties here — next/og
           // renders in an isolated satori environment, not a browser DOM —
-          // so these mirror --primary-solid (#003893) and --accent
-          // (#DC143C) from globals.css as literal hex.
-          background: "linear-gradient(135deg, #003893 0%, #001F52 100%)",
+          // so these mirror --navy/--navy-deep (#0D1B3D/#081227) and
+          // --coral (#E2523F) from globals.css as literal hex.
+          background: "linear-gradient(135deg, #0D1B3D 0%, #081227 100%)",
           fontFamily: "sans-serif",
         }}
       >
@@ -36,13 +36,13 @@ export default async function OpengraphImage() {
               width: 64,
               height: 64,
               borderRadius: 16,
-              background: "#DC143C",
+              background: "#E2523F",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               fontSize: 32,
               fontWeight: 700,
-              color: "#FFFFFF",
+              color: "#0D1B3D",
             }}
           >
             N
