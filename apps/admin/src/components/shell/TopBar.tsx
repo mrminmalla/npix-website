@@ -17,7 +17,7 @@ const ROLE_LABELS: Record<AdminRole, string> = {
 };
 
 const ICON_BUTTON_BASE =
-  'flex h-8 w-8 shrink-0 items-center justify-center rounded-control text-[var(--foreground)] transition-colors';
+  'flex h-8 w-8 shrink-0 items-center justify-center rounded-control transition-colors';
 const ICON_BUTTON = `${ICON_BUTTON_BASE} hover:bg-[var(--shell-hover)]`;
 /** White, bordered controls on the teal bar ("+" and the account button). */
 const WHITE_CONTROL = 'border border-[var(--shell-control-border)] bg-[var(--surface)] hover:bg-[var(--nav-hover)]';
@@ -55,7 +55,7 @@ export function TopBar({ mobileOpen, onOpenMenu }: { mobileOpen: boolean; onOpen
           onClick={onOpenMenu}
           aria-label="Open menu"
           aria-expanded={mobileOpen}
-          className={`${ICON_BUTTON} lg:hidden`}
+          className={`${ICON_BUTTON} text-[var(--foreground)] lg:hidden`}
         >
           <MenuIcon className="h-4 w-4" />
         </button>
@@ -78,7 +78,7 @@ export function TopBar({ mobileOpen, onOpenMenu }: { mobileOpen: boolean; onOpen
       <div className="ml-auto flex items-center gap-1">
         <Menu
           label="Create new"
-          buttonClassName={`${ICON_BUTTON_BASE} ${WHITE_CONTROL}`}
+          buttonClassName={`${ICON_BUTTON_BASE} ${WHITE_CONTROL} text-[var(--foreground)]`}
           buttonContent={<Plus className="h-4 w-4" aria-hidden="true" />}
           items={[
             { label: 'Add news', icon: Newspaper, ...createLink('/news') },
@@ -130,7 +130,13 @@ export function TopBar({ mobileOpen, onOpenMenu }: { mobileOpen: boolean; onOpen
           items={[{ label: 'Sign out', icon: LogOut, onClick: signOut }]}
         />
 
-        <button type="button" onClick={signOut} aria-label="Sign out" title="Sign out" className={ICON_BUTTON}>
+        <button
+          type="button"
+          onClick={signOut}
+          aria-label="Sign out"
+          title="Sign out"
+          className={`${ICON_BUTTON} text-[var(--shell-muted)]`}
+        >
           <LogOut className="h-4 w-4" />
         </button>
       </div>

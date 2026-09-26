@@ -72,7 +72,7 @@ export function NavSearch({ items }: { items: NavSearchItem[] }) {
   return (
     <div className="relative w-full max-w-[424px]">
       <Search
-        className="pointer-events-none absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--muted)]"
+        className="pointer-events-none absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--shell-muted)]"
         aria-hidden="true"
       />
       <input
@@ -98,7 +98,7 @@ export function NavSearch({ items }: { items: NavSearchItem[] }) {
       />
       <kbd
         aria-hidden="true"
-        className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 rounded border border-[var(--border)] px-1.5 text-xs leading-4 text-[var(--muted)] peer-focus:hidden"
+        className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 rounded border border-[var(--shell-control-border)] px-1.5 text-xs leading-4 text-[var(--muted)] peer-focus:hidden"
       >
         /
       </kbd>

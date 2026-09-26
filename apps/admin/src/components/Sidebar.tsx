@@ -22,7 +22,7 @@ const COLLAPSED_STORAGE_KEY = 'npix_admin_sidebar_collapsed';
 // (keyboard only, 2px accent with a 2px offset).
 const ITEM_BASE = 'flex w-full items-center rounded-control text-sm transition-colors';
 const ITEM_STATES = {
-  idle: 'text-[var(--foreground)] hover:bg-[var(--shell-hover)]',
+  idle: 'text-[var(--foreground-secondary)] hover:bg-[var(--shell-hover)]',
   // The current page: same solid fill and hover as the primary button.
   active: 'bg-[var(--primary-solid)] font-semibold text-white hover:bg-[var(--primary-hover)]',
   // A group containing the current page: accent text/icon, no fill.

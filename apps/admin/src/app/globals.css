@@ -34,7 +34,7 @@
  * text needs a darker blue than accent-colored text on a dark surface.
  */
 :root {
-  --background: #b2d4dd;
+  --background: #f0f7f8;
   --surface: #ffffff;
   --surface-subtle: #fbfafd;
   --surface-hover: var(--surface-subtle);
@@ -50,13 +50,14 @@
   --pill: #e1e1e6;
 
   /* Shell chrome (top bar + sidebar) sits on --background, so it gets its
-     own muted/hover/border colors that keep 4.5:1 contrast on the teal. */
-  --shell-muted: #3d4f55;
-  --shell-hover: rgba(255, 255, 255, 0.35);
-  --shell-pill: rgba(255, 255, 255, 0.55);
+     own muted/hover/border colors tuned for the light teal. */
+  --shell-muted: #4a5a60;
+  --shell-hover: #e1eef1;
+  --shell-pill: #dcebee;
   --shell-divider: rgba(0, 0, 0, 0.12);
-  --shell-control-border: #8fb3bd;
-  --shell-accent-text: #0b4f94;
+  --shell-control-border: #c9dde2;
+  /* Active nav category text: the primary button's hover shade. */
+  --shell-accent-text: var(--accent-hover);
 
   --accent: #1f75cb;
   --accent-hover: #1068bf;
