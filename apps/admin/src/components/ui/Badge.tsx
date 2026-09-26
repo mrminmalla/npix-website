@@ -4,7 +4,7 @@ import clsx from 'clsx';
 type Tone = 'neutral' | 'success' | 'danger' | 'info';
 
 const TONE_CLASSES: Record<Tone, string> = {
-  neutral: 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300',
+  neutral: 'bg-[var(--pill)] text-[var(--foreground-secondary)]',
   success: 'bg-[var(--success-tint)] text-[var(--success)]',
   danger: 'bg-[var(--danger-tint)] text-[var(--danger)]',
   info: 'bg-[var(--primary-tint)] text-[var(--primary)]',

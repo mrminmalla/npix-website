@@ -5,7 +5,7 @@ import { Trash2, UploadCloud, Image as ImageIcon } from 'lucide-react';
 import { api, ApiError } from '@/lib/api';
 import { useToast } from '@/lib/toast-context';
 import { Card } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
+import { Button, buttonClassName } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
 
 const ROW_SIZE = 6;
@@ -106,7 +106,7 @@ export default function MediaLibraryPage() {
             Every image and file uploaded from any content form lives here.
           </p>
         </div>
-        <label className="inline-flex shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-xl bg-[var(--primary-solid)] px-4 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-[var(--primary-hover)]">
+        <label className={buttonClassName({ className: 'cursor-pointer' })}>
           <UploadCloud className="h-4 w-4" />
           {uploading ? 'Uploading…' : 'Upload file'}
           <input

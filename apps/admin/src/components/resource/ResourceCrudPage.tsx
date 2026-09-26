@@ -258,13 +258,13 @@ export function ResourceCrudPage({ config }: { config: ResourceConfig }) {
 
       {rows.length > 0 && (
         <div className="relative mt-4 w-full sm:max-w-xs">
-          <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--muted)]" />
+          <Search className="pointer-events-none absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--muted)]" />
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder={`Search ${config.title.toLowerCase()}…`}
             aria-label={`Search ${config.title}`}
-            className="h-10 pl-9 pr-3.5 text-sm"
+            className="h-8 pl-8 pr-3 text-sm"
           />
         </div>
       )}
