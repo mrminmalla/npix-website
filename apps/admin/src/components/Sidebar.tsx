@@ -16,11 +16,22 @@ import { activeGroupLabel, navForRole, type NavEntry } from '@/components/shell/
 const SECTION_STORAGE_KEY = 'npix_admin_sidebar_sections';
 const COLLAPSED_STORAGE_KEY = 'npix_admin_sidebar_collapsed';
 
-const ITEM_BASE =
-  'relative flex w-full items-center rounded-control text-sm text-[var(--foreground)] transition-colors hover:bg-[var(--nav-hover)]';
-// The 3px accent bar on the active item's left edge, inset 6px top/bottom.
-const ITEM_ACTIVE =
-  'bg-[var(--nav-active)] font-semibold hover:bg-[var(--nav-active)] before:absolute before:inset-y-1.5 before:left-0 before:w-[3px] before:rounded-full before:bg-[var(--accent)]';
+// Each state sets its own text color and hover fill (rather than
+// overriding a base one) so no two conflicting utilities share an element.
+// Focus rings come from the global :focus-visible rule in globals.css
+// (keyboard only, 2px accent with a 2px offset).
+const ITEM_BASE = 'flex w-full items-center rounded-control text-sm transition-colors';
+const ITEM_STATES = {
+  idle: 'text-[var(--foreground)] hover:bg-[var(--nav-hover)]',
+  // The current page: same solid fill and hover as the primary button.
+  active: 'bg-[var(--primary-solid)] font-semibold text-white hover:bg-[var(--primary-hover)]',
+  // A group containing the current page: accent text/icon, no fill.
+  activeGroup: 'font-semibold text-[var(--accent)] hover:bg-[var(--nav-hover)]',
+};
+
+function itemClass(state: keyof typeof ITEM_STATES, ...extra: string[]) {
+  return clsx(ITEM_BASE, ITEM_STATES[state], ...extra);
+}
 
 function readStorage(key: string): string | null {
   try {
@@ -145,8 +156,8 @@ export function Sidebar({
     return (
       <span
         className={clsx(
-          'ml-auto rounded-full px-1.5 text-xs leading-4 text-[var(--foreground-secondary)]',
-          active ? 'bg-[var(--surface)]' : 'bg-[var(--nav-active)]',
+          'ml-auto rounded-full px-1.5 text-xs leading-4',
+          active ? 'bg-white/20 text-white' : 'bg-[var(--nav-active)] text-[var(--foreground-secondary)]',
         )}
       >
         {membersCount}
@@ -158,16 +169,17 @@ export function Sidebar({
     // In the rail a group has no room to expand, so its icon jumps to the
     // group's first page instead.
     const href = entry.href ?? entry.children![0].href;
-    const active = entry.href ? pathname === entry.href : activeGroup === entry.label;
+    const active = pathname === entry.href;
+    const activeGroupEntry = !entry.href && activeGroup === entry.label;
     const Icon = entry.icon;
     return (
       <li key={entry.label}>
         <Link
           href={href}
           aria-label={entry.label}
-          aria-current={entry.href && active ? 'page' : undefined}
+          aria-current={active ? 'page' : undefined}
           {...tooltipHandlers(entry.label)}
-          className={clsx(ITEM_BASE, 'h-8 justify-center', active && ITEM_ACTIVE)}
+          className={itemClass(active ? 'active' : activeGroupEntry ? 'activeGroup' : 'idle', 'h-8 justify-center')}
         >
           <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
         </Link>
@@ -186,7 +198,7 @@ export function Sidebar({
             href={entry.href}
             onClick={onCloseMobile}
             aria-current={active ? 'page' : undefined}
-            className={clsx(ITEM_BASE, 'h-8 gap-2.5 px-2', active && ITEM_ACTIVE)}
+            className={itemClass(active ? 'active' : 'idle', 'h-8 gap-2.5 px-2')}
           >
             <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
             <span className="truncate">{entry.label}</span>
@@ -205,13 +217,14 @@ export function Sidebar({
           onClick={() => toggleGroup(entry.label)}
           aria-expanded={isOpen}
           aria-controls={groupId}
-          className={clsx(ITEM_BASE, 'h-8 gap-2.5 px-2 text-left', activeGroup === entry.label && 'font-semibold')}
+          className={itemClass(activeGroup === entry.label ? 'activeGroup' : 'idle', 'h-8 gap-2.5 px-2 text-left')}
         >
           <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
           <span className="truncate">{entry.label}</span>
           <ChevronRight
             className={clsx(
-              'ml-auto h-4 w-4 shrink-0 text-[var(--muted)] transition-transform duration-200',
+              'ml-auto h-4 w-4 shrink-0 transition-transform duration-200',
+              activeGroup === entry.label ? 'text-[var(--accent)]' : 'text-[var(--muted)]',
               isOpen && 'rotate-90',
             )}
             aria-hidden="true"
@@ -234,7 +247,7 @@ export function Sidebar({
                     href={child.href}
                     onClick={onCloseMobile}
                     aria-current={active ? 'page' : undefined}
-                    className={clsx(ITEM_BASE, 'h-[30px] pl-[34px] pr-2', active && ITEM_ACTIVE)}
+                    className={itemClass(active ? 'active' : 'idle', 'h-[30px] pl-[34px] pr-2')}
                   >
                     <span className="truncate">{child.label}</span>
                   </Link>
@@ -287,7 +300,7 @@ export function Sidebar({
             rel="noopener noreferrer"
             aria-label={rail ? 'Help' : undefined}
             {...tooltipHandlers('Help')}
-            className={clsx(ITEM_BASE, 'h-8', rail ? 'justify-center' : 'gap-2.5 px-2')}
+            className={itemClass('idle', 'h-8', rail ? 'justify-center' : 'gap-2.5 px-2')}
           >
             <CircleHelp className="h-4 w-4 shrink-0" aria-hidden="true" />
             {!rail && <span>Help</span>}
@@ -298,7 +311,7 @@ export function Sidebar({
             aria-label={rail ? 'Expand sidebar' : undefined}
             aria-pressed={collapsed}
             {...tooltipHandlers('Expand sidebar')}
-            className={clsx(ITEM_BASE, 'hidden h-8 lg:flex', rail ? 'justify-center' : 'gap-2.5 px-2 text-left')}
+            className={itemClass('idle', 'hidden h-8 lg:flex', rail ? 'justify-center' : 'gap-2.5 px-2 text-left')}
           >
             {rail ? (
               <PanelLeftOpen className="h-4 w-4 shrink-0" aria-hidden="true" />
