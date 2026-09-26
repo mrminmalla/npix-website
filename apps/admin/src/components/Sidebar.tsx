@@ -22,11 +22,11 @@ const COLLAPSED_STORAGE_KEY = 'npix_admin_sidebar_collapsed';
 // (keyboard only, 2px accent with a 2px offset).
 const ITEM_BASE = 'flex w-full items-center rounded-control text-sm transition-colors';
 const ITEM_STATES = {
-  idle: 'text-[var(--foreground)] hover:bg-[var(--nav-hover)]',
+  idle: 'text-[var(--foreground)] hover:bg-[var(--shell-hover)]',
   // The current page: same solid fill and hover as the primary button.
   active: 'bg-[var(--primary-solid)] font-semibold text-white hover:bg-[var(--primary-hover)]',
   // A group containing the current page: accent text/icon, no fill.
-  activeGroup: 'font-semibold text-[var(--accent)] hover:bg-[var(--nav-hover)]',
+  activeGroup: 'font-semibold text-[var(--shell-accent-text)] hover:bg-[var(--shell-hover)]',
 };
 
 function itemClass(state: keyof typeof ITEM_STATES, ...extra: string[]) {
@@ -157,7 +157,7 @@ export function Sidebar({
       <span
         className={clsx(
           'ml-auto rounded-full px-1.5 text-xs leading-4',
-          active ? 'bg-white/20 text-white' : 'bg-[var(--nav-active)] text-[var(--foreground-secondary)]',
+          active ? 'bg-white/20 text-white' : 'bg-[var(--shell-pill)] text-[var(--foreground)]',
         )}
       >
         {membersCount}
@@ -224,7 +224,7 @@ export function Sidebar({
           <ChevronRight
             className={clsx(
               'ml-auto h-4 w-4 shrink-0 transition-transform duration-200',
-              activeGroup === entry.label ? 'text-[var(--accent)]' : 'text-[var(--muted)]',
+              activeGroup === entry.label ? 'text-[var(--shell-accent-text)]' : 'text-[var(--shell-muted)]',
               isOpen && 'rotate-90',
             )}
             aria-hidden="true"
@@ -282,7 +282,7 @@ export function Sidebar({
             type="button"
             onClick={onCloseMobile}
             aria-label="Close menu"
-            className="flex h-8 w-8 items-center justify-center rounded-control text-[var(--muted)] hover:bg-[var(--nav-hover)]"
+            className="flex h-8 w-8 items-center justify-center rounded-control text-[var(--shell-muted)] hover:bg-[var(--shell-hover)]"
           >
             <X className="h-4 w-4" />
           </button>
@@ -323,7 +323,7 @@ export function Sidebar({
             )}
           </button>
           {!rail && (
-            <p className="mt-2 border-t border-[var(--border)] px-2 pt-3 text-xs text-[var(--muted)]">
+            <p className="mt-2 border-t border-[var(--shell-divider)] px-2 pt-3 text-xs text-[var(--shell-muted)]">
               Built by Workalaya R&amp;D
             </p>
           )}

@@ -34,7 +34,7 @@
  * text needs a darker blue than accent-colored text on a dark surface.
  */
 :root {
-  --background: #f4f4f6;
+  --background: #b2d4dd;
   --surface: #ffffff;
   --surface-subtle: #fbfafd;
   --surface-hover: var(--surface-subtle);
@@ -43,11 +43,20 @@
   --muted: #626168;
   --border: #dcdcde;
   --divider: #ececef;
-  --panel-border: #e3e2ea;
+  --panel-border: rgba(0, 0, 0, 0.08);
   --control-border: #bfbfc3;
   --nav-hover: #ececef;
   --nav-active: #e3e2ea;
   --pill: #e1e1e6;
+
+  /* Shell chrome (top bar + sidebar) sits on --background, so it gets its
+     own muted/hover/border colors that keep 4.5:1 contrast on the teal. */
+  --shell-muted: #3d4f55;
+  --shell-hover: rgba(255, 255, 255, 0.35);
+  --shell-pill: rgba(255, 255, 255, 0.55);
+  --shell-divider: rgba(0, 0, 0, 0.12);
+  --shell-control-border: #8fb3bd;
+  --shell-accent-text: #0b4f94;
 
   --accent: #1f75cb;
   --accent-hover: #1068bf;
@@ -94,6 +103,13 @@
   --nav-hover: #2b2a30;
   --nav-active: #3a383f;
   --pill: #3a383f;
+
+  --shell-muted: #a4a3a8;
+  --shell-hover: #2b2a30;
+  --shell-pill: #3a383f;
+  --shell-divider: #333238;
+  --shell-control-border: #535158;
+  --shell-accent-text: var(--accent);
 
   /* Lighter accent for text/links on dark surfaces; solid fills keep the
      light-mode blue so white button text stays above 4.5:1. */

@@ -94,7 +94,7 @@ export function NavSearch({ items }: { items: NavSearchItem[] }) {
         onFocus={() => setOpen(true)}
         onBlur={() => setOpen(false)}
         onKeyDown={handleKeyDown}
-        className="peer h-8 border-[var(--control-border)] bg-[var(--surface)] pl-8 pr-8 text-sm placeholder:text-[var(--muted)]"
+        className="peer h-8 border-[var(--shell-control-border)] bg-[var(--surface)] pl-8 pr-8 text-sm placeholder:text-[var(--muted)]"
       />
       <kbd
         aria-hidden="true"

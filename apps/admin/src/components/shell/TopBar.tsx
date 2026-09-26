@@ -16,8 +16,11 @@ const ROLE_LABELS: Record<AdminRole, string> = {
   VIEWER: 'Viewer',
 };
 
-const ICON_BUTTON =
-  'flex h-8 w-8 shrink-0 items-center justify-center rounded-control text-[var(--foreground)] transition-colors hover:bg-[var(--nav-hover)]';
+const ICON_BUTTON_BASE =
+  'flex h-8 w-8 shrink-0 items-center justify-center rounded-control text-[var(--foreground)] transition-colors';
+const ICON_BUTTON = `${ICON_BUTTON_BASE} hover:bg-[var(--shell-hover)]`;
+/** White, bordered controls on the teal bar ("+" and the account button). */
+const WHITE_CONTROL = 'border border-[var(--shell-control-border)] bg-[var(--surface)] hover:bg-[var(--nav-hover)]';
 
 export function TopBar({ mobileOpen, onOpenMenu }: { mobileOpen: boolean; onOpenMenu: () => void }) {
   const { user, logout } = useAuth();
@@ -62,7 +65,7 @@ export function TopBar({ mobileOpen, onOpenMenu }: { mobileOpen: boolean; onOpen
             <img src="/npix_black.png" alt="" className="h-full w-full object-contain" />
           </span>
           <span className="text-sm font-semibold text-[var(--foreground)]">NPIX</span>
-          <span className="rounded-full bg-[var(--pill)] px-1.5 text-[11px] font-semibold leading-4 text-[var(--foreground-secondary)]">
+          <span className="rounded-full bg-[var(--shell-pill)] px-1.5 text-[11px] font-semibold leading-4 text-[var(--foreground)]">
             Admin
           </span>
         </Link>
@@ -75,7 +78,7 @@ export function TopBar({ mobileOpen, onOpenMenu }: { mobileOpen: boolean; onOpen
       <div className="ml-auto flex items-center gap-1">
         <Menu
           label="Create new"
-          buttonClassName={`${ICON_BUTTON} border border-[var(--control-border)] bg-[var(--surface)]`}
+          buttonClassName={`${ICON_BUTTON_BASE} ${WHITE_CONTROL}`}
           buttonContent={<Plus className="h-4 w-4" aria-hidden="true" />}
           items={[
             { label: 'Add news', icon: Newspaper, ...createLink('/news') },
@@ -84,14 +87,14 @@ export function TopBar({ mobileOpen, onOpenMenu }: { mobileOpen: boolean; onOpen
           ]}
         />
 
-        <span className="mx-1 h-5 w-px bg-[var(--border)]" aria-hidden="true" />
+        <span className="mx-1 h-5 w-px bg-[var(--shell-divider)]" aria-hidden="true" />
 
         <a
           href={PUBLIC_SITE_URL}
           target="_blank"
           rel="noopener noreferrer"
           aria-label="View site (opens in a new tab)"
-          className="flex h-8 items-center gap-1.5 rounded-control px-2 text-sm text-[var(--foreground)] transition-colors hover:bg-[var(--nav-hover)]"
+          className="flex h-8 items-center gap-1.5 rounded-control px-2 text-sm text-[var(--foreground)] transition-colors hover:bg-[var(--shell-hover)]"
         >
           <Globe className="h-4 w-4 shrink-0" aria-hidden="true" />
           <span className="hidden sm:inline">View site</span>
@@ -99,7 +102,7 @@ export function TopBar({ mobileOpen, onOpenMenu }: { mobileOpen: boolean; onOpen
 
         <Menu
           label={`Account: ${user.email}`}
-          buttonClassName="flex h-8 items-center gap-2 rounded-control px-1.5 text-left transition-colors hover:bg-[var(--nav-hover)]"
+          buttonClassName={`flex h-8 items-center gap-2 rounded-control px-1.5 text-left transition-colors ${WHITE_CONTROL}`}
           buttonContent={
             <>
               <span
@@ -112,7 +115,7 @@ export function TopBar({ mobileOpen, onOpenMenu }: { mobileOpen: boolean; onOpen
                 <span className="max-w-[12rem] truncate text-xs font-medium leading-4 text-[var(--foreground)]">
                   {user.email}
                 </span>
-                <span className="text-[11px] leading-3 text-[var(--muted)]">{ROLE_LABELS[user.role]}</span>
+                <span className="text-[11px] leading-3 text-[var(--shell-muted)]">{ROLE_LABELS[user.role]}</span>
               </span>
             </>
           }
