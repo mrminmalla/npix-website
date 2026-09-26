@@ -79,6 +79,8 @@ services:
     environment:
       NODE_ENV: development
       NEXT_PUBLIC_API_URL: http://localhost:4100
+      # Public site, for the admin's "View site" links (opened in the browser).
+      NEXT_PUBLIC_SITE_URL: http://localhost:3005
     command: pnpm --filter @npix/admin dev
 
   frontend:
